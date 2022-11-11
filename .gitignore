@@ -130,3 +130,6 @@ dmypy.json
 
 # Data CSV from MIMIC and eICU
 *.csv
+
+# R lintr my settings
+*.lintr

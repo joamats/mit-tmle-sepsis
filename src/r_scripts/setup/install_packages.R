@@ -1,7 +1,7 @@
 pkgInstall <- function(packages = "requirements") {
     
     if (length( packages ) == 1L && packages == "requirements") {
-        packages <- scan(file = "src\r_scripts\setup\requirements.txt", what = "character", skip = 0L)
+        packages <- scan(file = "src/r_scripts/setup/requirements.txt", what = "character", skip = 0L)
     }
 
     packagecheck <- match(packages, utils::installed.packages()[, 1])

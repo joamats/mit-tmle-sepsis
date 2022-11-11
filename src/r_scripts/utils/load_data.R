@@ -1,3 +1,6 @@
+library(magrittr) 
+library(dplyr)
+
 load_data <- function(file_path){
   # Load Data  
   raw_data <- read.csv(file_path, header = TRUE, stringsAsFactors = TRUE)

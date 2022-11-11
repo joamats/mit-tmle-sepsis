@@ -12,3 +12,5 @@ earth
 ranger
 rpart
 xgboost
+magrittr
+dbarts
