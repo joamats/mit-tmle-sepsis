@@ -134,3 +134,4 @@ dmypy.json
 # R lintr my settings
 *.lintr
 .Rproj.user
+.Rproj
