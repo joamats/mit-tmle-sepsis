@@ -1,7 +1,7 @@
 tmle
 ltmle
-plyr
 dplyr
+magrittr
 shiny
 psych
 hal9001
@@ -9,8 +9,5 @@ haldensify
 biglasso
 arm
 earth
+gam
 ranger
-rpart
-xgboost
-magrittr
-dbarts

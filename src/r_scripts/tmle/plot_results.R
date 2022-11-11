@@ -14,6 +14,7 @@ plot_tmle_years_results <- function(results, treatment) {
         U <- runif(4,2,3)
 
         while (aygIndex <= 4) {
+
             infoIndex <- (sofaIndex - 1) * 12 +  (aygIndex - 1) * 3 + 1
             dataIndex <- infoIndex + 1
             resultIndex <- infoIndex + 2
@@ -33,9 +34,9 @@ plot_tmle_years_results <- function(results, treatment) {
         df <- data.frame(x = c("2008 - 2010", "2011 - 2013", "2014 - 2016", "2017 - 2019"), F = F, L = L, U = U)
         p <- ggplot(df,aes(x = x, y = F)) + geom_point(size = 4) + geom_errorbar(aes(ymax = U, ymin = L)) + labs(title=title) + labs(x = "anchor_year_group", y = "ATE") + geom_hline(aes(yintercept = 0, color="red")) + ylim(-0.5, 0.5)
     
-    ggsave(paste0("tmle_time_", treatment, ".pdf"), path="src/r_scripts/tmle/plots")
+        ggsave(paste0("tmle_years_sofa_", sofaIndex,"_", treatment, ".png"), path="src/r_scripts/tmle/plots")
 
-    sofaIndex <- sofaIndex + 1
+        sofaIndex <- sofaIndex + 1
   
     }
 

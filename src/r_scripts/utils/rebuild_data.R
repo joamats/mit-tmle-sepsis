@@ -47,8 +47,8 @@ rebuild_data <- function(sepsis_data, treatment) {
 # Get data within SOFA ranges
 data_between_sofa <- function(sepsis_data, sofa_low_inclusive, sofa_high_inclusive) {
 
-    res <- sepsis_data[sepsis_data$SOFA <= sofa_high_inclusive & sepsis_data$SOFA >= sofa_low_inclusive ,
-                        c("anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index", "ventilation_bin", "death_bin", "rrt", "pressor", "anchor_year_group")]
+    res <- sepsis_data[sepsis_data$SOFA <= sofa_high_inclusive & sepsis_data$SOFA >= sofa_low_inclusive,
+        c("anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index","anchor_year_group", "ventilation_bin", "death_bin", "rrt", "pressor")]
     
     return(na.omit(res))
 }

@@ -1,13 +1,4 @@
 library(tmle)
-library(arm)
-library(earth)
-library(ranger)
-library(rpart)
-library(xgboost)
-library(hal9001)
-library(haldensify)
-library(biglasso)
-library(ltmle)
 library(dplyr)
 library(psych)
 library(dbarts)
@@ -28,7 +19,7 @@ run_tmle_sofa <- function(data_sofa, sofa_low_inclusive, sofa_high_inclusive,tre
         W <- data_sofa[, c("anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index", "pressor", "ventilation_bin")]
         A <- data_sofa$rrt
 
-    } else if(treatment == "pressor"){
+    } else if(treatment == "pressor") {
 
         W <- data_sofa[, c("anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index", "rrt", "ventilation_bin")]
         A <- data_sofa$pressor
@@ -36,14 +27,10 @@ run_tmle_sofa <- function(data_sofa, sofa_low_inclusive, sofa_high_inclusive,tre
 
     Y <- data_sofa$death_bin
 
-    print("starting")
-
     result <- tmle(Y, A, W , family = "binomial", 
                     g.SL.library = c("SL.glm", "SL.glmnet", "SL.bayesglm","SL.mean"),
                     Q.SL.library = c("SL.glm", "SL.glmnet", "SL.stepAIC","SL.mean","SL.earth","SL.ranger","SL.gam", "SL.bayesglm","SL.glm.interaction", "SL.biglasso")
                     )
-
-    print("ending")
 
     data_result <- list("data" = data_sofa, "result" = result)
 
@@ -56,7 +43,6 @@ run_tmle_sofa <- function(data_sofa, sofa_low_inclusive, sofa_high_inclusive,tre
 run_tmle_sofa_ayg <- function(data_sofa, sofa_low_inclusive, sofa_high_inclusive, ayg_value, treatment) {
     # TMLE 
     print(paste0(treatment,' effect for SOFA between [', sofa_low_inclusive, ",", sofa_high_inclusive,"] with anchor_year_group = ", ayg_value))
-    #data_sofa <- data_between_sofa_and_anchor_year_group(sepsis_data, sofa_low_inclusive, sofa_high_inclusive, ayg_value)
     
     if(treatment == "ventilation_bin") {
 
@@ -73,7 +59,7 @@ run_tmle_sofa_ayg <- function(data_sofa, sofa_low_inclusive, sofa_high_inclusive
         W <- data_sofa[, c("anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index", "rrt", "ventilation_bin")]
         A <- data_sofa$pressor
     }
-    write.csv(W, 'd.csv')
+
     Y <- data_sofa$death_bin
 
     result <- tmle(Y, A, W , family = "binomial", 
@@ -108,8 +94,8 @@ tmle_stratified_sofas <- function(sepsis_data, treatment){
                       paste0("SOFA = [", start, " ,", end, "]\nn =  ", nrow(data_sofa)),
                       paste0("PSI = ", toString(result$result$estimates$ATE$psi)),
                       paste0("CI = ", toString(result$result$estimates$ATE$CI)),
-                      paste0("AUC: ", toString(result$result$g$AUC)),
-                      paste0("R2: ", toString(result$result$Qinit$Rsq))
+                      paste0("AUC = ", toString(result$result$g$AUC)),
+                      paste0("R2 = ", toString(result$result$Qinit$Rsq))
                      )
 
         writeLines(full_log, file_log)
@@ -121,7 +107,7 @@ tmle_stratified_sofas <- function(sepsis_data, treatment){
 # run TMLE by SOFA and year range
 tmle_stratified_sofas_year <- function(sepsis_data, treatment){
 
-    sofa_ranges <- list(list(0, 5))#, list(6,10), list(11, 15), list(16, 100))
+    sofa_ranges <- list(list(0, 5), list(6,10), list(11, 15), list(16, 100))
     anchor_year_groups <- list("2008 - 2010", "2011 - 2013", "2014 - 2016", "2017 - 2019")
     
     results <- list()
@@ -140,9 +126,7 @@ tmle_stratified_sofas_year <- function(sepsis_data, treatment){
             results <- append(results, input)
             results <- append(results, result)
         }
-
-        plot_tmle_years_results(results, treatment)
-        
     }
+    plot_tmle_years_results(results, treatment)
     
 }
