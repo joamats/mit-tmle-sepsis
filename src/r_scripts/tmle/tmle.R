@@ -83,7 +83,7 @@ tmle_stratified_sofas <- function(sepsis_data, treatment){
         start <- sofa[1]
         end <- sofa[2]
 
-        log_name <- paste0('src/r_scripts/tmle/log/tmle_', treatment, '_sofa_', start, '_', end, '.txt')
+        log_name <- paste0('results/tmle/by_sofa/', treatment, '_sofa_', start, '_', end, '.txt')
         file_log <- file(log_name)
 
         data_sofa <- data_between_sofa(sepsis_data, start, end)

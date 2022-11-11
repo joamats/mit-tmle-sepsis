@@ -68,7 +68,7 @@ ltmle_all_sofas <- function(sepsis_data, treatment) {
 
     data_sofa <- rebuild_data(sepsis_data, treatment)
     write.csv(data_sofa, "d.csv")
-    log_name <- paste0('src/r_scripts/ltmle/log/ltmle_', treatment, '_all_sofas.txt')
+    log_name <- paste0('results/ltmle/', treatment, '_all_sofas.txt')
     file_log <- file(log_name)
 
     # Run LTMLE by 2x2 w/ SL library, all SOFAs
@@ -111,7 +111,7 @@ ltmle_stratified_sofas <- function(sepsis_data, treatment) {
 
     for (sofa in sofa_ranges) {
 
-        log_name <- paste0('src/r_scripts/ltmle/log/ltmle_', treatment, '_sofa_', sofa[1], '_', sofa[2], '.txt')
+        log_name <- paste0('results/ltmle/', treatment, '_sofa_', sofa[1], '_', sofa[2], '.txt')
         file_log <- file(log_name)
 
         start <- sofa[1]
