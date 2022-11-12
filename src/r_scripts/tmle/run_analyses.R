@@ -3,7 +3,7 @@ source("src/r_scripts/utils/load_data.R")
 source("src/r_scripts/tmle/plot_results.R")
 
 # List with possible invasive treatments
-treatments <- list("pressor", "ventilation_bin", "rrt")
+treatments <- list("ventilation_bin", "rrt", "pressor")
 
 # List with possible datasets
 data_paths <- list("data/MIMIC_data.csv") # add eICU when ready

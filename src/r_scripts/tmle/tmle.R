@@ -1,7 +1,6 @@
 library(tmle)
 library(dplyr)
 library(psych)
-library(dbarts)
 
 source("src/r_scripts/utils/rebuild_data.R")
 source("src/r_scripts/tmle/plot_results.R")
@@ -97,7 +96,7 @@ tmle_stratified_sofas <- function(sepsis_data, treatment){
                       paste0("AUC = ", toString(result$result$g$AUC)),
                       paste0("R2 = ", toString(result$result$Qinit$Rsq))
                      )
-
+        print(full_log)
         writeLines(full_log, file_log)
         close(file_log)
     }    
@@ -107,7 +106,7 @@ tmle_stratified_sofas <- function(sepsis_data, treatment){
 # run TMLE by SOFA and year range
 tmle_stratified_sofas_year <- function(sepsis_data, treatment){
 
-    sofa_ranges <- list(list(0, 5), list(6,10), list(11, 15), list(16, 100))
+    sofa_ranges <- list(list(0, 5), list(6,10), list(11, 15))#, list(16, 100))
     anchor_year_groups <- list("2008 - 2010", "2011 - 2013", "2014 - 2016", "2017 - 2019")
     
     results <- list()

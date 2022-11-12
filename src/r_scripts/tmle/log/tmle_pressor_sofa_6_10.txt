@@ -1,7 +1,0 @@
-TMLE Stratfied SOFAs, pressor
-SOFA = [6 ,10]
-n =  11787
-PSI = 
-CI = 
-AUC = 
-R2 = 0.0685153050267676
