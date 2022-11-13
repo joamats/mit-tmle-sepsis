@@ -14,9 +14,9 @@ load_data <- function(file_path){
   # One-Hot Encoding Ventilation
   sepsis_data <- sepsis_data %>% mutate(ventilation_bin = ifelse(InvasiveVent_hr > 0 & !is.na(InvasiveVent_hr), 1, 0))
   # One-Hot Encoding Mortality: died or survived
-  sepsis_data <- sepsis_data %>% mutate(death_bin = ifelse(discharge_location == "DIED" | discharge_location == "HOSPICE", 1, ifelse(discharge_location == "", NaN, 0)))
+  sepsis_data <- sepsis_data %>% mutate(death_bin = ifelse(discharge_location == "DIED" | discharge_location == "HOSPICE" | dod != "", 1, 0))
   # One-Hot Encoding Ethnicity: white or non-white
-  sepsis_data <- sepsis_data %>% mutate(ethnicity_white = ifelse(ethnicity == "WHITE", 1, 0))
+  sepsis_data <- sepsis_data %>% mutate(ethnicity_white = ifelse(race == "WHITE" | race == "WHITE - BRAZILIAN" | race == "WHITE - EASTERN EUROPEAN" | race == "WHITE - OTHER EUROPEAN" | race == "WHITE - RUSSIAN" | race == "PORTUGUESE", 1, 0))
   # Put CCI into bins
   sepsis_data <- sepsis_data %>% mutate(charlson_comorbidity_index = ifelse(
     charlson_comorbidity_index >= 0 & charlson_comorbidity_index <= 5, "0 - 5", ifelse(
