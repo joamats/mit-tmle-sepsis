@@ -1,6 +1,11 @@
-SELECT yug.*, vent_1, vent_2, vent_3, vent_4, vent_5, vent_6
-rrt_1, pressor_1, pressor_2, pressor_3, pressor_4
-
+SELECT yug.*, 
+-- to match MIMIC's names
+yug.Charlson as charlson_comorbidity_index,
+yug.ethnicity as race,
+-- newly added 
+vent_1, vent_2, vent_3, vent_4, vent_5, vent_6
+rrt_1,
+pressor_1, pressor_2, pressor_3, pressor_4
 
 FROM `matos-334518.my_eICU.yugang` as yug
 
@@ -157,4 +162,7 @@ LEFT JOIN(
 )
 AS pivoted_med
 ON pivoted_med.patientunitstayid = yug.patientunitstayid
+
+-- get only patients with ethnicity information
+WHERE yug.ethnicity != "Other/Unknown"
 

@@ -6,7 +6,7 @@ source("src/r_scripts/tmle/plot_results.R")
 treatments <- list( "pressor")#"ventilation_bin", "rrt",
 
 # List with possible datasets
-data_paths <- list("data/MIMIC_data.csv") # add eICU when ready
+data_paths <- list("data/eICU_data.csv") # add eICU / MIMIC
 
 for (data_path in data_paths) {
     # Load Data
