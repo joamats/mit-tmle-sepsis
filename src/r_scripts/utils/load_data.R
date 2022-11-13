@@ -28,8 +28,7 @@ load_data <- function(file_path){
 
   # One-Hot Encoding Pressor
   # in raw_data, pressor is either True or "", map it to 1 or 0 
-  sepsis_data <- sepsis_data %>% mutate(pressor = ifelse(pressor == "TRUE", 1, 0))
-  sepsis_data <- sepsis_data %>% mutate(pressor = ifelse(is.na(pressor), 0, 1))
+  sepsis_data <- sepsis_data %>% mutate(pressor = ifelse(is.na(rrt), 0, 1))
   # One-Hot Encoding RRT
   sepsis_data <- sepsis_data %>% mutate(rrt = ifelse(is.na(rrt), 0, 1))
 

@@ -34,7 +34,7 @@ plot_tmle_years_results <- function(results, treatment) {
         df <- data.frame(x = c("2008 - 2010", "2011 - 2013", "2014 - 2016", "2017 - 2019"), F = F, L = L, U = U)
         p <- ggplot(df,aes(x = x, y = F)) + geom_point(size = 4) + geom_errorbar(aes(ymax = U, ymin = L)) + labs(title=title) + labs(x = "anchor_year_group", y = "ATE") + geom_hline(aes(yintercept = 0, color="red")) + ylim(-0.5, 0.5)
     
-        ggsave(paste0(treatment, "_sofa_", sofaIndex, ".png"), path="results/tlme/by_sofa_and_years")
+        ggsave(paste0(treatment, "_sofa_", sofaIndex, ".png"), path="results/tmle/by_sofa_and_years")
 
         sofaIndex <- sofaIndex + 1
   
