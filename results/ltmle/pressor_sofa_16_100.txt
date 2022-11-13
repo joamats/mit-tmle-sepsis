@@ -1,0 +1,19 @@
+LTMLE Stratfied SOFAs, Race + pressor
+SOFA = [16 ,100]
+n =  576
+
+Non-white & Non-Treatment
+
+list(long.name = NULL, estimate = c(tmle = 0.723926380367605), std.dev = NA, pvalue = c(tmle = NA), CI = c(NA, NA), log.std.err = FALSE), ltmle(data = sepsis_data, Anodes = Anodes, Lnodes = Lnodes, Ynodes = c("death_bin"), Qform = NULL, gform = NULL, abar = abar, gbounds = c(0.01, 1)), tmle, NA
+
+Non-white & Yes-Treatment
+
+list(long.name = NULL, estimate = c(tmle = 0.723926380367635), std.dev = 0.0350463806209567, pvalue = c(tmle = 8.57936710794205e-95), CI = c(0.655236736562078, 0.792616024173193), log.std.err = FALSE), ltmle(data = sepsis_data, Anodes = Anodes, Lnodes = Lnodes, Ynodes = c("death_bin"), Qform = NULL, gform = NULL, abar = abar, gbounds = c(0.01, 1)), tmle, 1
+
+White & Non-Treatment
+
+list(long.name = NULL, estimate = c(tmle = 0.7554479418881), std.dev = NA, pvalue = c(tmle = NA), CI = c(NA, NA), log.std.err = FALSE), ltmle(data = sepsis_data, Anodes = Anodes, Lnodes = Lnodes, Ynodes = c("death_bin"), Qform = NULL, gform = NULL, abar = abar, gbounds = c(0.01, 1)), tmle, NA
+
+White & Yes-Treatment
+
+list(long.name = NULL, estimate = c(tmle = 0.755447941888107), std.dev = 0.0211685068620421, pvalue = c(tmle = 6.21115284142476e-279), CI = c(0.713958430832015, 0.796937452944199), log.std.err = FALSE), ltmle(data = sepsis_data, Anodes = Anodes, Lnodes = Lnodes, Ynodes = c("death_bin"), Qform = NULL, gform = NULL, abar = abar, gbounds = c(0.01, 1)), tmle, 1
