@@ -73,7 +73,7 @@ run_tmle_sofa_ayg <- function(data_sofa, sofa_low_inclusive, sofa_high_inclusive
 
 
 # run TMLE by SOFA only (main analysis)
-tmle_stratified_sofas <- function(sepsis_data, treatment){
+tmle_stratified_sofas <- function(sepsis_data, treatment, cohort){
 
     sofa_ranges <- list(list(0, 5), list(6,10), list(11, 15), list(16, 100))
 
@@ -82,7 +82,7 @@ tmle_stratified_sofas <- function(sepsis_data, treatment){
         start <- sofa[1]
         end <- sofa[2]
 
-        log_name <- paste0('results/tmle/by_sofa/', treatment, '_sofa_', start, '_', end, '.txt')
+        log_name <- paste0('results/', cohort,'/tmle/by_sofa/', treatment, '_sofa_', start, '_', end, '.txt')
         file_log <- file(log_name)
 
         data_sofa <- data_between_sofa(sepsis_data, start, end)

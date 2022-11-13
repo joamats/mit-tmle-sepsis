@@ -5,17 +5,17 @@ source("src/r_scripts/utils/load_data.R")
 treatments <- list("ventilation_bin", "rrt", "pressor")
 
 # List with possible datasets
-data_paths <- list("data/MIMIC_data.csv") # add eICU when ready
+cohorts <- list("eICU") # add eICU / MIMIC
 
-for (data_path in data_paths) {
+for (cohort in cohorts) {
     # Load Data
-    sepsis_data <- load_data(file_path = data_path)
+    sepsis_data <- load_data(cohort)
     # Go through all treatments
     for (treatment in treatments) {
         # All SOFAs
-        ltmle_all_sofas(sepsis_data, treatment)
+        ltmle_all_sofas(sepsis_data, treatment, cohort)
 
         # Stratified SOFAs
-        ltmle_stratified_sofas(sepsis_data, treatment)
+        ltmle_stratified_sofas(sepsis_data, treatment, cohort)
     }
 }

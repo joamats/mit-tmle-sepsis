@@ -1,7 +1,10 @@
 library(magrittr) 
 library(dplyr)
 
-load_data <- function(file_path){
+load_data <- function(cohort){
+
+  file_path <- paste0("data/", cohort, "_data.csv")
+
   # Load Data  
   sepsis_data <- read.csv(file_path, header = TRUE, stringsAsFactors = TRUE)
 
@@ -38,6 +41,9 @@ load_data <- function(file_path){
       charlson_comorbidity_index >= 0 & charlson_comorbidity_index <= 5, "0 - 5", ifelse(
         charlson_comorbidity_index >= 6 & charlson_comorbidity_index <= 10, "6 - 10", ifelse(
           charlson_comorbidity_index >= 11 & charlson_comorbidity_index <= 15, "11 - 15", "16 and above"))))
+
+    sepsis_data <- sepsis_data %>% mutate(anchor_age = ifelse(anchor_age == "> 89", 91, strtoi(anchor_age)))
+    sepsis_data <- subset(sepsis_data, anchor_age > 17)
 
   } else {
     print("Wrong path or file name.")

@@ -11,3 +11,4 @@ arm
 earth
 gam
 ranger
+xgboost

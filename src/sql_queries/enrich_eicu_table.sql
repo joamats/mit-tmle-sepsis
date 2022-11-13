@@ -2,6 +2,10 @@ SELECT yug.*,
 -- to match MIMIC's names
 yug.Charlson as charlson_comorbidity_index,
 yug.ethnicity as race,
+yug.age as anchor_age,
+yug.sofa_admit as SOFA, 
+yug.hospitaldischargeyear as anchor_year_group,
+
 -- newly added 
 vent_1, vent_2, vent_3, vent_4, vent_5, vent_6
 rrt_1,
@@ -163,6 +167,4 @@ LEFT JOIN(
 AS pivoted_med
 ON pivoted_med.patientunitstayid = yug.patientunitstayid
 
--- get only patients with ethnicity information
 WHERE yug.ethnicity != "Other/Unknown"
-
