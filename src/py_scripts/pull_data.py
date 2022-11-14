@@ -14,7 +14,7 @@ def main(sql_query_path, destination_path):
     import os
     from dotenv import load_dotenv
 
-    # Load env
+    # Load env file 
     load_dotenv()
 
     # Get GCP's secrets
@@ -32,6 +32,7 @@ def main(sql_query_path, destination_path):
     with open(sql_query_path, 'r') as fd:
         query = fd.read()
 
+    # Replace the project id by the coder's project id in GCP
     my_query = query.replace("physionet-data", PROJECT_ID, -1)
 
     # Make request to BigQuery with our query
