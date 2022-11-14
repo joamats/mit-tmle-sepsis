@@ -122,6 +122,7 @@ LEFT JOIN(
     LOWER(drugname) LIKE '%dobutrex%' OR
     LOWER(drugname) LIKE '%neo synephrine%' OR
     LOWER(drugname) LIKE '%neo-synephrine%' OR
+    LOWER(drugname) LIKE '%neosynephrine%' OR
     LOWER(drugname) LIKE '%neosynsprine%'
   )
   GROUP BY patientunitstayid
@@ -142,7 +143,6 @@ LEFT JOIN(
     LOWER(drugname) LIKE '%epinephrine%' OR
     LOWER(drugname) LIKE '%vasopressin%' OR
     LOWER(drugname) LIKE '%milrinone%' OR
-    LOWER(drugname) LIKE '%dobutrex%' OR
     LOWER(drugname) LIKE '%dobutrex%' OR
     LOWER(drugname) LIKE '%neo synephrine%' OR
     LOWER(drugname) LIKE '%neo-synephrine%' OR
