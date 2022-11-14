@@ -7,7 +7,7 @@ yug.sofa_admit as SOFA,
 yug.hospitaldischargeyear as anchor_year_group,
 
 -- newly added 
-vent_1, vent_2, vent_3, vent_4, vent_5, vent_6
+vent_1, vent_2, vent_3, vent_4, vent_5, vent_6,
 rrt_1,
 pressor_1, pressor_2, pressor_3, pressor_4
 
