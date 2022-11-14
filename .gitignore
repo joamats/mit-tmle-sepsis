@@ -135,3 +135,6 @@ dmypy.json
 *.lintr
 .Rproj.user
 .Rproj
+
+# VS Code Project
+.vscode
