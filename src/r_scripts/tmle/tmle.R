@@ -104,10 +104,17 @@ tmle_stratified_sofas <- function(sepsis_data, treatment, cohort){
 
 
 # run TMLE by SOFA and year range
-tmle_stratified_sofas_year <- function(sepsis_data, treatment){
+tmle_stratified_sofas_year <- function(sepsis_data, treatment, cohort){
 
     sofa_ranges <- list(list(0, 5), list(6,10), list(11, 15))#, list(16, 100))
-    anchor_year_groups <- list("2008 - 2010", "2011 - 2013", "2014 - 2016", "2017 - 2019")
+    if (cohort == "MIMIC") {
+        
+        anchor_year_groups <- list("2008 - 2010", "2011 - 2013", "2014 - 2016", "2017 - 2019")
+
+    } else if (cohort == "eICU") {
+
+        anchor_year_groups <- list("2014", "2015")
+    }
     
     results <- list()
 
@@ -126,6 +133,7 @@ tmle_stratified_sofas_year <- function(sepsis_data, treatment){
             results <- append(results, result)
         }
     }
-    plot_tmle_years_results(results, treatment)
+    
+    plot_tmle_years_results(results, treatment, cohort)
     
 }
