@@ -76,11 +76,17 @@ ON respiratorycare.patientunitstayid = yug.patientunitstayid
 LEFT JOIN(
   SELECT patientunitstayid, COUNT(treatmentstring) as rrt_1
   FROM `physionet-data.eicu_crd.treatment` 
-  WHERE (treatmentstring LIKE '%dialysis%' OR treatmentstring LIKE '%renal%')
+  WHERE (
+    treatmentstring LIKE "renal|dialysis|C%" OR 
+    treatmentstring LIKE "renal|dialysis|hemodialysis|emergent%" OR 
+    treatmentstring LIKE "renal|dialysis|hemodialysis|for acute renal failure" OR
+    treatmentstring LIKE "renal|dialysis|hemodialysis"
+    )
   GROUP BY patientunitstayid
 )
 AS treatment
 ON treatment.patientunitstayid = yug.patientunitstayid
+
 
 -- pivoted infusions table to get vasopressors
 LEFT JOIN(
@@ -114,7 +120,6 @@ LEFT JOIN(
     LOWER(drugname) LIKE '%vasopressin%' OR
     LOWER(drugname) LIKE '%milrinone%' OR
     LOWER(drugname) LIKE '%dobutrex%' OR
-    LOWER(drugname) LIKE '%dobutrex%' OR
     LOWER(drugname) LIKE '%neo synephrine%' OR
     LOWER(drugname) LIKE '%neo-synephrine%' OR
     LOWER(drugname) LIKE '%neosynsprine%'
@@ -141,6 +146,7 @@ LEFT JOIN(
     LOWER(drugname) LIKE '%dobutrex%' OR
     LOWER(drugname) LIKE '%neo synephrine%' OR
     LOWER(drugname) LIKE '%neo-synephrine%' OR
+    LOWER(drugname) LIKE '%neosynephrine%' OR
     LOWER(drugname) LIKE '%neosynsprine%'
   )
   GROUP BY patientunitstayid
