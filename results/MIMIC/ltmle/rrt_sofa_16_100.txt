@@ -4,16 +4,16 @@ n =  576
 
 Non-white & Non-Treatment
 
-list(long.name = NULL, estimate = c(tmle = 0.759999999999574), std.dev = 0.0493581762721781, pvalue = c(tmle = 1.6972214660176e-53), CI = c(0.663259752163525, 0.856740247835622), log.std.err = FALSE), ltmle(data = sepsis_data, Anodes = Anodes, Lnodes = Lnodes, Ynodes = c("death_bin"), Qform = NULL, gform = NULL, abar = abar, gbounds = c(0.01, 1)), tmle, 1
+list(long.name = NULL, estimate = c(tmle = 0.759999999999573), std.dev = 0.0493581762721781, pvalue = c(tmle = 1.69722146601812e-53), CI = c(0.663259752163525, 0.856740247835622), log.std.err = FALSE), ltmle(data = sepsis_data, Anodes = Anodes, Lnodes = Lnodes, Ynodes = c("death_bin"), Qform = NULL, gform = NULL, abar = abar, gbounds = c(0.01, 1)), tmle, 1
 
 Non-white & Yes-Treatment
 
-list(long.name = NULL, estimate = c(tmle = 0.693181818181644), std.dev = 0.0492039661155034, pvalue = c(tmle = 4.50603691077176e-45), CI = c(0.596743816698728, 0.789619819664559), log.std.err = FALSE), ltmle(data = sepsis_data, Anodes = Anodes, Lnodes = Lnodes, Ynodes = c("death_bin"), Qform = NULL, gform = NULL, abar = abar, gbounds = c(0.01, 1)), tmle, 1
+list(long.name = NULL, estimate = c(tmle = 0.693181818181643), std.dev = 0.0492039661155034, pvalue = c(tmle = 4.50603691077233e-45), CI = c(0.596743816698728, 0.789619819664559), log.std.err = FALSE), ltmle(data = sepsis_data, Anodes = Anodes, Lnodes = Lnodes, Ynodes = c("death_bin"), Qform = NULL, gform = NULL, abar = abar, gbounds = c(0.01, 1)), tmle, 1
 
 White & Non-Treatment
 
-list(long.name = NULL, estimate = c(tmle = 0.805263157894722), std.dev = 0.0287536839851523, pvalue = c(tmle = 1.39005414114941e-172), CI = c(0.748906972860977, 0.861619342928466), log.std.err = FALSE), ltmle(data = sepsis_data, Anodes = Anodes, Lnodes = Lnodes, Ynodes = c("death_bin"), Qform = NULL, gform = NULL, abar = abar, gbounds = c(0.01, 1)), tmle, 1
+list(long.name = NULL, estimate = c(tmle = 0.805263157894722), std.dev = 0.0287536839851524, pvalue = c(tmle = 1.3900541411519e-172), CI = c(0.748906972860977, 0.861619342928466), log.std.err = FALSE), ltmle(data = sepsis_data, Anodes = Anodes, Lnodes = Lnodes, Ynodes = c("death_bin"), Qform = NULL, gform = NULL, abar = abar, gbounds = c(0.01, 1)), tmle, 1
 
 White & Yes-Treatment
 
-list(long.name = NULL, estimate = c(tmle = 0.713004484304569), std.dev = 0.0303185602528981, pvalue = c(tmle = 2.72690205699931e-122), CI = c(0.653581198145781, 0.772427770463356), log.std.err = FALSE), ltmle(data = sepsis_data, Anodes = Anodes, Lnodes = Lnodes, Ynodes = c("death_bin"), Qform = NULL, gform = NULL, abar = abar, gbounds = c(0.01, 1)), tmle, 1
+list(long.name = NULL, estimate = c(tmle = 0.713004484304569), std.dev = 0.0303185602528981, pvalue = c(tmle = 2.72690205700091e-122), CI = c(0.653581198145781, 0.772427770463356), log.std.err = FALSE), ltmle(data = sepsis_data, Anodes = Anodes, Lnodes = Lnodes, Ynodes = c("death_bin"), Qform = NULL, gform = NULL, abar = abar, gbounds = c(0.01, 1)), tmle, 1
