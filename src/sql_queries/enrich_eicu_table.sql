@@ -11,7 +11,7 @@ vent_1, vent_2, vent_3, vent_4, vent_5, vent_6,
 rrt_1,
 pressor_1, pressor_2, pressor_3, pressor_4
 
-FROM `protean-chassis-368116.my_eICU.yugang` as yug -- change to your BigQuery project, eg. `john_doe.my_eICU.yugang`
+FROM `physionet-data.my_eICU.yugang` as yug
 
 -- ventilation events
 LEFT JOIN (

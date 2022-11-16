@@ -1,4 +1,6 @@
 import argparse
+import pandas as pd
+import numpy as np
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -7,8 +9,61 @@ def parse_args():
 
     return parser.parse_args()
 
+# Combine the info from multiple columns into 3 distinct columns for each of the 3 treatments in eICU data
+def cat_rrt(rrt):  
+    if rrt['rrt'] == True:
+        return 1
+    elif rrt['rrt_1'] > 0:
+        return 1
+    else: 
+        return np.NaN
 
-def main(sql_query_path, destination_path):
+def cat_vent(vent): 
+    if vent['vent'] == True:
+        return 1
+    elif vent['vent_1'] > 0:
+        return 1
+    elif vent['vent_2'] > 0:
+        return 1
+    elif vent['vent_3'] > 0:
+        return 1
+    elif vent['vent_4'] > 0:
+        return 1
+    elif vent['vent_5'] > 0:
+        return 1
+    elif vent['vent_6'] > 0:
+        return 1
+    else: 
+        return np.NaN
+
+def cat_pressor(pressor): 
+    if pressor['vasopressor'] == True:
+        return 1
+    elif pressor['pressor_1'] > 0:
+        return 1
+    elif pressor['pressor_2'] > 0:
+        return 1
+    elif pressor['pressor_2'] > 0:
+        return 1
+    elif pressor['pressor_3'] > 0:
+        return 1
+    elif pressor['pressor_4'] > 0:
+        return 1
+    else: 
+        return np.NaN
+
+# Apply the functions and save the CSV
+def combine_treatment_eICU(df, destination_path):
+
+    df['RRT_final'] = df.apply(lambda rrt: cat_rrt(rrt), axis=1)
+    df['VENT_final'] = df.apply(lambda vent: cat_vent(vent), axis=1)
+    df['PRESSOR_final'] = df.apply(lambda pressor: cat_pressor(pressor), axis=1)
+
+    # Save as csv
+    df.to_csv(destination_path)
+
+# Run Query to get a DataFrame from BigQuery
+def run_query(sql_query_path):
 
     # Access data using Google BigQuery.
     import os
@@ -38,11 +93,12 @@ def main(sql_query_path, destination_path):
     # Make request to BigQuery with our query
     df = BigQuery_client.query(my_query).to_dataframe()
 
-    # Save query to CSV file
-    df.to_csv(destination_path)
-
+    return df
 
 if __name__ == '__main__':
 
     args = parse_args()
-    main(sql_query_path = args.sql_query_path, destination_path = args.destination_path)
+    df = run_query(sql_query_path = args.sql_query_path)
+
+    if args.destination_path == 'data\eICU_data.csv':
+        combine_treatment_eICU(df, args.destination_path)
