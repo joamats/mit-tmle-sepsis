@@ -8,7 +8,7 @@ list(long.name = NULL, estimate = c(tmle = 0.705882352940872), std.dev = NA, pva
 
 Non-white & Yes-Treatment
 
-list(long.name = NULL, estimate = c(tmle = 0.705882352940923), std.dev = 0.0783366328863589, pvalue = c(tmle = 2.04401158591089e-19), CI = c(0.552345373813524, 0.859419332068323), log.std.err = FALSE), ltmle(data = sepsis_data, Anodes = Anodes, Lnodes = Lnodes, Ynodes = c("death_bin"), Qform = NULL, gform = NULL, abar = abar, gbounds = c(0.01, 1)), tmle, 1
+list(long.name = NULL, estimate = c(tmle = 0.705882352940923), std.dev = 0.0783366328863589, pvalue = c(tmle = 2.04401158591079e-19), CI = c(0.552345373813524, 0.859419332068323), log.std.err = FALSE), ltmle(data = sepsis_data, Anodes = Anodes, Lnodes = Lnodes, Ynodes = c("death_bin"), Qform = NULL, gform = NULL, abar = abar, gbounds = c(0.01, 1)), tmle, 1
 
 White & Non-Treatment
 

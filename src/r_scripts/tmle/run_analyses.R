@@ -15,7 +15,7 @@ for (cohort in cohorts) {
     for (treatment in treatments) {
 
         # Stratified SOFAs - logs as outputs
-        #tmle_stratified_sofas(sepsis_data, treatment, cohort)
+        tmle_stratified_sofas(sepsis_data, treatment, cohort)
 
         # Stratified SOFAs && Year - plots as outputs
         tmle_stratified_sofas_year(sepsis_data, treatment, cohort)

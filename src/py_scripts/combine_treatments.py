@@ -52,4 +52,4 @@ df['VENT_final'] = df.apply(lambda vent: cat_vent(vent), axis=1)
 df['PRESSOR_final'] = df.apply(lambda pressor: cat_pressor(pressor), axis=1)
 
 # Save as csv
-df.to_csv('data/eICU_final.csv')
+df.to_csv('data/eICU_data.csv')
