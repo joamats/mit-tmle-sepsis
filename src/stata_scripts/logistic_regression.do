@@ -22,13 +22,41 @@ replace charlson_comorbidity_index = 3 if charlson ==  "11 - 15"
 replace charlson_comorbidity_index = 4 if charlson == "16 and above"
 drop charlson
 
-gen sofa_group = 1 if sofa <=5
+gen sofa_group = 0 if sofa != .
+replace sofa_group = 1 if sofa <=5 & sofa >0
 replace sofa_group = 2 if sofa <=10 & sofa >=6
 replace sofa_group = 3 if sofa <=15 & sofa >=11
 replace sofa_group = 4 if sofa >15 & sofa !=.
 
+putexcel set log_reg_results, replace sheet(MIMIC, replace)
+putexcel A1="Procedure" B1="IR0" C1="IR1" D1="IRD" E1="IRD lCI" F1="IRD uCI" G1="IRR" H1="IRR lCI" I1="IRR uCI" J1="p-value"
+local row=2	
+		
+forval i=0/4  {          
+        
+    logistic ventilation_bin ethnicity_white anchor_age female i.anchor_year sofa i.charlson_comorbidity_index rrt pressor if sofa_group == `i' // repeform logistic across all sofa groups, then groups 1-4
+
+
+
+		nbreg i._class, irr level(99) vce(robust) exposure(persontime_gender)
+		matrix res= r(table)
+		putexcel A`row'=("`var'") G`row'=res[1,2] H`row'=res[5,2] I`row'=res[6,2] J`row'=res[4,2]
+		
+		margins i._class, expression(predict(ir)*100000) pwcompare level(99)
+		matrix res= r(table)
+		putexcel B`row'=(res[1,1]) C`row'=(res[1,2])
+		
+		matrix res_vs= r(table_vs)
+		putexcel D`row'=(res_vs[1,1]) E`row'=(res_vs[5,1]) F`row'=(res_vs[6,1]) 
+		
+		local row=`row'+1
+
+		}
+	
+
+
 * LogReg on race and ventilation
-logistic ventilation_bin ethnicity_white anchor_age female i.anchor_year sofa i.charlson_comorbidity_index rrt pressor // across all sofa groups
+logistic ventilation_bin ethnicity_white anchor_age female i.anchor_year sofa i.charlson_comorbidity_index rrt pressor if sofa_group == 0 // across all sofa groups
 logistic ventilation_bin ethnicity_white anchor_age female i.anchor_year sofa i.charlson_comorbidity_index rrt pressor if sofa_group == 1 // sofa 0-5
 logistic ventilation_bin ethnicity_white anchor_age female i.anchor_year sofa i.charlson_comorbidity_index rrt pressor if sofa_group == 2 // sofa 6-10
 logistic ventilation_bin ethnicity_white anchor_age female i.anchor_year sofa i.charlson_comorbidity_index rrt pressor if sofa_group == 3 // sofa 11-15

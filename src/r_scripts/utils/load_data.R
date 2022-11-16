@@ -28,7 +28,6 @@ load_data <- function(cohort){
         charlson_comorbidity_index >= 6 & charlson_comorbidity_index <= 10, "6 - 10", ifelse(
           charlson_comorbidity_index >= 11 & charlson_comorbidity_index <= 15, "11 - 15", "16 and above"))))
           
-print(head(sepsis_data))
 
   } else if (file_path == "data/eICU_data.csv") {
 
