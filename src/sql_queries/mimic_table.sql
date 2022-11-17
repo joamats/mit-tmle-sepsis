@@ -66,5 +66,6 @@ where (discharge_location is not null or abs(timestamp_diff(pat.dod,icu.icu_outt
 and (icu.race != "UNKNOWN")
 and (icu.race != "UNABLE TO OBTAIN")
 and (icu.race != "PATIENT DECLINED TO ANSWER")
+and (icu.race != "OTHER")
 
 order by icu.hadm_id

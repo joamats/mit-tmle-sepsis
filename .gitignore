@@ -139,3 +139,5 @@ dmypy.json
 
 # VS Code Project
 .vscode
+
+.DS_Store
