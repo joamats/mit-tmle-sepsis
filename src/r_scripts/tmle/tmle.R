@@ -53,7 +53,7 @@ run_tmle_sofa_ayg <- function(data_sofa, sofa_low_inclusive, sofa_high_inclusive
         W <- data_sofa[, c("anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index", "pressor", "ventilation_bin")]
         A <- data_sofa$rrt
 
-    } else if(treatment == "pressor"){
+    } else if(treatment == "pressor") {
 
         W <- data_sofa[, c("anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index", "rrt", "ventilation_bin")]
         A <- data_sofa$pressor
@@ -73,33 +73,31 @@ run_tmle_sofa_ayg <- function(data_sofa, sofa_low_inclusive, sofa_high_inclusive
 
 
 # run TMLE by SOFA only (main analysis)
-tmle_stratified_sofas <- function(sepsis_data, treatment, cohort){
+tmle_stratified_sofas <- function(sepsis_data, treatment, cohort) {
 
     sofa_ranges <- list(list(0, 5), list(6,10), list(11, 15), list(16, 100))
+
+    df <- data.frame("cohort", "treatment", "sofa_start", "sofa_end", "psi", "ci", "auc", "r2")
 
     for (sofa in sofa_ranges) {
 
         start <- sofa[1]
         end <- sofa[2]
 
-        log_name <- paste0('results/', cohort,'/tmle/by_sofa/', treatment, '_sofa_', start, '_', end, '.txt')
-        file_log <- file(log_name)
-
         data_sofa <- data_between_sofa(sepsis_data, start, end)
-
         result <- run_tmle_sofa(data_sofa, start, end, treatment)
-
-        full_log <- c(paste0('TMLE Stratfied SOFAs, ', treatment), 
-                      paste0("SOFA = [", start, " ,", end, "]\nn =  ", nrow(data_sofa)),
-                      paste0("PSI = ", toString(result$result$estimates$ATE$psi)),
-                      paste0("CI = ", toString(result$result$estimates$ATE$CI)),
-                      paste0("AUC = ", toString(result$result$g$AUC)),
-                      paste0("R2 = ", toString(result$result$Qinit$Rsq))
-                     )
-        print(full_log)
-        writeLines(full_log, file_log)
-        close(file_log)
-    }    
+    
+        df[nrow(df) + 1,] <- c(cohort,
+                               treatment,
+                               start,
+                               end,
+                               toString(result$result$estimates$ATE$psi),
+                               toString(result$result$estimates$ATE$CI),
+                               toString(result$result$g$AUC),
+                               toString(result$result$Qinit$Rsq)
+                              ) 
+    }  
+    write.csv(df, paste0('results/', cohort,'/tmle_', treatment,'_by_sofa.csv'))
 }
 
 

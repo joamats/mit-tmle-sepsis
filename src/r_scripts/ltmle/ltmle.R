@@ -67,7 +67,7 @@ ltmle_all_sofas <- function(sepsis_data, treatment, cohort) {
     Lnodes <- get_lnodes(treatment)
 
     data_sofa <- rebuild_data(sepsis_data, treatment)
-    write.csv(data_sofa, "d.csv")
+
     log_name <- paste0('results/', cohort,'/ltmle/', treatment, '_all_sofas.txt')
     file_log <- file(log_name)
 
@@ -75,6 +75,10 @@ ltmle_all_sofas <- function(sepsis_data, treatment, cohort) {
     result_run_ltmle_abar_00_wlib <- run_ltmle_abar_w_slLib(data_sofa, c(0,0), Anodes, Lnodes)
     log1 <- summary(result_run_ltmle_abar_00_wlib)
     
+    print("results")
+    print(result_run_ltmle_abar_00_wlib$estimates["tmle"])
+    print(names(log1))
+    print(log1["estimator"]["tmle"])
 
     result_run_ltmle_abar_01_wlib <- run_ltmle_abar_w_slLib(data_sofa, c(0,1), Anodes, Lnodes)
     log2 <- summary(result_run_ltmle_abar_01_wlib)
