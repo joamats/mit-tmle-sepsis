@@ -68,37 +68,37 @@ ltmle_all_sofas <- function(sepsis_data, treatment, cohort) {
 
     data_sofa <- rebuild_data(sepsis_data, treatment)
 
-    log_name <- paste0('results/', cohort,'/ltmle/', treatment, '_all_sofas.txt')
-    file_log <- file(log_name)
+    df <- data.frame(matrix(ncol=7, nrow=0))
+    colnames(df) <- c("cohort", "treatment", "analysis", "psi", "std_dev", "pvalue", "CI")
 
-    # Run LTMLE by 2x2 w/ SL library, all SOFAs
-    result_run_ltmle_abar_00_wlib <- run_ltmle_abar_w_slLib(data_sofa, c(0,0), Anodes, Lnodes)
-    log1 <- summary(result_run_ltmle_abar_00_wlib)
-    
-    print("results")
-    print(result_run_ltmle_abar_00_wlib$estimates["tmle"])
-    print(names(log1))
-    print(log1["estimator"]["tmle"])
+    abars <- c(c(0,0), c(0,1), c(1,0), c(1,1))
+    analyses <- list('Non-white & Non-Treatment',
+                       'Non-white & Yes-Treatment',
+                       'White & Non-Treatment',
+                       'White & Yes-Treatment'
+                      )
 
-    result_run_ltmle_abar_01_wlib <- run_ltmle_abar_w_slLib(data_sofa, c(0,1), Anodes, Lnodes)
-    log2 <- summary(result_run_ltmle_abar_01_wlib)
+    # Go through different analyses
+    for (i in 1:4) {
 
-    result_run_ltmle_abar_10_wlib <- run_ltmle_abar_w_slLib(data_sofa, c(1,0), Anodes, Lnodes)
-    log3 <- summary(result_run_ltmle_abar_10_wlib)
+        abar <- c(abars[2*(i-1) + 1], abars[2*i]) 
+        analysis <- analyses[i]
 
-    result_run_ltmle_abar_11_wlib <- run_ltmle_abar_w_slLib(data_sofa, c(1,1), Anodes, Lnodes)
-    log4 <- summary(result_run_ltmle_abar_11_wlib)
+        # Run LTMLE by 2x2 w/ SL library, all SOFAs
+        result_run_ltmle_abar_wlib <- run_ltmle_abar_w_slLib(data_sofa, abar, Anodes, Lnodes)
+        log <- summary(result_run_ltmle_abar_wlib)
 
-    full_log <- c(paste0('LTMLE All SOFAs, Race + ', treatment), 
-                  '\nNon-white & Non-Treatment\n', toString(log1),
-                  '\nNon-white & Yes-Treatment\n', toString(log2),
-                  '\nWhite & Non-Treatment\n', toString(log3),
-                  '\nWhite & Yes-Treatment\n', toString(log4)
-                 )
-
-    writeLines(full_log, file_log)
-    close(file_log)
-
+        # Append to df
+        df[nrow(df) + 1,] <- c(cohort,
+                    treatment,
+                    analysis,
+                    log$treatment["estimate"][1],
+                    log$treatment["std.dev"],
+                    log$treatment["pvalue"][1],
+                    toString(log$treatment["CI"])
+                    ) 
+    }
+    write.csv(df, paste0('results/', cohort,'/ltmle_', treatment,'.csv'))
 }
 
 
@@ -113,38 +113,45 @@ ltmle_stratified_sofas <- function(sepsis_data, treatment, cohort) {
     # cut data by SOFA score and run LTMLE by 2x2 WITH SL library
     sofa_ranges <- list(list(0, 5), list(6,10), list(11, 15), list(16, 100))
 
-    for (sofa in sofa_ranges) {
+    df <- data.frame(matrix(ncol=9, nrow=0))
+    colnames(df) <- c("cohort", "treatment", "analysis", "sofa_start", "sofa_end",
+                      "psi", "std_dev", "pvalue", "CI")
 
-        log_name <- paste0('results/', cohort, '/ltmle/', treatment, '_sofa_', sofa[1], '_', sofa[2], '.txt')
-        file_log <- file(log_name)
-
-        start <- sofa[1]
-        end <- sofa[2]
-        data_sofa <- rebuild_data(data_between_sofa(sepsis_data, start, end), treatment)
-
-        # Run LTMLE by 2x2 w/ SL library
-        result_run_ltmle_abar_00_wlib <- run_ltmle_abar_w_slLib(data_sofa, c(0,0), Anodes, Lnodes)
-        log1 <- summary(result_run_ltmle_abar_00_wlib)
-
-        result_run_ltmle_abar_01_wlib <- run_ltmle_abar_w_slLib(data_sofa, c(0,1), Anodes, Lnodes)
-        log2 <- summary(result_run_ltmle_abar_01_wlib)
-
-        result_run_ltmle_abar_10_wlib <- run_ltmle_abar_w_slLib(data_sofa, c(1,0), Anodes, Lnodes)
-        log3 <- summary(result_run_ltmle_abar_10_wlib)
-
-        result_run_ltmle_abar_11_wlib <- run_ltmle_abar_w_slLib(data_sofa, c(1,1), Anodes, Lnodes)
-        log4 <- summary(result_run_ltmle_abar_11_wlib)
-
-        full_log <- c(paste0('LTMLE Stratfied SOFAs, Race + ', treatment), 
-                      paste0("SOFA = [", start, " ,", end, "]\nn =  ", nrow(data_sofa)),
-                      '\nNon-white & Non-Treatment\n', toString(log1),
-                      '\nNon-white & Yes-Treatment\n', toString(log2),
-                      '\nWhite & Non-Treatment\n', toString(log3),
-                      '\nWhite & Yes-Treatment\n', toString(log4)
+    abars <- c(c(0,0), c(0,1), c(1,0), c(1,1))
+    analyses <- list('Non-white & Non-Treatment',
+                       'Non-white & Yes-Treatment',
+                       'White & Non-Treatment',
+                       'White & Yes-Treatment'
                     )
 
-        writeLines(full_log, file_log)
-        close(file_log)
+    # Go through different analyses
+    for (i in 1:4) {
 
+        abar <- c(abars[2*(i-1) + 1], abars[2*i]) 
+        analysis <- analyses[i]
+
+        for (sofa in sofa_ranges) {
+
+            start <- sofa[1]
+            end <- sofa[2]
+            data_sofa <- rebuild_data(data_between_sofa(sepsis_data, start, end), treatment)
+
+            # Run LTMLE by 2x2 w/ SL library
+            result_run_ltmle_abar_00_wlib <- run_ltmle_abar_w_slLib(data_sofa, abar, Anodes, Lnodes)
+            log <- summary(result_run_ltmle_abar_00_wlib)
+        
+            # Append to df
+            df[nrow(df) + 1,] <- c(cohort,
+                        treatment,
+                        analysis,
+                        start,
+                        end,
+                        log$treatment["estimate"][1],
+                        log$treatment["std.dev"],
+                        log$treatment["pvalue"][1],
+                        toString(log$treatment["CI"])
+                        ) 
+        }
     }
+    write.csv(df, paste0('results/', cohort,'/ltmle_', treatment,'_by_sofa.csv'))
 }

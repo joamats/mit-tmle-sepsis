@@ -128,8 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Data CSV from MIMIC and eICU
-*.csv
+# Data from MIMIC and eICU
+data/
 
 # R lintr my settings
 *.lintr
