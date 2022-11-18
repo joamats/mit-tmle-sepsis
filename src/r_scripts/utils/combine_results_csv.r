@@ -48,17 +48,16 @@ write.csv(df_ltmle_all, "results/LTMLE_combined.csv", row.names = FALSE)
 # Combine TMLE Results
 
 # MIMIC first
-df_M_tmle_p_bysofa <- read.csv(file="results/MIMIC/tmle_pressor_by_sofa.csv", header = TRUE, skip = 1)
-df_M_tmle_rrt_bysofa <- read.csv(file="results/MIMIC/tmle_rrt_by_sofa.csv", header = TRUE, skip = 1)
-df_M_tmle_v_bysofa <- read.csv(file="results/MIMIC/tmle_ventilation_bin_by_sofa.csv", header = TRUE, skip = 1)
+df_M_tmle_p_bysofa <- read.csv(file="results/MIMIC/tmle_pressor_by_sofa.csv", header = TRUE)
+df_M_tmle_rrt_bysofa <- read.csv(file="results/MIMIC/tmle_rrt_by_sofa.csv", header = TRUE)
+df_M_tmle_v_bysofa <- read.csv(file="results/MIMIC/tmle_ventilation_bin_by_sofa.csv", header = TRUE)
 
 # eICU second
-df_E_tmle_p_bysofa <- read.csv(file="results/eICU/tmle_pressor.csv", header = TRUE, skip = 1)
-df_E_tmle_rrt_bysofa <- read.csv(file="results/eICU/tmle_rrt.csv", header = TRUE, skip = 1)
-df_E_tmle_v_bysofa <- read.csv(file="results/eICU/tmle_ventilation_bin.csv", header = TRUE, skip = 1)
+df_E_tmle_p_bysofa <- read.csv(file="results/eICU/tmle_pressor.csv", header = TRUE)
+df_E_tmle_rrt_bysofa <- read.csv(file="results/eICU/tmle_rrt.csv", header = TRUE)
+df_E_tmle_v_bysofa <- read.csv(file="results/eICU/tmle_ventilation_bin.csv", header = TRUE)
 
 df_tmle_all <- rbind(df_M_tmle_p_bysofa, df_M_tmle_rrt_bysofa, df_M_tmle_v_bysofa, df_E_tmle_p_bysofa, df_E_tmle_rrt_bysofa, df_E_tmle_v_bysofa)
-df_tmle_all <- subset(df_tmle_all, select=-c(X1))
 df_tmle_all <- separate(df_tmle_all, ci, c("lCI", "uCI"), sep = "," )
 
 write.csv(df_tmle_all, "results/TMLE_combined.csv", row.names = FALSE)
