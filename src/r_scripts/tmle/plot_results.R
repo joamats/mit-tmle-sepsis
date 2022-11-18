@@ -57,12 +57,16 @@ plot_tmle_years_results <- function(results, treatment, cohort) {
             df <- data.frame(x = c("2014", "2015"), F = F, L = L, U = U)
         }
 
-        p <- ggplot(df,aes(x = x, y = F)) + geom_point(size = 4) + geom_errorbar(aes(ymax = U, ymin = L)) + geom_hline(aes(yintercept = 0, color="red"))
-                    + ylim(-0.3, 0.3) + theme(legend.position = "none",
-                                              text = element_text(size = 18),
-                                              axis.title.x = element_blank(),
-                                              axis.title.y = element_blank()                                                 
-                                             )
+        p <- ggplot(df,aes(x = x, y = F)) + 
+                    geom_point(size = 4) +
+                    geom_errorbar(aes(ymax = U, ymin = L)) +
+                    geom_hline(aes(yintercept = 0, color="red")) +
+                    ylim(-0.3, 0.3) +
+                    theme(legend.position = "none",
+                          text = element_text(size = 18),
+                          axis.title.x = element_blank(),
+                          axis.title.y = element_blank()                                                 
+                         )
     
         ggsave(paste0(treatment, "_sofa_", sofaIndex, ".png"),
                path=paste0("results/", cohort, "/tmle_by_sofa_and_years"),
