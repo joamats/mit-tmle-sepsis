@@ -11,7 +11,7 @@ vent_1, vent_2, vent_3, vent_4, vent_5, vent_6,
 rrt_1,
 pressor_1, pressor_2, pressor_3, pressor_4
 
-FROM `db_name.my_eICU.yugang` as yug
+FROM `matos-334518.my_eICU.yugang` as yug
 
 -- ventilation events
 LEFT JOIN (
@@ -173,4 +173,14 @@ LEFT JOIN(
 AS pivoted_med
 ON pivoted_med.patientunitstayid = yug.patientunitstayid
 
+-- exclude non-first stays
+LEFT JOIN(
+  SELECT patientunitstayid, unitvisitnumber
+  FROM `physionet-data.eicu_crd_derived.icustay_detail`
+) 
+AS icustay_detail
+ON icustay_detail.patientunitstayid = yug.patientunitstayid
+
+
 WHERE yug.ethnicity != "Other/Unknown"
+AND icustay_detail.unitvisitnumber = 1
