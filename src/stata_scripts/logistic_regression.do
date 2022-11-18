@@ -3,8 +3,8 @@
 * Stata code for logistic regression only
 
 * Import MIMIC data from csv file
-import delimited "/Users/Tristan/Documents/Projekte/Boston Celi/1 Causal Inference/Race Interventions/mit-tmle/data/MIMIC_data_stata.csv", clear // substitute with your local data path
-cd  "/Users/Tristan/Documents/Projekte/Boston Celi/1 Causal Inference/Race Interventions/mit-tmle/results/MIMIC/log_reg" // substitute with your local results path
+import delimited "***/mit-tmle/data/MIMIC_data_stata.csv", clear // substitute with your local data path
+cd  "***/mit-tmle/results/log_reg/" // substitute with your local results path
 
 * Transform variables for Stata
 rename gender female
@@ -81,7 +81,7 @@ forval i=1/4  {
 
 * Import eICU data from csv file
 import delimited "/Users/Tristan/Documents/Projekte/Boston Celi/1 Causal Inference/Race Interventions/mit-tmle/data/eICU_data_stata.csv", clear // substitute with your local data path
-cd  "/Users/Tristan/Documents/Projekte/Boston Celi/1 Causal Inference/Race Interventions/mit-tmle/results/MIMIC/log_reg" // substitute with your local results path
+cd  "/Users/Tristan/Documents/Projekte/Boston Celi/1 Causal Inference/Race Interventions/mit-tmle/results/log_reg/" // substitute with your local results path
 
 * Replace NaN/missings in treatments with 0
 destring rrt_final vent_final pressor_final, replace ignore("NA")
