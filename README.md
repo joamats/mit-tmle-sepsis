@@ -1,8 +1,8 @@
 # Disparities in Use of Interventions across Races in ICU Sepsis Patients
 
-Many interventions in healthcare are still not based on hard evidence and care might differ between races, especially in Intensive Care Units (ICU).
+Many interventions in healthcare are still not based on hard evidence and care might differ between races, especially in the Intensive Care Unit (ICU).
 
-To investigate disparities between races in critically ill sepsis patients in regard to in-hospital mortality, renal replacement therapy (RRT), vasopressor use (VP), or mechanical ventilation (MV) in cohorts curated from MIMIC IV (2008-2019) and eICU (2014-2015) datasets.
+The goal of this project is to investigate disparities between races in critically ill sepsis patients in regard to in-hospital mortality, renal replacement therapy (RRT), vasopressor use (VP), or mechanical ventilation (MV), in cohorts curated from MIMIC IV (2008-2019) and eICU (2014-2015) datasets.
 
 
 ## How to run this project 
