@@ -38,6 +38,7 @@ plot_tmle_years_results <- function(results, treatment, cohort) {
             ciHigh <- results[resultIndex]$result$estimates$ATE$CI[2]
             psi <- results[resultIndex]$result$estimates$ATE$psi[1]
 
+
             F[aygIndex] <- psi
             L[aygIndex] <- ciLow
             U[aygIndex] <- ciHigh
@@ -56,9 +57,16 @@ plot_tmle_years_results <- function(results, treatment, cohort) {
             df <- data.frame(x = c("2014", "2015"), F = F, L = L, U = U)
         }
 
-        p <- ggplot(df,aes(x = x, y = F)) + geom_point(size = 4) + geom_errorbar(aes(ymax = U, ymin = L)) + labs(title=title) + labs(x = "anchor_year_group", y = "ATE") + geom_hline(aes(yintercept = 0, color="red")) + ylim(-0.5, 0.5)
+        p <- ggplot(df,aes(x = x, y = F)) + geom_point(size = 4) + geom_errorbar(aes(ymax = U, ymin = L)) + geom_hline(aes(yintercept = 0, color="red"))
+                    + ylim(-0.3, 0.3) + theme(legend.position = "none",
+                                              text = element_text(size = 18),
+                                              axis.title.x = element_blank(),
+                                              axis.title.y = element_blank()                                                 
+                                             )
     
-        ggsave(paste0(treatment, "_sofa_", sofaIndex, ".png"), path=paste0("results/", cohort, "/tmle_by_sofa_and_years"))
+        ggsave(paste0(treatment, "_sofa_", sofaIndex, ".png"),
+               path=paste0("results/", cohort, "/tmle_by_sofa_and_years"),
+               dpi=700)
 
         sofaIndex <- sofaIndex + 1
   
