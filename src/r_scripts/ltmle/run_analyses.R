@@ -5,7 +5,7 @@ source("src/r_scripts/utils/load_data.R")
 treatments <- list("ventilation_bin", "rrt", "pressor")
 
 # List with possible datasets
-cohorts <- list("eICU", "MIMIC") # add eICU / MIMIC
+cohorts <- list("eICU") # add eICU / MIMIC
 
 for (cohort in cohorts) {
     # Load Data

@@ -60,9 +60,7 @@ After getting credentialing at PhysioNet, you must sign the data use agreement a
 Having all the necessary tables for the cohort generation query in your project, run the following command to fetch the data as a dataframe that will be saved as CSV in your local project. Make sure you have all required files and folders.
 
 ```sh
-python3 src/py_scripts/pull_data.py
---sql_query_path src/sql_queries/mimic_table.sql
---destination_path data/MIMIC_data.csv
+python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/mimic_table.sql --destination_path data/MIMIC_data.csv
 ```
 
 #### eICU
@@ -74,9 +72,7 @@ First, you must run all the queries present in the folder **src/sql_queries/eICU
 Finally, run:
 
 ```sh
-python3 src/py_scripts/pull_data.py
---sql_query_path src/sql_queries/eICU_table.sql
---destination_path data/eICU_data.csv
+python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/eICU_table.sql --destination_path data/eICU_data.csv
 ```
 
 
