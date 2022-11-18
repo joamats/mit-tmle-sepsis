@@ -77,9 +77,9 @@ tmle_stratified_sofas <- function(sepsis_data, treatment, cohort) {
 
     sofa_ranges <- list(list(0, 5), list(6,10), list(11, 15), list(16, 100))
 
-    df <- data.frame(matrix(ncol=8, nrow=0))
+    df <- data.frame(matrix(ncol=9, nrow=0))
     colnames(df) <- c("cohort", "treatment", "sofa_start", "sofa_end",
-                      "psi", "ci", "auc", "r2")
+                      "psi", "ci", "auc", "r2", "n")
 
     for (sofa in sofa_ranges) {
 
@@ -96,7 +96,8 @@ tmle_stratified_sofas <- function(sepsis_data, treatment, cohort) {
                                toString(result$result$estimates$ATE$psi),
                                toString(result$result$estimates$ATE$CI),
                                toString(result$result$g$AUC),
-                               toString(result$result$Qinit$Rsq)
+                               toString(result$result$Qinit$Rsq),
+                               nrow(data_sofa)
                               ) 
     }  
     write.csv(df, paste0('results/', cohort,'/tmle_', treatment,'.csv'))
