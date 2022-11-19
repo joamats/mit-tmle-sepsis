@@ -85,11 +85,19 @@ tmle_stratified_sofas <- function(sepsis_data, treatment, cohort, df) {
         data_sofa <- data_between_sofa(sepsis_data, start, end)
         result <- run_tmle_sofa(data_sofa, treatment)
 
-        # split CIs
-        ci <- gsub( "c", "", as.character(result$result$estimates$ATE$CI)) 
-        ci <- gsub( "[()]", "", ci) 
-        i_ci <- as.double(strsplit(ci, split=', ')[[1]][1])
-        s_ci <- as.double(strsplit(ci, split=', ')[[1]][2])
+        conf_int <- result$result$estimates$ATE$CI
+        print(conf_int)
+
+        if (length(conf_int) == 2){
+            # split CIs
+            ci <- gsub( "c", "", as.character(conf_int)) 
+            ci <- gsub( "[()]", "", ci) 
+            i_ci <- as.double(strsplit(ci, split=', ')[[1]][1])
+            s_ci <- as.double(strsplit(ci, split=', ')[[1]][2])
+        } else {
+            i_ci <- 0
+            s_ci <- 0
+        }
 
         df[nrow(df) + 1,] <- c(cohort,
                                treatment,
