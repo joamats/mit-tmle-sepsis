@@ -69,7 +69,7 @@ plot_tmle_years_results <- function(results, treatment, cohort) {
                          )
     
         ggsave(paste0(treatment, "_sofa_", sofaIndex, ".png"),
-               path=paste0("results/", cohort, "/tmle_by_sofa_and_years"),
+               path=paste0("results/", cohort, "_tmle_by_sofa_and_years"),
                dpi=700)
 
         sofaIndex <- sofaIndex + 1
