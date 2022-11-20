@@ -9,10 +9,10 @@ treatments <- list("ventilation_bin", "rrt", "pressor")
 cohorts <- list("MIMIC", "eICU") #add eICU / MIMIC
 
 # Dataframe to hold results
-df <- data.frame(matrix(ncol=10, nrow=0))
+df <- data.frame(matrix(ncol=11, nrow=0))
 colnames(df) <- c("cohort", "treatment", "sofa_start", "sofa_end",
-                    "psi", "i_ci","s_ci", "auc", "r2", "n")
-                    
+                    "psi", "i_ci","s_ci", "pvalue", "auc", "r2", "n")
+
 for (cohort in cohorts) {
     # Load Data
     sepsis_data <- load_data(cohort)
@@ -23,7 +23,7 @@ for (cohort in cohorts) {
         df <- tmle_stratified_sofas(sepsis_data, treatment, cohort, df)
 
         # Stratified SOFAs && Year - plots as outputs
-        tmle_stratified_sofas_year(sepsis_data, treatment, cohort)
+        #tmle_stratified_sofas_year(sepsis_data, treatment, cohort)
     }
 }
 
