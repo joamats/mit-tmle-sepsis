@@ -112,9 +112,6 @@ label(final_df$pressor_lab) <- "Vasopressor"
 
 label(final_df$vent_req)       <- "Invasive ventilation"
 
-label(final_df$InvasiveVent_hr)       <- "Invasive ventilation"
-units(final_df$InvasiveVent_hr)       <- "hours"
-
 label(final_df$dis_expiration)       <- "In-hospital mortality"
 label(final_df$discharge_location)  <- "Location of discharge"
 
@@ -133,7 +130,7 @@ render.strat <- function (label, n, ...) {
 # Create Table1 Object
 tbl1 <- table1(~ dis_expiration + pressor_lab +  vent_req + rrt_new +
          age_new + admission_age + gender + SOFA_new + SOFA  + los_hosp + 
-         charlson_new + charlson_comorbidity_index  + InvasiveVent_hr
+         charlson_new + charlson_comorbidity_index
        | race_new, data=final_df, render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
        render.categorical=render.categorical, render.strat=render.strat)
 

@@ -77,7 +77,7 @@ finaleICU_df$charlson_new[finaleICU_df$charlson_comorbidity_index >= 16] <- "16 
 finaleICU_df$los_hosp = (finaleICU_df$hospitaldischargeoffset/1440)
 
 finaleICU_df$los_hosp[finaleICU_df$los_hosp < 0] <- 0 # clean data to have minimum of 0 days
-finaleICU_df$gender <- factor(df$gender, levels = c('F', 'M'), 
+finaleICU_df$gender <- factor(df$gender, levels = c('Female', 'Male'), 
                           labels = c('Female', 'Male'))
 
 finaleICU_df$pressor_lab <- factor(finaleICU_df$pressor_lab)

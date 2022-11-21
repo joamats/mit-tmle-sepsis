@@ -11,7 +11,7 @@ vent_1, vent_2, vent_3, vent_4, vent_5, vent_6,
 rrt_1,
 pressor_1, pressor_2, pressor_3, pressor_4
 
-FROM `matos-334518.my_eICU.yugang` as yug
+FROM `db_name.my_eICU.yugang` as yug
 
 -- ventilation events
 LEFT JOIN (

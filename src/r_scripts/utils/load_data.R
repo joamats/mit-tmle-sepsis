@@ -44,7 +44,6 @@ load_data <- function(cohort){
           charlson_comorbidity_index >= 11 & charlson_comorbidity_index <= 15, "11 - 15", "16 and above"))))
 
     sepsis_data <- sepsis_data %>% mutate(anchor_age = ifelse(anchor_age == "> 89", 91, strtoi(anchor_age)))
-    sepsis_data <- subset(sepsis_data, anchor_age > 17)
 
   } else {
     print("Wrong path or file name.")
