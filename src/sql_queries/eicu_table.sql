@@ -181,6 +181,17 @@ LEFT JOIN(
 AS icustay_detail
 ON icustay_detail.patientunitstayid = yug.patientunitstayid
 
-
 WHERE yug.ethnicity != "Other/Unknown"
 AND icustay_detail.unitvisitnumber = 1
+
+-- exclude patients <18 years old
+LEFT JOIN(
+  SELECT anchor_age
+  FROM `physionet-data.eicu_crd_derived.icustay_detail`
+) 
+AS anchor_age
+ON icustay_detail.age = yug.anchor_age
+
+WHERE yug.anchor_age >= 18
+
+
