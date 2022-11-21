@@ -79,7 +79,7 @@ def run_query(sql_query_path):
     # Set environment variables
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = KEYS_FILE
 
-    # Stablish connection with BigQuery
+    # Establish connection with BigQuery
     from google.cloud import bigquery
     BigQuery_client = bigquery.Client()
 
