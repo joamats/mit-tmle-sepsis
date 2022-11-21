@@ -7,15 +7,20 @@ treatments <- list("ventilation_bin", "rrt", "pressor")
 # List with possible datasets
 cohorts <- list("eICU", "MIMIC") # add eICU / MIMIC
 
+# Initialize final dataframe
+df <- data.frame(matrix(ncol=11, nrow=0))
+colnames(df) <- c("cohort", "treatment", "analysis", "sofa_start", "sofa_end",
+                      "psi", "std_dev", "pvalue", "iCI", "sCI", "n")
+
 for (cohort in cohorts) {
     # Load Data
     sepsis_data <- load_data(cohort)
     # Go through all treatments
     for (treatment in treatments) {
-        # All SOFAs
-        ltmle_all_sofas(sepsis_data, treatment, cohort)
+        # Stratified SOFAs, append
+        df <- ltmle_stratified_sofas(sepsis_data, treatment, cohort, df)
 
-        # Stratified SOFAs
-        ltmle_stratified_sofas(sepsis_data, treatment, cohort)
     }
 }
+
+write.csv(df, "results/LTMLE.csv")

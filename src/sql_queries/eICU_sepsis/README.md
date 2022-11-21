@@ -5,4 +5,4 @@
 4) Replace "db_name" by your project_id.database name, like "project_id.icu_elos."
 5) Run these queries sequentially in Google Cloud's BigQuery.
 6) If you run into quota limits, split the jobs over a couple of days.
-
+7) 14_cohort.sql query will provide the final cohort of patients.

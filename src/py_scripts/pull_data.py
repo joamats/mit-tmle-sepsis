@@ -88,7 +88,7 @@ def run_query(sql_query_path):
         query = fd.read()
 
     # Replace the project id by the coder's project id in GCP
-    my_query = query.replace("physionet-data", PROJECT_ID, -1)
+    my_query = query.replace("physionet-data", PROJECT_ID).replace("db_name", PROJECT_ID, -1)
 
     # Make request to BigQuery with our query
     df = BigQuery_client.query(my_query).to_dataframe()
@@ -100,5 +100,5 @@ if __name__ == '__main__':
     args = parse_args()
     df = run_query(sql_query_path = args.sql_query_path)
 
-    if args.destination_path == 'data\eICU_data.csv':
+    if "eICU" in args.destination_path:
         combine_treatment_eICU(df, args.destination_path)

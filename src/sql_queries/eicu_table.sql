@@ -1,26 +1,186 @@
-select pt.*,
-sf.sofa_admit,
-(s3.patientunitstayid = vaso.patientunitstayid) as vasopressor,
-(s3.patientunitstayid = rrtid.patientunitstayid) as rrt,
-(s3.patientunitstayid = ventid.patientunitstayid) as vent,
-cci.final_charlson_score as Charlson
+SELECT yug.*, 
+-- to match MIMIC's names
+yug.Charlson as charlson_comorbidity_index,
+yug.ethnicity as race,
+yug.age as anchor_age,
+yug.sofa_admit as SOFA, 
+yug.hospitaldischargeyear as anchor_year_group,
 
-from `icu-elos.eicu_sepsis.sepsis_adult_eicu` s3
+-- newly added 
+vent_1, vent_2, vent_3, vent_4, vent_5, vent_6,
+rrt_1,
+pressor_1, pressor_2, pressor_3, pressor_4
 
-left join `physionet-data.eicu_crd.patient` pt
-on s3.patientunitstayid = pt.patientunitstayid
+FROM `matos-334518.my_eICU.yugang` as yug
 
-left join (select distinct patientunitstayid, sofa_resp as resp_24,sofa_gcs as cns_24,sofa_circ as cv_24,sofa_liver as liver_24,sofa_hematology as coag_24, sofa_renal as renal_24, sofa as sofa_admit  from `icu-elos.eicu_sepsis.itu_sofa_day` where day = 1 ) sf
-on s3.patientunitstayid = sf.patientunitstayid 
+-- ventilation events
+LEFT JOIN (
+  SELECT patientunitstayid, COUNT(event) as vent_1
+  FROM `physionet-data.eicu_crd_derived.ventilation_events` 
+  WHERE (event = "mechvent start" OR event = "mechvent end")
+  GROUP BY patientunitstayid
+  )
 
-left join (select distinct patientunitstayid from `physionet-data.eicu_crd_derived.pivoted_treatment_vasopressor` ) vaso
-on s3.patientunitstayid = vaso.patientunitstayid
+AS vent_events
+ON vent_events.patientunitstayid = yug.patientunitstayid
 
-left join (select distinct patientunitstayid from `physionet-data.eicu_crd.intakeoutput` where dialysistotal<>0) as rrtid
-on s3.patientunitstayid = rrtid.patientunitstayid 
+-- apache aps vars
+LEFT JOIN(
+  SELECT patientunitstayid, COUNT(intubated) as vent_2
+  FROM `physionet-data.eicu_crd.apacheapsvar`
+  WHERE intubated = 1
+  GROUP BY patientunitstayid
+)
+AS apachepsvar
+ON apachepsvar.patientunitstayid = yug.patientunitstayid
 
-left join (select distinct patientunitstayid from `icu-elos.eicu_sepsis.invasive`) as ventid
-on s3.patientunitstayid = ventid.patientunitstayid 
+-- apache pred vars
+LEFT JOIN(
+  SELECT patientunitstayid, COUNT(oobintubday1) as vent_3
+  FROM `physionet-data.eicu_crd.apachepredvar`
+  WHERE oobintubday1 = 1
+  GROUP BY patientunitstayid
+)
+AS apachepredvar
+ON apachepredvar.patientunitstayid = yug.patientunitstayid
 
-left join (select patientunitstayid,final_charlson_score from `icu-elos.eicu_sepsis.charlson_comorbidity_index`) as cci
-on  s3.patientunitstayid = cci.patientunitstayid 
+-- debug vent tags
+LEFT JOIN(
+  SELECT patientunitstayid, COUNT(intubated) as vent_4, COUNT(extubated) as vent_5
+  FROM `physionet-data.eicu_crd_derived.debug_vent_tags`
+  WHERE intubated = 1 OR extubated = 1
+  GROUP BY patientunitstayid
+)
+AS debug_vent_tags
+ON debug_vent_tags.patientunitstayid = yug.patientunitstayid
+
+-- respiratory care table
+LEFT JOIN(
+  SELECT patientunitstayid, CASE
+    WHEN COUNT(airwaytype) >= 1 THEN 1
+    WHEN COUNT(airwaysize) >= 1 THEN 1
+    WHEN COUNT(airwayposition) >= 1 THEN 1
+    WHEN COUNT(cuffpressure) >= 1 THEN 1
+    WHEN COUNT(setapneatv) >= 1 THEN 1
+    ELSE NULL
+    END AS vent_6
+
+  FROM `physionet-data.eicu_crd.respiratorycare`
+  GROUP BY patientunitstayid
+)
+AS respiratorycare
+ON respiratorycare.patientunitstayid = yug.patientunitstayid
+
+
+-- treatment table to get RRT
+LEFT JOIN(
+  SELECT patientunitstayid, COUNT(treatmentstring) as rrt_1
+  FROM `physionet-data.eicu_crd.treatment` 
+  WHERE (
+    treatmentstring LIKE "renal|dialysis|C%" OR 
+    treatmentstring LIKE "renal|dialysis|hemodialysis|emergent%" OR 
+    treatmentstring LIKE "renal|dialysis|hemodialysis|for acute renal failure" OR
+    treatmentstring LIKE "renal|dialysis|hemodialysis"
+    )
+  GROUP BY patientunitstayid
+)
+AS treatment
+ON treatment.patientunitstayid = yug.patientunitstayid
+
+
+-- pivoted infusions table to get vasopressors
+LEFT JOIN(
+  SELECT patientunitstayid, CASE
+    WHEN COUNT(dopamine) >= 1 THEN 1
+    WHEN COUNT(dobutamine) >= 1 THEN 1
+    WHEN COUNT(norepinephrine) >= 1 THEN 1
+    WHEN COUNT(phenylephrine) >= 1 THEN 1
+    WHEN COUNT(epinephrine) >= 1 THEN 1
+    WHEN COUNT(vasopressin) >= 1 THEN 1
+    WHEN COUNT(milrinone) >= 1 THEN 1
+    ELSE NULL
+    END AS pressor_1  
+
+  FROM `physionet-data.eicu_crd_derived.pivoted_infusion`
+  GROUP BY patientunitstayid
+)
+AS pivoted_infusion
+ON pivoted_infusion.patientunitstayid = yug.patientunitstayid
+
+-- infusions table to get vasopressors
+LEFT JOIN(
+  SELECT patientunitstayid, COUNT(drugname) as pressor_2
+  FROM `physionet-data.eicu_crd.infusiondrug`
+  WHERE(
+    LOWER(drugname) LIKE '%dopamine%' OR
+    LOWER(drugname) LIKE '%dobutamine%' OR
+    LOWER(drugname) LIKE '%norepinephrine%' OR
+    LOWER(drugname) LIKE '%phenylephrine%' OR
+    LOWER(drugname) LIKE '%epinephrine%' OR
+    LOWER(drugname) LIKE '%vasopressin%' OR
+    LOWER(drugname) LIKE '%milrinone%' OR
+    LOWER(drugname) LIKE '%dobutrex%' OR
+    LOWER(drugname) LIKE '%neo synephrine%' OR
+    LOWER(drugname) LIKE '%neo-synephrine%' OR
+    LOWER(drugname) LIKE '%neosynephrine%' OR
+    LOWER(drugname) LIKE '%neosynsprine%'
+  )
+  GROUP BY patientunitstayid
+)
+AS infusiondrug
+ON infusiondrug.patientunitstayid = yug.patientunitstayid
+
+
+-- medication
+LEFT JOIN(
+  SELECT patientunitstayid, COUNT(drugname) as pressor_3
+  FROM `physionet-data.eicu_crd.medication`
+  WHERE(
+    LOWER(drugname) LIKE '%dopamine%' OR
+    LOWER(drugname) LIKE '%dobutamine%' OR
+    LOWER(drugname) LIKE '%norepinephrine%' OR
+    LOWER(drugname) LIKE '%phenylephrine%' OR
+    LOWER(drugname) LIKE '%epinephrine%' OR
+    LOWER(drugname) LIKE '%vasopressin%' OR
+    LOWER(drugname) LIKE '%milrinone%' OR
+    LOWER(drugname) LIKE '%dobutrex%' OR
+    LOWER(drugname) LIKE '%neo synephrine%' OR
+    LOWER(drugname) LIKE '%neo-synephrine%' OR
+    LOWER(drugname) LIKE '%neosynephrine%' OR
+    LOWER(drugname) LIKE '%neosynsprine%'
+  )
+  GROUP BY patientunitstayid
+)
+AS medication
+ON medication.patientunitstayid = yug.patientunitstayid
+
+-- pivoted med
+LEFT JOIN(
+  SELECT patientunitstayid, CASE
+    WHEN SUM(dopamine) >= 1 THEN 1
+    WHEN SUM(dobutamine) >= 1 THEN 1
+    WHEN SUM(norepinephrine) >= 1 THEN 1
+    WHEN SUM(phenylephrine) >= 1 THEN 1
+    WHEN SUM(epinephrine) >= 1 THEN 1
+    WHEN SUM(vasopressin) >= 1 THEN 1
+    WHEN SUM(milrinone) >= 1 THEN 1
+    ELSE NULL
+    END AS pressor_4
+
+  FROM `physionet-data.eicu_crd_derived.pivoted_med`
+  GROUP BY patientunitstayid
+)
+AS pivoted_med
+ON pivoted_med.patientunitstayid = yug.patientunitstayid
+
+-- exclude non-first stays
+LEFT JOIN(
+  SELECT patientunitstayid, unitvisitnumber
+  FROM `physionet-data.eicu_crd_derived.icustay_detail`
+) 
+AS icustay_detail
+ON icustay_detail.patientunitstayid = yug.patientunitstayid
+
+
+WHERE yug.ethnicity != "Other/Unknown"
+AND icustay_detail.unitvisitnumber = 1

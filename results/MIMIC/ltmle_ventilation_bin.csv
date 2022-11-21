@@ -1,5 +1,0 @@
-"","cohort","treatment","analysis","psi","std_dev","pvalue","CI"
-"1","MIMIC","ventilation_bin","Non-white & Non-Treatment",0.521822236380587,0.00891596499855453,0,"c(0.504347266096, 0.539297206665173)"
-"2","MIMIC","ventilation_bin","Non-white & Yes-Treatment",0.503606279168436,0.0102988076664707,0,"c(0.483420987058448, 0.523791571278424)"
-"3","MIMIC","ventilation_bin","White & Non-Treatment",0.484662576687146,0.00461331985358026,0,"c(0.475620635924965, 0.493704517449327)"
-"4","MIMIC","ventilation_bin","White & Yes-Treatment",0.446745562333045,0.00502161323198661,0,"c(0.436903381254061, 0.456587743412029)"

@@ -6,7 +6,7 @@ source("src/r_scripts/utils/rebuild_data.R")
 source("src/r_scripts/tmle/plot_results.R")
 
 # TMLE by SOFA
-run_tmle_sofa <- function(data_sofa, sofa_low_inclusive, sofa_high_inclusive,treatment) {
+run_tmle_sofa <- function(data_sofa, treatment) {
 
     if(treatment == "ventilation_bin") {
 
@@ -73,13 +73,9 @@ run_tmle_sofa_ayg <- function(data_sofa, sofa_low_inclusive, sofa_high_inclusive
 
 
 # run TMLE by SOFA only (main analysis)
-tmle_stratified_sofas <- function(sepsis_data, treatment, cohort) {
+tmle_stratified_sofas <- function(sepsis_data, treatment, cohort, df) {
 
-    sofa_ranges <- list(list(0, 5), list(6,10), list(11, 15), list(16, 100))
-
-    df <- data.frame(matrix(ncol=8, nrow=0))
-    colnames(df) <- c("cohort", "treatment", "sofa_start", "sofa_end",
-                      "psi", "ci", "auc", "r2")
+    sofa_ranges <- list(list(0,100), list(0, 5), list(6,10), list(11, 15), list(16, 100))
 
     for (sofa in sofa_ranges) {
 
@@ -87,19 +83,38 @@ tmle_stratified_sofas <- function(sepsis_data, treatment, cohort) {
         end <- sofa[2]
 
         data_sofa <- data_between_sofa(sepsis_data, start, end)
-        result <- run_tmle_sofa(data_sofa, start, end, treatment)
-    
+        result <- run_tmle_sofa(data_sofa, treatment)
+
+        conf_int <- result$result$estimates$ATE$CI
+
+        if (length(conf_int) == 2){
+            # split CIs
+            ci <- gsub( "c", "", as.character(conf_int)) 
+            ci <- gsub( "[()]", "", ci) 
+            cis <- strsplit(ci, split=', ')
+            i_ci <- as.double(ci[1])
+            s_ci <- as.double(ci[2])
+
+        } else {
+            i_ci <- 0
+            s_ci <- 0
+        }
+
         df[nrow(df) + 1,] <- c(cohort,
                                treatment,
                                start,
                                end,
                                toString(result$result$estimates$ATE$psi),
-                               toString(result$result$estimates$ATE$CI),
+                               i_ci,
+                               s_ci,
+                               toString(result$result$estimates$ATE$pvalue),
                                toString(result$result$g$AUC),
-                               toString(result$result$Qinit$Rsq)
+                               toString(result$result$Qinit$Rsq),
+                               nrow(data_sofa)
                               ) 
     }  
-    write.csv(df, paste0('results/', cohort,'/tmle_', treatment,'.csv'))
+
+    return (df)
 }
 
 

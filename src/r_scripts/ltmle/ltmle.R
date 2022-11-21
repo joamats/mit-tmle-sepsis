@@ -60,50 +60,9 @@ get_lnodes <- function(treatment) {
     return(Lnodes)
 }
 
-# Run LTMLE analyses to all SOFAs
-ltmle_all_sofas <- function(sepsis_data, treatment, cohort) {
-
-    Anodes <- get_anodes(treatment)
-    Lnodes <- get_lnodes(treatment)
-
-    data_sofa <- rebuild_data(sepsis_data, treatment)
-
-    df <- data.frame(matrix(ncol=7, nrow=0))
-    colnames(df) <- c("cohort", "treatment", "analysis", "psi", "std_dev", "pvalue", "CI")
-
-    abars <- c(c(0,0), c(0,1), c(1,0), c(1,1))
-    analyses <- list('Non-white & Non-Treatment',
-                       'Non-white & Yes-Treatment',
-                       'White & Non-Treatment',
-                       'White & Yes-Treatment'
-                      )
-
-    # Go through different analyses
-    for (i in 1:4) {
-
-        abar <- c(abars[2*(i-1) + 1], abars[2*i]) 
-        analysis <- analyses[i]
-
-        # Run LTMLE by 2x2 w/ SL library, all SOFAs
-        result_run_ltmle_abar_wlib <- run_ltmle_abar_w_slLib(data_sofa, abar, Anodes, Lnodes)
-        log <- summary(result_run_ltmle_abar_wlib)
-
-        # Append to df
-        df[nrow(df) + 1,] <- c(cohort,
-                    treatment,
-                    analysis,
-                    log$treatment["estimate"][1],
-                    log$treatment["std.dev"],
-                    log$treatment["pvalue"][1],
-                    toString(log$treatment["CI"])
-                    ) 
-    }
-    write.csv(df, paste0('results/', cohort,'/ltmle_', treatment,'.csv'))
-}
-
 
 # Run LTMLE analyses to stratified SOFAs
-ltmle_stratified_sofas <- function(sepsis_data, treatment, cohort) {
+ltmle_stratified_sofas <- function(sepsis_data, treatment, cohort, df) {
 
     Anodes <- get_anodes(treatment)
     Lnodes <- get_lnodes(treatment)
@@ -111,11 +70,7 @@ ltmle_stratified_sofas <- function(sepsis_data, treatment, cohort) {
     data_sofa <- rebuild_data(sepsis_data, treatment)
 
     # cut data by SOFA score and run LTMLE by 2x2 WITH SL library
-    sofa_ranges <- list(list(0, 5), list(6,10), list(11, 15), list(16, 100))
-
-    df <- data.frame(matrix(ncol=9, nrow=0))
-    colnames(df) <- c("cohort", "treatment", "analysis", "sofa_start", "sofa_end",
-                      "psi", "std_dev", "pvalue", "CI")
+    sofa_ranges <- list(list(0,100), list(0, 5), list(6,10), list(11, 15), list(16, 100))
 
     abars <- c(c(0,0), c(0,1), c(1,0), c(1,1))
     analyses <- list('Non-white & Non-Treatment',
@@ -139,19 +94,29 @@ ltmle_stratified_sofas <- function(sepsis_data, treatment, cohort) {
             # Run LTMLE by 2x2 w/ SL library
             result_run_ltmle_abar_00_wlib <- run_ltmle_abar_w_slLib(data_sofa, abar, Anodes, Lnodes)
             log <- summary(result_run_ltmle_abar_00_wlib)
+
+            # split CIs
+            ci <- gsub( "c", "", as.character(log$treatment["CI"])) 
+            ci <- gsub( "[()]", "", ci) 
+            i_ci <- as.double(strsplit(ci, split=', ')[[1]][1])
+            s_ci <- as.double(strsplit(ci, split=', ')[[1]][2])
         
             # Append to df
             df[nrow(df) + 1,] <- c(cohort,
-                        treatment,
-                        analysis,
-                        start,
-                        end,
-                        log$treatment["estimate"][1],
-                        log$treatment["std.dev"],
-                        log$treatment["pvalue"][1],
-                        toString(log$treatment["CI"])
-                        ) 
+                                   treatment,
+                                   analysis,
+                                   start,
+                                   end,
+                                   log$treatment["estimate"][1],
+                                   log$treatment["std.dev"],
+                                   log$treatment["pvalue"][1],
+                                   i_ci,
+                                   s_ci,
+                                   nrow(data_sofa)
+                                  ) 
         }
+
+    
     }
-    write.csv(df, paste0('results/', cohort,'/ltmle_', treatment,'_by_sofa.csv'))
+    return (df)
 }
