@@ -12,12 +12,17 @@ load_data <- function(cohort){
   death_bin <- sepsis_data[, c(1)]
   ethnicity_white <- sepsis_data[, c(1)]
 
-  sepsis_data <- cbind(sepsis_data, ventilation_bin, death_bin, ethnicity_white)
 
   if (file_path == "data/MIMIC_data.csv") {
 
-    sepsis_data <- sepsis_data %>% mutate(gender = ifelse(gender == "F", 1, 0))
+    # Add hospital ID to MIMIC, all ones
+    hospitalid <- sepsis_data[, c(1)]
+    # Join these columns
+    sepsis_data <- cbind(sepsis_data, ventilation_bin, death_bin, ethnicity_white, hospitalid)
 
+    # MIMIC's data comes all from BI, which will be hospital number 1
+    sepsis_data <- sepsis_data %>% mutate(hospitalid = 1)
+    sepsis_data <- sepsis_data %>% mutate(gender = ifelse(gender == "F", 1, 0))
     sepsis_data <- sepsis_data %>% mutate(ventilation_bin = ifelse(InvasiveVent_hr > 0 & !is.na(InvasiveVent_hr), 1, 0))
     sepsis_data <- sepsis_data %>% mutate(pressor = ifelse(pressor=="True", 1, 0))
     sepsis_data <- sepsis_data %>% mutate(rrt = ifelse(is.na(rrt), 0, 1))
@@ -31,6 +36,11 @@ load_data <- function(cohort){
 
   } else if (file_path == "data/eICU_data.csv") {
 
+
+    sepsis_data <- cbind(sepsis_data, ventilation_bin, death_bin, ethnicity_white)
+    
+    # transform hospital ids to numbers starting at 1
+    sepsis_data <- sepsis_data %>% mutate(hospitalid = as.numeric(factor(sepsis_data$hospitalid, levels = unique(sepsis_data$hospitalid))))
     sepsis_data <- sepsis_data %>% mutate(gender = ifelse(gender == "Female", 1, 0))
 
     sepsis_data <- sepsis_data %>% mutate(ventilation_bin = ifelse(is.na(VENT_final), 0, 1))

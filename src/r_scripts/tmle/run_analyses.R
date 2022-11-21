@@ -6,7 +6,7 @@ source("src/r_scripts/tmle/plot_results.R")
 treatments <- list("ventilation_bin", "rrt", "pressor")
 
 # List with possible datasets
-cohorts <- list("MIMIC", "eICU") #add eICU / MIMIC
+cohorts <- list("eICU")#, "eICU") #add eICU / MIMIC
 
 # Dataframe to hold results
 df <- data.frame(matrix(ncol=11, nrow=0))
@@ -20,11 +20,11 @@ for (cohort in cohorts) {
     # Go through all treatments
     for (treatment in treatments) {
         # Stratified SOFAs
-        df <- tmle_stratified_sofas(sepsis_data, treatment, cohort, df)
+        #df <- tmle_stratified_sofas(sepsis_data, treatment, cohort, df)
 
         # Stratified SOFAs && Year - plots as outputs
         #tmle_stratified_sofas_year(sepsis_data, treatment, cohort)
     }
 }
 
-write.csv(df, "results/TMLE.csv")
+write.csv(sepsis_data, "data/d.csv")

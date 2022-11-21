@@ -5,7 +5,7 @@ source("src/r_scripts/utils/load_data.R")
 treatments <- list("ventilation_bin", "rrt", "pressor")
 
 # List with possible datasets
-cohorts <- list("eICU", "MIMIC") # add eICU / MIMIC
+cohorts <- list("eICU")#, "MIMIC") # add eICU / MIMIC
 
 # Initialize final dataframe
 df <- data.frame(matrix(ncol=11, nrow=0))
@@ -19,8 +19,8 @@ for (cohort in cohorts) {
     for (treatment in treatments) {
         # Stratified SOFAs, append
         df <- ltmle_stratified_sofas(sepsis_data, treatment, cohort, df)
-
     }
 }
 
+write.csv(sepsis_data, "data/d.csv")
 write.csv(df, "results/LTMLE.csv")
