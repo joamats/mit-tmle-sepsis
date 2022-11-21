@@ -1,6 +1,7 @@
 tmle
 ltmle
 dplyr
+tidyverse
 magrittr
 shiny
 psych
@@ -12,3 +13,5 @@ earth
 gam
 ranger
 xgboost
+flextable
+table1
