@@ -1,5 +1,4 @@
 # Code for creating Table 1 in MIMIC data
-
 library(tidyverse)
 library(table1)
 library(dplyr)
