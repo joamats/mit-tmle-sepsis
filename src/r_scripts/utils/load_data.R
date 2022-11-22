@@ -1,5 +1,6 @@
 library(magrittr) 
 library(dplyr)
+library(gdata)
 
 load_data <- function(cohort){
 
@@ -45,9 +46,26 @@ load_data <- function(cohort){
 
     sepsis_data <- sepsis_data %>% mutate(anchor_age = ifelse(anchor_age == "> 89", 91, strtoi(anchor_age)))
 
+    sepsis_data <- sepsis_data %>% mutate(anchor_year_group = as.character(anchor_year_group))
+
   } else {
     print("Wrong path or file name.")
   }
 
-  return(sepsis_data)
+  # Return just keeping columns of interest
+  return(sepsis_data[, c("gender", "ventilation_bin", "pressor", "rrt", "death_bin", "ethnicity_white",
+                         "charlson_comorbidity_index", "anchor_age", "SOFA", "anchor_year_group")])
+}
+
+get_merged_datasets <- function() {
+
+  mimic_data <- load_data("MIMIC")
+  eicu_data <- load_data("eICU")
+  # merge both datasets 
+  data <- combine(mimic_data, eicu_data)
+  # add column to keep the cohort source and control for it
+  data <- data %>% mutate(source = ifelse(source == "mimic_data", 1, 0))
+
+  return (data)
+
 }
