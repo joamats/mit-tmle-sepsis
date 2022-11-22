@@ -10,17 +10,17 @@ run_tmle_sofa <- function(data_sofa, treatment) {
 
     if(treatment == "ventilation_bin") {
 
-        W <- data_sofa[, c("anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index","rrt", "pressor")]
+        W <- data_sofa[, c("source","anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index","rrt", "pressor")]
         A <- data_sofa$ventilation_bin
 
     } else if(treatment == "rrt") {
 
-        W <- data_sofa[, c("anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index", "pressor", "ventilation_bin")]
+        W <- data_sofa[, c("source","anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index", "pressor", "ventilation_bin")]
         A <- data_sofa$rrt
 
     } else if(treatment == "pressor") {
 
-        W <- data_sofa[, c("anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index", "rrt", "ventilation_bin")]
+        W <- data_sofa[, c("source","anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index", "rrt", "ventilation_bin")]
         A <- data_sofa$pressor
     }
 
@@ -45,17 +45,17 @@ run_tmle_sofa_ayg <- function(data_sofa, sofa_low_inclusive, sofa_high_inclusive
     
     if(treatment == "ventilation_bin") {
 
-        W <- data_sofa[, c("anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index","rrt", "pressor")]
+        W <- data_sofa[, c("source","anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index","rrt", "pressor")]
         A <- data_sofa$ventilation_bin
 
     } else if(treatment == "rrt") {
 
-        W <- data_sofa[, c("anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index", "pressor", "ventilation_bin")]
+        W <- data_sofa[, c("source","anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index", "pressor", "ventilation_bin")]
         A <- data_sofa$rrt
 
     } else if(treatment == "pressor") {
 
-        W <- data_sofa[, c("anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index", "rrt", "ventilation_bin")]
+        W <- data_sofa[, c("source","anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index", "rrt", "ventilation_bin")]
         A <- data_sofa$pressor
     }
 
