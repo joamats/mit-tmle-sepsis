@@ -101,17 +101,8 @@ Longitudinal Targetted Maximum Likelihood Estimation was applied as sensitivity 
 ```sh
 source("src/r_scripts/ltmle/run_analyses.R")
 ```
-
-#### Results merging
-The results after running the previous commands can be found under **results/MIMIC** and **results\eICU**.
-
-These results can be merged using the command:
-
-```sh
-source("src/r_scripts/utils/combine_results_csv.r")
-```
-
-and boxplots created with the Stata commands present in the file **src\stata_scripts\box_plots.do**.
+#### 4.4 Create Forest Plot
+Forest plot is created with the Stata commands present in the file **src\stata_scripts\forest_plots.do**.
 
 ## How to contribute
 We are actively working on this project.
