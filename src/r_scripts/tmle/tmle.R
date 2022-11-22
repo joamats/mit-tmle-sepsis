@@ -63,8 +63,9 @@ run_tmle_sofa_ayg <- function(data_sofa, sofa_low_inclusive, sofa_high_inclusive
 
     result <- tmle(Y, A, W , family = "binomial", 
                    g.SL.library = c("SL.glm", "SL.glmnet", "SL.bayesglm","SL.mean"),
-                   Q.SL.library = c("SL.glm", "SL.glmnet", "SL.stepAIC","SL.mean","SL.earth","SL.ranger","SL.gam","SL.bayesglm","SL.glm.interaction", "SL.biglasso")
-                   )
+                   Q.SL.library = c("SL.glm", "SL.glmnet", "SL.stepAIC","SL.mean","SL.earth","SL.ranger","SL.gam","SL.bayesglm","SL.glm.interaction", "SL.biglasso"),
+                   gbounds = c(0.01, 1)
+                )
 
     data_result <- list("data" = data_sofa, "result" = result)
 

@@ -28,7 +28,7 @@ source('src\r_scripts\setup\install_packages.R')
 
 Run the following command:
 ```sh
-pip install --r src/py_scripts/setup/requirements.txt
+pip install -r src/py_scripts/setup/requirements.txt
 ```
 
 ### 3. Fetch the data
