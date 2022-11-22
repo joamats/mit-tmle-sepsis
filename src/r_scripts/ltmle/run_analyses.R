@@ -20,9 +20,9 @@ cohort <- "MIMIC_eICU"
     # Go through all treatments
 for (treatment in treatments) {
     # Stratified SOFAs, append
-    #df <- ltmle_stratified_sofas(data, treatment, cohort, df)
+    df <- ltmle_stratified_sofas(data, treatment, cohort, df)
 
 }
 
 
-#write.csv(df, "results/LTMLE.csv")
+write.csv(df, "results/LTMLE.csv")
