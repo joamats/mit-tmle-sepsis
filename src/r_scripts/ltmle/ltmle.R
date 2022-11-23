@@ -23,6 +23,7 @@ run_ltmle_abar_w_slLib <- function(sepsis_data, abar, Anodes, Lnodes) {
         Qform=NULL,
         gform=NULL,
         SL.library = c("SL.glm", "SL.glmnet", "SL.stepAIC","SL.mean","SL.earth","SL.ranger","SL.gam","SL.bayesglm","SL.glm.interaction", "SL.biglasso")
+        gform=NULL
     )
     return(result)
 }

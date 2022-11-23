@@ -181,8 +181,8 @@ LEFT JOIN(
 AS icustay_detail
 ON icustay_detail.patientunitstayid = yug.patientunitstayid
 
--- exclude patients <18 years old
-WHERE yug.age != "16" AND yug.age != "17"
-
+-- yug.ethnicity != "Other/Unknown"
+WHERE icustay_detail.unitvisitnumber = 1
 AND yug.ethnicity != "Other/Unknown"
-AND icustay_detail.unitvisitnumber = 1
+AND yug.age != "16" AND yug.age != "17"
+
