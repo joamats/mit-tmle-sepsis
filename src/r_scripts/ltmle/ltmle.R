@@ -21,8 +21,7 @@ run_ltmle_abar_w_slLib <- function(sepsis_data, abar, Anodes, Lnodes) {
         abar = abar, # binary matrix of counterfactual
         gbounds = c(0.01, 1), # Lower and Upper bounds on estimated cumulative probabilities
         Qform=NULL,
-        gform=NULL,
-        #SL.library = c("SL.glm", "SL.glmnet", "SL.stepAIC","SL.mean","SL.earth","SL.ranger","SL.gam","SL.bayesglm","SL.glm.interaction", "SL.biglasso")
+        gform=NULL
     )
     return(result)
 }
