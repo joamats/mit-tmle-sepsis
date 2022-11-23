@@ -4,6 +4,8 @@ source("src/r_scripts/utils/load_data.R")
 # Get merged datasets' data
 data <- get_merged_datasets()
 
+write.csv(data, "data/MIMIC_eICU.csv")
+
 # List with possible invasive treatments
 treatments <- list("ventilation_bin", "rrt", "pressor")
 
