@@ -22,4 +22,4 @@ for (treatment in treatments) {
     #tmle_stratified_sofas_year(sepsis_data, treatment, cohort)
 }
 
-write.csv(df, "results/TMLE.csv")
+write.csv(df, "results/TMLE_gbounds.csv")
