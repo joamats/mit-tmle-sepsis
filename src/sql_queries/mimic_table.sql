@@ -6,7 +6,6 @@ ABS(TIMESTAMP_DIFF(pat.dod,icu.icu_outtime,DAY)) as dod_icuout_offset
 from physionet-data.mimiciv_derived.icustay_detail as icu 
 inner join physionet-data.mimiciv_derived.sepsis3 as s3
 on s3.stay_id = icu.stay_id
-and icu.first_icu_stay is true 
 and s3.sepsis3 is true
 
 left join physionet-data.mimiciv_hosp.patients as pat
@@ -62,10 +61,12 @@ left join (SELECT stay_id, sum(TIMESTAMP_DIFF(endtime,starttime,HOUR)) as Trach_
 FROM `physionet-data.mimiciv_derived.ventilation` where ventilation_status = "Trach" group by stay_id) as Trach
 on Trach.stay_id = icu.stay_id
 
-where (discharge_location is not null or abs(timestamp_diff(pat.dod,icu.icu_outtime,DAY)) < 4)
-and (icu.race != "UNKNOWN")
-and (icu.race != "UNABLE TO OBTAIN")
-and (icu.race != "PATIENT DECLINED TO ANSWER")
-and (icu.race != "OTHER")
+WHERE (icu.first_icu_stay is true)
+AND (discharge_location is not null OR abs(timestamp_diff(pat.dod,icu.icu_outtime,DAY)) < 4)
+AND (icu.race != "UNKNOWN")
+AND (icu.race != "UNABLE TO OBTAIN")
+AND (icu.race != "PATIENT DECLINED TO ANSWER")
+AND (icu.race != "OTHER")
+
 
 order by icu.hadm_id
