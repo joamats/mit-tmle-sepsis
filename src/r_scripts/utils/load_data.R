@@ -29,8 +29,8 @@ load_data <- function(cohort){
         charlson_comorbidity_index >= 6 & charlson_comorbidity_index <= 10, "6 - 10", ifelse(
           charlson_comorbidity_index >= 11 & charlson_comorbidity_index <= 15, "11 - 15", "16 and above"))))
           
-  sepsis_data$los_mimic = as.numeric(difftime(sespis_data$dischtime, sespis_data$admittime, units = 'days')) # Length of stay MIMIC
-  sepsis_data$los_mimic[sepsis_data$los_mimic < 0] <- 0 # clean data to have minimum of 0 days
+    sepsis_data$los_hosp <- as.numeric(difftime(sepsis_data$dischtime, sepsis_data$admittime, units = 'days')) # Length of stay MIMIC
+    sepsis_data$los_hosp[sepsis_data$los_hosp < 0] <- 0 # clean data to have minimum of 0 days
 
   } else if (file_path == "data/eICU_data.csv") {
 
@@ -49,14 +49,14 @@ load_data <- function(cohort){
     sepsis_data <- sepsis_data %>% mutate(anchor_age = ifelse(anchor_age == "> 89", 91, strtoi(anchor_age)))
     sepsis_data <- sepsis_data %>% mutate(anchor_year_group = as.character(anchor_year_group))
     
-    sepsis_data$los_eicu <- (sepsis_data$hospitaldischargeoffset/1440) # Generate eICU Lenght of stay
+    sepsis_data$los_hosp <- (sepsis_data$hospitaldischargeoffset/1440) # Generate eICU Lenght of stay
 
   } else {
     print("Wrong path or file name.")
   }
 
   # Return just keeping columns of interest
-  return(sepsis_data[, c("gender", "los_mimic", "los_eicu", "ventilation_bin", "pressor", "rrt", "death_bin", "ethnicity_white",
+  return(sepsis_data[, c("gender", "los_hosp", "ventilation_bin", "pressor", "rrt", "death_bin", "ethnicity_white",
                          "charlson_comorbidity_index", "anchor_age", "SOFA", "anchor_year_group")])
 }
 
@@ -69,8 +69,6 @@ get_merged_datasets <- function() {
   
   # add column to keep the cohort source and control for it
   data <- data %>% mutate(source = ifelse(source == "mimic_data", 1, 0))
-  #data$mimic <- data$source
-  #data <- data %>% mutate(mimic = ifelse(mimic == "mimic_data", 1, 0))
 
   return (data)
 
