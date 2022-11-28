@@ -131,6 +131,9 @@ dmypy.json
 # Data from MIMIC and eICU
 data/
 
+# Results in Word files
+.docx
+
 # R lintr my settings
 *.lintr
 .Rproj.user
