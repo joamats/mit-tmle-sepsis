@@ -67,6 +67,9 @@ m_e_df$death_bin <- factor(m_e_df$death_bin, levels = c(0, 1),
 m_e_df$gender <- factor(df$gender, levels = c(0, 1), 
                          labels = c('Female', 'Male'))
 
+m_e_df$source <- factor(m_e_df$source, levels = c(0, 1), 
+                           labels = c('eICU', 'MIMIC'))
+
 m_e_df$pressor <- factor(m_e_df$pressor)
 m_e_df$rrt <- factor(m_e_df$rrt)
 m_e_df$ventilation_bin <- factor(m_e_df$ventilation_bin)
@@ -105,7 +108,7 @@ label(m_e_df$pressor) <- "Vasopressor"
 label(m_e_df$ventilation_bin)       <- "Invasive ventilation"
 
 label(m_e_df$death_bin)       <- "In-hospital mortality"
-
+label(m_e_df$source)    <- "Cohort"
 label(m_e_df$rrt)      <- "Renal replacement therapy"
 
 render.categorical <- function(x, ...) {
@@ -119,7 +122,7 @@ render.strat <- function (label, n, ...) {
 }
 
 # Create table1 object
-tbl1 <- table1(~ death_bin + pressor +  ventilation_bin + rrt +
+tbl1 <- table1(~ death_bin + source + pressor + ventilation_bin + rrt +
                  age_new + anchor_age + gender + SOFA_new + SOFA  + los + los_s + los_d +
                  charlson_new + charlson_cont
                | ethnicity_white, data=m_e_df, render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
