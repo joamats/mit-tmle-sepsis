@@ -51,15 +51,15 @@ load_data <- function(cohort){
     sepsis_data <- sepsis_data %>% mutate(anchor_age = ifelse(anchor_age == "> 89", 91, strtoi(anchor_age)))
     sepsis_data <- sepsis_data %>% mutate(anchor_year_group = as.character(anchor_year_group))
     
-    sepsis_data$los <- (sepsis_data$hospitaldischargeoffset/1440) # Generate eICU Lenght of stay
+    sepsis_data$los_eicu <- (sepsis_data$hospitaldischargeoffset/1440) # Generate eICU Lenght of stay
 
   } else {
     print("Wrong path or file name.")
   }
 
   # Return just keeping columns of interest
-  return(sepsis_data[, c("gender", "los", "ventilation_bin", "pressor", "rrt", "death_bin", "ethnicity_white",
-                         "charlson_cont", "charlson_comorbidity_index", "anchor_age", "SOFA", "anchor_year_group")])
+  return(sepsis_data[, c("gender", "los_mimic", "los_eicu", "ventilation_bin", "pressor", "rrt", "death_bin", "ethnicity_white",
+                         "charlson_comorbidity_index", "anchor_age", "SOFA", "anchor_year_group")])
 }
 
 get_merged_datasets <- function() {
@@ -71,8 +71,6 @@ get_merged_datasets <- function() {
   
   # add column to keep the cohort source and control for it
   data <- data %>% mutate(source = ifelse(source == "mimic_data", 1, 0))
-  #data$mimic <- data$source
-  #data <- data %>% mutate(mimic = ifelse(mimic == "mimic_data", 1, 0))
 
   return (data)
 

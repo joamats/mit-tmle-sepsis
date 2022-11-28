@@ -59,8 +59,8 @@ def combine_treatment_eICU(df, destination_path):
     df['VENT_final'] = df.apply(lambda vent: cat_vent(vent), axis=1)
     df['PRESSOR_final'] = df.apply(lambda pressor: cat_pressor(pressor), axis=1)
 
-    # Save as csv
-    df.to_csv(destination_path)
+    return df
+
 
 # Run Query to get a DataFrame from BigQuery
 def run_query(sql_query_path):
@@ -101,4 +101,6 @@ if __name__ == '__main__':
     df = run_query(sql_query_path = args.sql_query_path)
 
     if "eICU" in args.destination_path:
-        combine_treatment_eICU(df, args.destination_path)
+        df = combine_treatment_eICU(df, args.destination_path)
+    
+    df.to_csv(args.destination_path)

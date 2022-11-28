@@ -24,4 +24,4 @@ for (treatment in treatments) {
 }
 
 # Save results
-write.csv(df, "results/LTMLE_allRace.csv")  
+write.csv(df, "results/LTMLE.csv")  
