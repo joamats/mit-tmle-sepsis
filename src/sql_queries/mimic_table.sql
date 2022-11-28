@@ -61,7 +61,7 @@ left join (SELECT stay_id, sum(TIMESTAMP_DIFF(endtime,starttime,HOUR)) as Trach_
 FROM `physionet-data.mimiciv_derived.ventilation` where ventilation_status = "Trach" group by stay_id) as Trach
 on Trach.stay_id = icu.stay_id
 
-WHERE (icu.first_icu_stay is true)
+WHERE (icu.first_icu_stay IS TRUE AND icu.first_hosp_stay IS TRUE)
 AND (discharge_location is not null OR abs(timestamp_diff(pat.dod,icu.icu_outtime,DAY)) < 4)
 AND (icu.race != "UNKNOWN")
 AND (icu.race != "UNABLE TO OBTAIN")
