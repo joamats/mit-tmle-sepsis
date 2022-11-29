@@ -11,6 +11,7 @@ biglasso
 arm
 earth
 gam
+aod
 ranger
 xgboost
 flextable

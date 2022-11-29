@@ -5,7 +5,7 @@ library(dplyr)
 library(flextable)
 library(magrittr)
 
-df = read_csv('/Users/Tristan/Documents/Projekte/Boston Celi/1 Causal Inference/Race Interventions/mit-tmle/data/MIMIC_eICU.csv', show_col_types = FALSE)
+df = read_csv('data/MIMIC_eICU.csv', show_col_types = FALSE)
 m_e_df = df
 
 ##########SOFA############
