@@ -19,10 +19,9 @@ run_ltmle_abar_w_slLib <- function(sepsis_data, abar, Anodes, Lnodes) {
         Lnodes = Lnodes, # Time-Dependent Covariate Nodes
         Ynodes = c("death_bin"), # Outcome Nodes
         abar = abar, # binary matrix of counterfactual
-        gbounds = c(0.01, 1), # Lower and Upper bounds on estimated cumulative probabilities
+        gbounds = c(0.05, 0.95), # Lower and Upper bounds on estimated cumulative probabilities
         Qform=NULL,
-        gform=NULL,
-        #SL.library = c("SL.glm", "SL.glmnet", "SL.stepAIC","SL.mean","SL.earth","SL.ranger","SL.gam","SL.bayesglm","SL.glm.interaction", "SL.biglasso")
+        gform=NULL
     )
     return(result)
 }
@@ -108,7 +107,7 @@ ltmle_stratified_sofas <- function(sepsis_data, treatment, cohort, df) {
                                    log$treatment["estimate"][1],
                                    log$treatment["std.dev"],
                                    log$treatment["pvalue"][1],
-                                   i_ci,
+                                   i_ci,    
                                    s_ci,
                                    nrow(data_sofa)
                                   ) 
