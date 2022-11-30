@@ -40,19 +40,6 @@ m_e_df$SOFA_new[m_e_df$SOFA >= 11
 
 m_e_df$SOFA_new[m_e_df$SOFA >= 16] <- "16 and above"
 
-##########Charlson Index###################
-m_e_df$charlson_new = m_e_df$charlson_comorbidity_index
-m_e_df$charlson_new[m_e_df$charlson_comorbidity_index >= 0 
-                     & m_e_df$charlson_comorbidity_index <= 5] <- "0 - 5"
-
-m_e_df$charlson_new[m_e_df$charlson_comorbidity_index >= 6 
-                     & m_e_df$charlson_comorbidity_index <= 10] <- "6 - 10"
-
-m_e_df$charlson_new[m_e_df$charlson_comorbidity_index >= 11 
-                     & m_e_df$charlson_comorbidity_index <= 15] <- "11 - 15"
-
-m_e_df$charlson_new[m_e_df$charlson_comorbidity_index >= 16] <- "16 and above"
-
 # LOS groups
 m_e_df$los[m_e_df$los < 0] <- 0 # clean data to have minimum of 0 days
 m_e_df$los_d <- m_e_df$los
@@ -68,9 +55,6 @@ m_e_df$death_bin <- factor(m_e_df$death_bin, levels = c(0, 1),
 m_e_df$gender <- factor(df$gender, levels = c(0, 1), 
                          labels = c('Female', 'Male'))
 
-m_e_df$source <- factor(m_e_df$source, levels = c(0, 1), 
-                           labels = c('eICU', 'MIMIC'))
-
 m_e_df$pressor <- factor(m_e_df$pressor)
 m_e_df$rrt <- factor(m_e_df$rrt)
 m_e_df$ventilation_bin <- factor(m_e_df$ventilation_bin)
@@ -79,7 +63,8 @@ m_e_df$ethnicity_white <- factor(m_e_df$ethnicity_white, levels = c(0, 1),
                            labels = c('Non-White', 'White'))
 
 m_e_df$SOFA_new <- factor(m_e_df$SOFA_new, levels = c('0 - 5', '6 - 10','11 - 15', '16 and above' ))
-m_e_df$charlson_new <- factor(m_e_df$charlson_new, levels = c('0 - 5', '6 - 10','11 - 15', '16 and above' ))
+m_e_df$charlson_comorbidity_index <- factor(m_e_df$charlson_comorbidity_index, levels = c('0 - 5', '6 - 10','11 - 15', '16 and above' ))
+
 
 label(m_e_df$age_new)    <- "Age by group"
 units(m_e_df$age_new)       <- "years"
@@ -102,7 +87,7 @@ label(m_e_df$los_s)       <- "Length of stay, if survived"
 units(m_e_df$los_s)       <- "days"
 
 label(m_e_df$charlson_cont)       <- "Charlson index continuous"
-label(m_e_df$charlson_new) <- "Charlson index categorical"
+label(m_e_df$charlson_comorbidity_index) <- "Charlson index categorical"
 
 label(m_e_df$pressor) <- "Vasopressor"
 
@@ -125,7 +110,7 @@ render.strat <- function (label, n, ...) {
 # Create table1 object
 tbl1 <- table1(~ death_bin + source + pressor + ventilation_bin + rrt +
                  age_new + anchor_age + gender + SOFA_new + SOFA  + los + los_s + los_d +
-                 charlson_new + charlson_cont
+                  charlson_comorbidity_index + charlson_cont
                | ethnicity_white, data=m_e_df, render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
                render.categorical=render.categorical, render.strat=render.strat)
 
@@ -133,4 +118,24 @@ tbl1 <- table1(~ death_bin + source + pressor + ventilation_bin + rrt +
 t1flex(tbl1) %>% 
   save_as_docx(path="results/Table1_m_e.docx")
 
+# Create table1 object for MIMIC 
+tbl1 <- table1(~ death_bin + source + pressor + ventilation_bin + rrt +
+                 age_new + anchor_age + gender + SOFA_new + SOFA  + los + los_s + los_d +
+                 charlson_comorbidity_index + charlson_cont
+               | ethnicity_white, data= subset(m_e_df, source==1), render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
+               render.categorical=render.categorical, render.strat=render.strat)
 
+# Convert MIMIC table to flextable
+t1flex(tbl1) %>% 
+  save_as_docx(path="results/Table1_MIMIC.docx")
+
+# Create table1 object for eICU 
+tbl1 <- table1(~ death_bin + source + pressor + ventilation_bin + rrt +
+                 age_new + anchor_age + gender + SOFA_new + SOFA  + los + los_s + los_d +
+                 charlson_comorbidity_index + charlson_cont
+               | ethnicity_white, data= subset(m_e_df, source==0), render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
+               render.categorical=render.categorical, render.strat=render.strat)
+
+# Convert MIMIC table to flextable
+t1flex(tbl1) %>% 
+  save_as_docx(path="results/Table1_eICU.docx")
