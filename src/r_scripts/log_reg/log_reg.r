@@ -1,4 +1,3 @@
-
 # Logistic regression in R
 library(tidyverse)
 library(dplyr)
@@ -19,9 +18,6 @@ df2$SOFA_new[df2$SOFA >= 11
                   & df2$SOFA <= 15] <- "11 - 15"
 
 df2$SOFA_new[df2$SOFA >= 16] <- "16 and above"
-
-# check for empty cells -> handy for assumptions
-xtabs(~pressor + SOFA_new, data = df2)
 
 # Define factor variables
 df2$SOFA_new <- factor(df2$SOFA_new)

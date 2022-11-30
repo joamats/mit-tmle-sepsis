@@ -54,6 +54,7 @@ m_e_df$charlson_new[m_e_df$charlson_comorbidity_index >= 11
 m_e_df$charlson_new[m_e_df$charlson_comorbidity_index >= 16] <- "16 and above"
 
 # LOS groups
+m_e_df$los[m_e_df$los < 0] <- 0 # clean data to have minimum of 0 days
 m_e_df$los_d <- m_e_df$los
 m_e_df <- m_e_df %>% mutate(los_d = ifelse(death_bin == 1, los_d, NA)) 
 
