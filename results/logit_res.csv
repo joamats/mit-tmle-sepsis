@@ -1,223 +1,193 @@
-"","OR","2.5 %","97.5 %","model","cohort","outcome","SOFA_start"
-"(Intercept)",0.416137577282602,0.375836910006326,0.460680858752712,"SOFA all","combined","Ventilation",100
-"ethnicity_white",1.13370062053327,1.081034005498,1.18902618067701,"SOFA all","combined","Ventilation",100
-"anchor_age",0.98645892372743,0.985206433056503,0.987711747465839,"SOFA all","combined","Ventilation",100
-"gender",0.922959026119285,0.889257106246419,0.957934831383956,"SOFA all","combined","Ventilation",100
-"anchor_year_group2011 - 2013",0.887293164249748,0.817820435683642,0.96261989601759,"SOFA all","combined","Ventilation",100
-"anchor_year_group2014",0.983751144055895,0.924339138761266,1.0470388239299,"SOFA all","combined","Ventilation",100
-"anchor_year_group2014 - 2016",0.905949318599891,0.832603049216017,0.985723245079323,"SOFA all","combined","Ventilation",100
-"anchor_year_group2015",0.872667927002934,0.820432082404287,0.928270432108112,"SOFA all","combined","Ventilation",100
-"anchor_year_group2017 - 2019",0.729490742814487,0.659883505086244,0.806311771715298,"SOFA all","combined","Ventilation",100
-"SOFA",1.26114029064892,1.25222135013166,1.27016749985848,"SOFA all","combined","Ventilation",100
-"charlson_comorbidity_index11 - 15",0.56898158939212,0.514712228929509,0.628573876855874,"SOFA all","combined","Ventilation",100
-"charlson_comorbidity_index16 and above",0.2443904612372,0.132394610240839,0.428771728083685,"SOFA all","combined","Ventilation",100
-"charlson_comorbidity_index6 - 10",0.731494107790327,0.699587034203824,0.7648221489145,"SOFA all","combined","Ventilation",100
-"rrt",1.00090861365165,0.931303469581033,1.07578383997061,"SOFA all","combined","Ventilation",100
-"pressor",2.51971341437158,2.42337295249261,2.61995105579593,"SOFA all","combined","Ventilation",100
-"(Intercept)1",1.38642346413205,1.35039672407334,1.42341134840771,"1","combined","Ventilation",0
-"ethnicity_white1",1.01365176020421,1.00164713448059,1.02580025998701,"1","combined","Ventilation",0
-"anchor_age1",0.997418383925399,0.997111652335406,0.997725209872186,"1","combined","Ventilation",0
-"gender1",0.980562281908232,0.971615697863453,0.989591245608177,"1","combined","Ventilation",0
-"anchor_year_group2011 - 20131",0.989370179787322,0.967830827127467,1.01138889692083,"1","combined","Ventilation",0
-"anchor_year_group20141",0.99276068640067,0.976783772625823,1.00899892901956,"1","combined","Ventilation",0
-"anchor_year_group2014 - 20161",0.996481199099633,0.973671015779983,1.01982575640622,"1","combined","Ventilation",0
-"anchor_year_group20151",0.968753301160198,0.953240312136957,0.984518747855895,"1","combined","Ventilation",0
-"anchor_year_group2017 - 20191",0.955053136543322,0.928423411740692,0.982446674747333,"1","combined","Ventilation",0
-"SOFA1",1.03799842480085,1.03455572897488,1.04145257690136,"1","combined","Ventilation",0
-"charlson_comorbidity_index11 - 151",0.937957058558044,0.914307431881194,0.962218410375217,"1","combined","Ventilation",0
-"charlson_comorbidity_index16 and above1",0.808686677858817,0.715658653248745,0.913807357714262,"1","combined","Ventilation",0
-"charlson_comorbidity_index6 - 101",0.948231731994861,0.93772289229104,0.958858341792137,"1","combined","Ventilation",0
-"rrt1",1.03172390101896,1.00595375384353,1.05815421819147,"1","combined","Ventilation",0
-"pressor1",1.22987187443916,1.21756770774943,1.24230038125107,"1","combined","Ventilation",0
-"(Intercept)2",1.47354447399793,1.30598710970307,1.66259934781707,"2","combined","Ventilation",6
-"ethnicity_white2",0.985550530778335,0.959688993507858,1.01210898039699,"2","combined","Ventilation",6
-"anchor_age2",0.999582153724029,0.998776356610799,1.00038860094174,"2","combined","Ventilation",6
-"gender2",0.991943579818296,0.970377963755272,1.01398846871472,"2","combined","Ventilation",6
-"anchor_year_group2011 - 20132",1.00506273810316,0.966736510078328,1.04490840781587,"2","combined","Ventilation",6
-"anchor_year_group20142",1.00269286201355,0.967594388850813,1.03906449553413,"2","combined","Ventilation",6
-"anchor_year_group2014 - 20162",0.986378701743411,0.94779687509069,1.02653107308454,"2","combined","Ventilation",6
-"anchor_year_group20152",1.00083894446048,0.967630574059003,1.03518700173653,"2","combined","Ventilation",6
-"anchor_year_group2017 - 20192",0.962349779646178,0.92303845040074,1.00333534099579,"2","combined","Ventilation",6
-"SOFA2",1.02900695808671,1.02037996377105,1.03770689094835,"2","combined","Ventilation",6
-"charlson_comorbidity_index11 - 152",0.884334865350203,0.842888041797235,0.927819728473634,"2","combined","Ventilation",6
-"charlson_comorbidity_index16 and above2",0.744771539247859,0.592543753945434,0.936107489076343,"2","combined","Ventilation",6
-"charlson_comorbidity_index6 - 102",0.932199084064897,0.908932858279847,0.95606086237878,"2","combined","Ventilation",6
-"rrt2",1.06341116292676,1.03735902986379,1.09011756670754,"2","combined","Ventilation",6
-"pressor2",1.21374415545687,1.16951820005009,1.25964253898975,"2","combined","Ventilation",6
-"(Intercept)3",2.280319124551,1.68339108189519,3.08891698769067,"3","combined","Ventilation",10
-"ethnicity_white3",1.02812934996307,0.983636597787966,1.07463463908584,"3","combined","Ventilation",10
-"anchor_age3",0.998471341428212,0.997083339997618,0.9998612750423,"3","combined","Ventilation",10
-"gender3",0.978091516126378,0.942399742679674,1.01513505425858,"3","combined","Ventilation",10
-"anchor_year_group2011 - 20133",0.984277468577926,0.927602396920127,1.04441529945033,"3","combined","Ventilation",10
-"anchor_year_group20143",1.05613048878906,0.988786527372721,1.1280610915215,"3","combined","Ventilation",10
-"anchor_year_group2014 - 20163",0.993418466001476,0.937261805462948,1.05293978997178,"3","combined","Ventilation",10
-"anchor_year_group20153",1.04785677723494,0.98424344607893,1.11558154638618,"3","combined","Ventilation",10
-"anchor_year_group2017 - 20193",0.96506450027632,0.908267859463472,1.02541280084902,"3","combined","Ventilation",10
-"SOFA3",1.01241531658783,0.999094308793416,1.02591393449083,"3","combined","Ventilation",10
-"charlson_comorbidity_index11 - 153",1.04140172073335,0.960138950851332,1.12954228446287,"3","combined","Ventilation",10
-"charlson_comorbidity_index6 - 103",1.01949570636573,0.977359136142874,1.06344889699401,"3","combined","Ventilation",10
-"rrt3",1.03728391327707,0.999232909673411,1.07678390726247,"3","combined","Ventilation",10
-"pressor3",0.953728855296066,0.797042453016274,1.141217416942,"3","combined","Ventilation",10
-"(Intercept)4",1.33438585933893,1.26364403574264,1.40908797987362,"4","combined","Ventilation",16
-"ethnicity_white4",1.05516476052091,1.03681464637706,1.0738396450472,"4","combined","Ventilation",16
-"anchor_age4",0.99662364044916,0.996125791656948,0.997121738058762,"4","combined","Ventilation",16
-"gender4",0.991972456858605,0.978098441677644,1.00604327053067,"4","combined","Ventilation",16
-"anchor_year_group2011 - 20134",0.949334229486196,0.92259152843632,0.976852107889916,"4","combined","Ventilation",16
-"anchor_year_group20144",0.99665792894264,0.974311170190474,1.01951723198452,"4","combined","Ventilation",16
-"anchor_year_group2014 - 20164",0.956616859028032,0.929092059133928,0.984957094380497,"4","combined","Ventilation",16
-"anchor_year_group20154",0.972058848357533,0.950678761371054,0.993919758244806,"4","combined","Ventilation",16
-"anchor_year_group2017 - 20194",0.917485777632175,0.887315285370991,0.948682126900615,"4","combined","Ventilation",16
-"SOFA4",1.05854523029297,1.05283715470375,1.06428425285891,"4","combined","Ventilation",16
-"charlson_comorbidity_index11 - 154",0.839135244968532,0.811237172161487,0.867992719652937,"4","combined","Ventilation",16
-"charlson_comorbidity_index16 and above3",0.778705153953197,0.652140643910447,0.929832732334365,"4","combined","Ventilation",16
-"charlson_comorbidity_index6 - 104",0.930225849428348,0.915211902496112,0.945486098448317,"4","combined","Ventilation",16
-"rrt4",0.951375504330687,0.930919271239258,0.972281247369224,"4","combined","Ventilation",16
-"pressor4",1.20848914678512,1.19075161074157,1.22649090265618,"4","combined","Ventilation",16
-"(Intercept)5",0.0363578045395064,0.0303784371962315,0.0434394443953895,"SOFA all","combined","RRT",100
-"ethnicity_white5",0.669217809293267,0.621927250800951,0.720469955185167,"SOFA all","combined","RRT",100
-"anchor_age5",0.979081062930395,0.976906887788678,0.981260731206807,"SOFA all","combined","RRT",100
-"gender5",0.927625244088181,0.869600372237757,0.989403999112157,"SOFA all","combined","RRT",100
-"anchor_year_group2011 - 20135",0.891712107830262,0.766187270503952,1.03651763476229,"SOFA all","combined","RRT",100
-"anchor_year_group20145",2.0508557563179,1.83328170530817,2.29737178016858,"SOFA all","combined","RRT",100
-"anchor_year_group2014 - 20165",0.879411586953013,0.752872108172007,1.02574907121948,"SOFA all","combined","RRT",100
-"anchor_year_group20155",2.253622447614,2.01989662075417,2.51810704692106,"SOFA all","combined","RRT",100
-"anchor_year_group2017 - 20195",1.10642156745819,0.938706767915512,1.30180230099947,"SOFA all","combined","RRT",100
-"SOFA5",1.29520681334361,1.28229075742261,1.30832930838067,"SOFA all","combined","RRT",100
-"charlson_comorbidity_index11 - 155",1.89866978261674,1.62146444419218,2.215280138177,"SOFA all","combined","RRT",100
-"charlson_comorbidity_index16 and above4",1.59561242468762,0.607600037634399,3.46639266335618,"SOFA all","combined","RRT",100
-"charlson_comorbidity_index6 - 105",2.09178500836966,1.93829721998,2.25770882426919,"SOFA all","combined","RRT",100
-"ventilation_bin",1.00321252387881,0.932162761165003,1.07966009899471,"SOFA all","combined","RRT",100
-"pressor5",1.19720188918153,1.10988235516715,1.29149068913361,"SOFA all","combined","RRT",100
-"(Intercept)6",1.00625822934396,0.995356532858195,1.01727932725268,"1","combined","RRT",0
-"ethnicity_white6",0.981746728553814,0.97696230863849,0.986554578926697,"1","combined","RRT",0
-"anchor_age6",0.999360004724847,0.999233578068616,0.999486447377038,"1","combined","RRT",0
-"gender6",0.997232109353696,0.993487615179833,1.00099071667453,"1","combined","RRT",0
-"anchor_year_group2011 - 20136",1.00035042640439,0.991355644951537,1.00942681943023,"1","combined","RRT",0
-"anchor_year_group20146",1.03596835500812,1.02910458016507,1.04287790887612,"1","combined","RRT",0
-"anchor_year_group2014 - 20166",0.996476290245919,0.98705242583806,1.00599012882179,"1","combined","RRT",0
-"anchor_year_group20156",1.04204334617136,1.03517635574385,1.04895588976261,"1","combined","RRT",0
-"anchor_year_group2017 - 20196",1.00328045868334,0.991703935939702,1.01499211841079,"1","combined","RRT",0
-"SOFA6",1.01521563173084,1.01383234889044,1.01660080193595,"1","combined","RRT",0
-"charlson_comorbidity_index11 - 156",1.01971349222412,1.00908202359401,1.03045697169406,"1","combined","RRT",0
-"charlson_comorbidity_index16 and above5",1.00030545158017,0.951371960348649,1.05175582018843,"1","combined","RRT",0
-"charlson_comorbidity_index6 - 106",1.02492646932403,1.02025169610394,1.0296226622629,"1","combined","RRT",0
-"ventilation_bin1",1.00527261179394,1.00100003332817,1.00956342694929,"1","combined","RRT",0
-"pressor6",1.01007461187408,1.0058233603812,1.0143438318695,"1","combined","RRT",0
-"(Intercept)7",0.895037953082036,0.769696703023467,1.04079039745199,"2","combined","RRT",6
-"ethnicity_white7",0.997103954409696,0.964654736480516,1.03064470457767,"2","combined","RRT",6
-"anchor_age7",0.996170140484555,0.995178114506802,0.997163155346136,"2","combined","RRT",6
-"gender7",0.980053904490423,0.953623001043577,1.0072173748492,"2","combined","RRT",6
-"anchor_year_group2011 - 20137",1.00889887414027,0.961263165496486,1.05889518581085,"2","combined","RRT",6
-"anchor_year_group20147",1.08772205558406,1.04063935172041,1.13693497007203,"2","combined","RRT",6
-"anchor_year_group2014 - 20167",1.03161761144934,0.981667759758746,1.08410904368907,"2","combined","RRT",6
-"anchor_year_group20157",1.09379122613721,1.04892278028727,1.14057895286352,"2","combined","RRT",6
-"anchor_year_group2017 - 20197",1.03053601576767,0.978417832332654,1.08543042113457,"2","combined","RRT",6
-"SOFA7",1.03622315529698,1.02542676994632,1.0471332122818,"2","combined","RRT",6
-"charlson_comorbidity_index11 - 157",1.09083244942959,1.02746938635959,1.15810305253444,"2","combined","RRT",6
-"charlson_comorbidity_index16 and above6",0.961414666347124,0.723232985422227,1.27803651008576,"2","combined","RRT",6
-"charlson_comorbidity_index6 - 107",1.08310622042891,1.0495598303602,1.11772483168417,"2","combined","RRT",6
-"ventilation_bin2",1.09982366164793,1.05840532602938,1.14286281160228,"2","combined","RRT",6
-"pressor7",1.03074262073555,0.983649746442875,1.0800900971538,"2","combined","RRT",6
-"(Intercept)8",1.58299173255803,0.799116722864661,3.13579074701913,"3","combined","RRT",10
-"ethnicity_white8",0.995278476038664,0.902815196735862,1.09721153171468,"3","combined","RRT",10
-"anchor_age8",0.992567124332406,0.989581805801752,0.995561448815552,"3","combined","RRT",10
-"gender8",0.986290258080986,0.908720418833503,1.07048158380129,"3","combined","RRT",10
-"anchor_year_group2011 - 20138",1.07676171239953,0.945099489181743,1.22676585752191,"3","combined","RRT",10
-"anchor_year_group20148",1.00696703546746,0.870732190355632,1.16451719799631,"3","combined","RRT",10
-"anchor_year_group2014 - 20168",1.08972307301662,0.958903445095425,1.23838993585701,"3","combined","RRT",10
-"anchor_year_group20158",1.11105534858054,0.967994923460533,1.27525874123013,"3","combined","RRT",10
-"anchor_year_group2017 - 20198",1.26152485166559,1.10521461530357,1.43994200703975,"3","combined","RRT",10
-"SOFA8",1.02430743006597,0.994857948340609,1.05462866637232,"3","combined","RRT",10
-"charlson_comorbidity_index11 - 158",1.0187662430369,0.851820672260456,1.21843093476154,"3","combined","RRT",10
-"charlson_comorbidity_index6 - 108",1.07767886393462,0.982203055495957,1.18243547225068,"3","combined","RRT",10
-"ventilation_bin3",1.19404329653137,0.996289116857263,1.43104985276654,"3","combined","RRT",10
-"pressor8",0.820074283977593,0.55258629497866,1.21704399358529,"3","combined","RRT",10
-"(Intercept)9",1.06839298629575,1.02925726288313,1.10901677775803,"4","combined","RRT",16
-"ethnicity_white9",0.944907764647173,0.933665511157955,0.956285385954836,"4","combined","RRT",16
-"anchor_age9",0.99763040673514,0.997289988563845,0.997970941105865,"4","combined","RRT",16
-"gender9",0.996469894830202,0.986926471592107,1.00610560146532,"4","combined","RRT",16
-"anchor_year_group2011 - 20139",0.9769397431325,0.958048424269998,0.996203571274326,"4","combined","RRT",16
-"anchor_year_group20149",1.06085059433191,1.04456711458526,1.07738791292606,"4","combined","RRT",16
-"anchor_year_group2014 - 20169",0.972616304184456,0.953407222277618,0.992212407312829,"4","combined","RRT",16
-"anchor_year_group20159",1.06920519347839,1.05311292955606,1.08554335786494,"4","combined","RRT",16
-"anchor_year_group2017 - 20199",0.987603883007997,0.965282737154328,1.01044118183235,"4","combined","RRT",16
-"SOFA9",1.02712824054825,1.02331664629349,1.03095403202229,"4","combined","RRT",16
-"charlson_comorbidity_index11 - 159",1.06558508020083,1.04120016220152,1.09054109321832,"4","combined","RRT",16
-"charlson_comorbidity_index16 and above7",1.09787760713483,0.97255927652374,1.23934372880196,"4","combined","RRT",16
-"charlson_comorbidity_index6 - 109",1.08370732711969,1.07176909630809,1.09577853559921,"4","combined","RRT",16
-"ventilation_bin4",0.977000731414253,0.967137908199668,0.986964135198321,"4","combined","RRT",16
-"pressor9",1.01087097624065,1.00053013611389,1.02131869268296,"4","combined","RRT",16
-"(Intercept)10",0.045457468372213,0.0406677139178044,0.0507853155716279,"SOFA all","combined","VP",100
-"ethnicity_white10",1.20764554771229,1.15075221712024,1.26745519607277,"SOFA all","combined","VP",100
-"anchor_age10",1.01095041461287,1.00963590257072,1.01226894041862,"SOFA all","combined","VP",100
-"gender10",1.00582258887775,0.96882333097466,1.04423968404522,"SOFA all","combined","VP",100
-"anchor_year_group2011 - 201310",1.31946930248931,1.21488876281491,1.4330823017994,"SOFA all","combined","VP",100
-"anchor_year_group201410",1.4017786558531,1.31553858536284,1.49385964455136,"SOFA all","combined","VP",100
-"anchor_year_group2014 - 201610",1.67887687985698,1.5411456459358,1.82909085887997,"SOFA all","combined","VP",100
-"anchor_year_group201510",1.39957145324862,1.31431636914131,1.49054486229743,"SOFA all","combined","VP",100
-"anchor_year_group2017 - 201910",1.24567247686226,1.12625166879729,1.37774727689747,"SOFA all","combined","VP",100
-"SOFA10",1.31138578554747,1.30181485792663,1.32108106096134,"SOFA all","combined","VP",100
-"charlson_comorbidity_index11 - 1510",0.766131568263938,0.694925263794214,0.844362486385302,"SOFA all","combined","VP",100
-"charlson_comorbidity_index16 and above8",0.820186776852738,0.504660264970339,1.31563429413546,"SOFA all","combined","VP",100
-"charlson_comorbidity_index6 - 1010",0.824698032781639,0.788761038713442,0.862241917315817,"SOFA all","combined","VP",100
-"ventilation_bin5",2.52274210393669,2.42622702696204,2.62316128424074,"SOFA all","combined","VP",100
-"rrt5",1.20128168116019,1.11543999930705,1.29394022701258,"SOFA all","combined","VP",100
-"(Intercept)11",0.936717588992741,0.911953222828044,0.96215443902457,"1","combined","VP",0
-"ethnicity_white11",1.0333649953427,1.02101402503153,1.04586537248184,"1","combined","VP",0
-"anchor_age11",1.00171351962395,1.00140183259709,1.00202530366363,"1","combined","VP",0
-"gender11",0.996191695408818,0.987013356249247,1.00545538489299,"1","combined","VP",0
-"anchor_year_group2011 - 201311",1.0485982647325,1.0255577330903,1.07215643285897,"1","combined","VP",0
-"anchor_year_group201411",1.06146724348115,1.04423375509237,1.07898514436006,"1","combined","VP",0
-"anchor_year_group2014 - 201611",1.11397836201951,1.08826548337196,1.14029876901135,"1","combined","VP",0
-"anchor_year_group201511",1.05832171937726,1.04122035679029,1.07570396064656,"1","combined","VP",0
-"anchor_year_group2017 - 201911",1.00261343573933,0.974388685917542,1.03165576125181,"1","combined","VP",0
-"SOFA11",1.04525187748899,1.04176091579084,1.0487545374694,"1","combined","VP",0
-"charlson_comorbidity_index11 - 1511",0.949927590055372,0.92574583861539,0.974741002020754,"1","combined","VP",0
-"charlson_comorbidity_index16 and above9",0.951868310847348,0.841364128629815,1.07688603585495,"1","combined","VP",0
-"charlson_comorbidity_index6 - 1011",0.963785359726608,0.952995100488991,0.974697791360326,"1","combined","VP",0
-"ventilation_bin6",1.23479827572819,1.22220736835384,1.24751889181838,"1","combined","VP",0
-"rrt6",1.06256163451473,1.03577518744199,1.09004081274867,"1","combined","VP",0
-"(Intercept)12",1.3088120357268,1.18485734935399,1.44573432894439,"2","combined","VP",6
-"ethnicity_white12",1.01153808332527,0.989639034697762,1.03392172109486,"2","combined","VP",6
-"anchor_age12",1.00260362409356,1.0019431508525,1.00326453271352,"2","combined","VP",6
-"gender12",1.00993232207628,0.991826417987465,1.02836875150391,"2","combined","VP",6
-"anchor_year_group2011 - 201312",1.00638468331726,0.974689584578453,1.03911044792133,"2","combined","VP",6
-"anchor_year_group201412",1.03841270998559,1.00842390578672,1.0692933299894,"2","combined","VP",6
-"anchor_year_group2014 - 201612",1.01199780499482,0.979302572029923,1.04578460892986,"2","combined","VP",6
-"anchor_year_group201512",1.02792255192583,0.999779133671143,1.05685819714778,"2","combined","VP",6
-"anchor_year_group2017 - 201912",1.01580005954851,0.98151060676414,1.05128742763222,"2","combined","VP",6
-"SOFA12",1.02684881198784,1.0197681174126,1.03397867091215,"2","combined","VP",6
-"charlson_comorbidity_index11 - 1512",0.981250975165003,0.943125391907207,1.02091777458693,"2","combined","VP",6
-"charlson_comorbidity_index16 and above10",1.01691287725572,0.842334307064967,1.22767384784801,"2","combined","VP",6
-"charlson_comorbidity_index6 - 1012",0.985623055983648,0.965260907455238,1.00641474339576,"2","combined","VP",6
-"ventilation_bin7",1.14023304757628,1.11191782924544,1.16926931881947,"2","combined","VP",6
-"rrt7",1.0133431780599,0.992809453893964,1.03430158978947,"2","combined","VP",6
-"(Intercept)13",2.43020212357294,2.14939378387738,2.74769677186113,"3","combined","VP",10
-"ethnicity_white13",0.996193766774432,0.976112963154749,1.01668767695988,"3","combined","VP",10
-"anchor_age13",1.00029964314924,0.99965796618611,1.00094173200258,"3","combined","VP",10
-"gender13",0.999504916133793,0.982548116416483,1.01675435603009,"3","combined","VP",10
-"anchor_year_group2011 - 201313",1.04357301039565,1.01572974494706,1.07217951767572,"3","combined","VP",10
-"anchor_year_group201413",1.04301977724062,1.01202932068777,1.07495922645377,"3","combined","VP",10
-"anchor_year_group2014 - 201613",1.0337667517206,1.00661873383326,1.06164693845244,"3","combined","VP",10
-"anchor_year_group201513",1.04578413935798,1.01628832379023,1.07613601428964,"3","combined","VP",10
-"anchor_year_group2017 - 201913",1.04686922705924,1.01830842001023,1.07623108778047,"3","combined","VP",10
-"SOFA13",1.00409115781117,0.997986956482853,1.01023269557321,"3","combined","VP",10
-"charlson_comorbidity_index11 - 1513",0.977769385471946,0.941935573770046,1.01496641361545,"3","combined","VP",10
-"charlson_comorbidity_index6 - 1013",0.99846519126451,0.97926346333269,1.01804343314725,"3","combined","VP",10
-"ventilation_bin8",0.990036663658006,0.953185102826401,1.02831296091457,"3","combined","VP",10
-"rrt8",0.99138359593872,0.974455149063019,1.00860612747691,"3","combined","VP",10
-"(Intercept)14",0.743538114511654,0.70461969142596,0.784606127900004,"4","combined","VP",16
-"ethnicity_white14",1.04863014117198,1.03062099569178,1.06695397975689,"4","combined","VP",16
-"anchor_age14",1.00298215143146,1.00248701422123,1.00347753319433,"4","combined","VP",16
-"gender14",1.00892646257978,0.994994478844208,1.02305352294619,"4","combined","VP",16
-"anchor_year_group2011 - 201314",1.07592484953215,1.04600902001863,1.10669627095584,"4","combined","VP",16
-"anchor_year_group201414",1.08316143703627,1.0592152399097,1.10764899755629,"4","combined","VP",16
-"anchor_year_group2014 - 201614",1.12382653035119,1.09194680827615,1.15663699069271,"4","combined","VP",16
-"anchor_year_group201514",1.09185965055558,1.06818535219414,1.11605864474914,"4","combined","VP",16
-"anchor_year_group2017 - 201914",1.09469795392902,1.05915578738807,1.13143281149579,"4","combined","VP",16
-"SOFA14",1.07057353428254,1.0649071900796,1.07627002895959,"4","combined","VP",16
-"charlson_comorbidity_index11 - 1514",0.936421454378274,0.905603353021898,0.968288309991295,"4","combined","VP",16
-"charlson_comorbidity_index16 and above11",0.964708751780048,0.809715111644842,1.14937088660235,"4","combined","VP",16
-"charlson_comorbidity_index6 - 1014",0.958453621915213,0.943158767708854,0.973996507071513,"4","combined","VP",16
-"ventilation_bin9",1.20269286556375,1.18548535186392,1.22015014913844,"4","combined","VP",16
-"rrt9",1.0228317290635,1.00110718839995,1.04502770342799,"4","combined","VP",16
+,OR,2.50%,97.50%,model,cohort,outcome,SOFA_start
+(Intercept),0.42,0.38,0.46,SOFA all,combined,Ventilation,100
+ethnicity_white,1.13,1.08,1.19,SOFA all,combined,Ventilation,100
+anchor_age,0.99,0.99,0.99,SOFA all,combined,Ventilation,100
+gender,0.92,0.89,0.96,SOFA all,combined,Ventilation,100
+anchor_year_group2011 - 2013,0.89,0.82,0.96,SOFA all,combined,Ventilation,100
+anchor_year_group2014 - 2016,0.92,0.87,0.98,SOFA all,combined,Ventilation,100
+anchor_year_group2017 - 2019,0.73,0.66,0.81,SOFA all,combined,Ventilation,100
+SOFA,1.26,1.25,1.27,SOFA all,combined,Ventilation,100
+charlson_comorbidity_index11 - 15,0.57,0.51,0.63,SOFA all,combined,Ventilation,100
+charlson_comorbidity_index16 and above,0.25,0.13,0.43,SOFA all,combined,Ventilation,100
+charlson_comorbidity_index6 - 10,0.73,0.70,0.76,SOFA all,combined,Ventilation,100
+rrt,1.00,0.93,1.08,SOFA all,combined,Ventilation,100
+pressor,2.52,2.42,2.62,SOFA all,combined,Ventilation,100
+(Intercept)1,0.47,0.41,0.54,1,combined,Ventilation,0
+ethnicity_white1,1.07,1.01,1.14,1,combined,Ventilation,0
+anchor_age1,0.99,0.99,0.99,1,combined,Ventilation,0
+gender1,0.90,0.86,0.95,1,combined,Ventilation,0
+anchor_year_group2011 - 20131,0.95,0.85,1.06,1,combined,Ventilation,0
+anchor_year_group2014 - 20161,0.91,0.84,0.98,1,combined,Ventilation,0
+anchor_year_group2017 - 20191,0.78,0.67,0.91,1,combined,Ventilation,0
+SOFA1,1.21,1.19,1.23,1,combined,Ventilation,0
+charlson_comorbidity_index11 - 151,0.71,0.62,0.82,1,combined,Ventilation,0
+charlson_comorbidity_index16 and above1,0.20,0.06,0.49,1,combined,Ventilation,0
+charlson_comorbidity_index6 - 101,0.76,0.71,0.80,1,combined,Ventilation,0
+rrt1,1.15,1.01,1.30,1,combined,Ventilation,0
+pressor1,2.64,2.51,2.77,1,combined,Ventilation,0
+(Intercept)2,0.16,0.06,0.46,2,combined,Ventilation,6
+ethnicity_white2,0.89,0.71,1.11,2,combined,Ventilation,6
+anchor_age2,1.00,0.99,1.00,2,combined,Ventilation,6
+gender2,0.94,0.79,1.13,2,combined,Ventilation,6
+anchor_year_group2011 - 20132,1.05,0.76,1.45,2,combined,Ventilation,6
+anchor_year_group2014 - 20162,0.98,0.77,1.25,2,combined,Ventilation,6
+anchor_year_group2017 - 20192,0.75,0.54,1.04,2,combined,Ventilation,6
+SOFA2,1.30,1.20,1.40,2,combined,Ventilation,6
+charlson_comorbidity_index11 - 152,0.39,0.27,0.55,2,combined,Ventilation,6
+charlson_comorbidity_index16 and above2,0.18,0.05,0.78,2,combined,Ventilation,6
+charlson_comorbidity_index6 - 102,0.54,0.44,0.67,2,combined,Ventilation,6
+rrt2,1.81,1.44,2.29,2,combined,Ventilation,6
+pressor2,3.18,2.49,4.05,2,combined,Ventilation,6
+(Intercept)3,177971.90,0.00,5868087168993300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.00,3,combined,Ventilation,10
+ethnicity_white3,1.59,0.65,3.61,3,combined,Ventilation,10
+anchor_age3,0.97,0.94,1.00,3,combined,Ventilation,10
+gender3,0.66,0.30,1.42,3,combined,Ventilation,10
+anchor_year_group2011 - 20133,0.78,0.25,2.45,3,combined,Ventilation,10
+anchor_year_group2014 - 20163,1.95,0.64,5.82,3,combined,Ventilation,10
+anchor_year_group2017 - 20193,0.50,0.16,1.52,3,combined,Ventilation,10
+SOFA3,1.35,0.98,1.99,3,combined,Ventilation,10
+charlson_comorbidity_index11 - 153,1.63,0.38,11.40,3,combined,Ventilation,10
+charlson_comorbidity_index6 - 103,1.18,0.49,2.78,3,combined,Ventilation,10
+rrt3,2.26,0.99,5.54,3,combined,Ventilation,10
+pressor3,0.00,NA,20072190544175100000000000000000000.00,3,combined,Ventilation,10
+(Intercept)4,0.39,0.30,0.50,4,combined,Ventilation,16
+ethnicity_white4,1.27,1.17,1.37,4,combined,Ventilation,16
+anchor_age4,0.98,0.98,0.99,4,combined,Ventilation,16
+gender4,0.97,0.91,1.03,4,combined,Ventilation,16
+anchor_year_group2011 - 20134,0.79,0.69,0.90,4,combined,Ventilation,16
+anchor_year_group2014 - 20164,0.91,0.83,1.00,4,combined,Ventilation,16
+anchor_year_group2017 - 20194,0.68,0.58,0.79,4,combined,Ventilation,16
+SOFA4,1.29,1.26,1.33,4,combined,Ventilation,16
+charlson_comorbidity_index11 - 154,0.46,0.39,0.53,4,combined,Ventilation,16
+charlson_comorbidity_index16 and above3,0.32,0.13,0.73,4,combined,Ventilation,16
+charlson_comorbidity_index6 - 104,0.72,0.67,0.77,4,combined,Ventilation,16
+rrt4,0.80,0.73,0.88,4,combined,Ventilation,16
+pressor4,2.27,2.12,2.42,4,combined,Ventilation,16
+(Intercept)5,0.04,0.03,0.05,SOFA all,combined,RRT,100
+ethnicity_white5,0.66,0.62,0.71,SOFA all,combined,RRT,100
+anchor_age5,0.98,0.98,0.98,SOFA all,combined,RRT,100
+gender5,0.94,0.88,1.00,SOFA all,combined,RRT,100
+anchor_year_group2011 - 20135,0.89,0.77,1.04,SOFA all,combined,RRT,100
+anchor_year_group2014 - 20165,1.88,1.70,2.08,SOFA all,combined,RRT,100
+anchor_year_group2017 - 20195,1.12,0.95,1.31,SOFA all,combined,RRT,100
+SOFA5,1.28,1.27,1.30,SOFA all,combined,RRT,100
+charlson_comorbidity_index11 - 155,1.75,1.49,2.04,SOFA all,combined,RRT,100
+charlson_comorbidity_index16 and above4,1.39,0.53,3.04,SOFA all,combined,RRT,100
+charlson_comorbidity_index6 - 105,1.95,1.81,2.10,SOFA all,combined,RRT,100
+ventilation_bin,1.01,0.93,1.08,SOFA all,combined,RRT,100
+pressor5,1.20,1.11,1.29,SOFA all,combined,RRT,100
+(Intercept)6,0.01,0.01,0.01,1,combined,RRT,0
+ethnicity_white6,0.62,0.54,0.70,1,combined,RRT,0
+anchor_age6,0.98,0.98,0.98,1,combined,RRT,0
+gender6,0.92,0.82,1.03,1,combined,RRT,0
+anchor_year_group2011 - 20136,1.00,0.68,1.47,1,combined,RRT,0
+anchor_year_group2014 - 20166,3.20,2.51,4.17,1,combined,RRT,0
+anchor_year_group2017 - 20196,1.18,0.72,1.87,1,combined,RRT,0
+SOFA6,1.60,1.53,1.68,1,combined,RRT,0
+charlson_comorbidity_index11 - 156,1.78,1.29,2.40,1,combined,RRT,0
+charlson_comorbidity_index16 and above5,0.85,0.05,3.98,1,combined,RRT,0
+charlson_comorbidity_index6 - 106,2.04,1.78,2.34,1,combined,RRT,0
+ventilation_bin1,1.13,1.00,1.28,1,combined,RRT,0
+pressor6,1.31,1.16,1.48,1,combined,RRT,0
+(Intercept)7,0.05,0.02,0.11,2,combined,RRT,6
+ethnicity_white7,0.99,0.83,1.18,2,combined,RRT,6
+anchor_age7,0.98,0.97,0.99,2,combined,RRT,6
+gender7,0.90,0.77,1.04,2,combined,RRT,6
+anchor_year_group2011 - 20137,1.04,0.80,1.37,2,combined,RRT,6
+anchor_year_group2014 - 20167,1.49,1.22,1.83,2,combined,RRT,6
+anchor_year_group2017 - 20197,1.18,0.89,1.56,2,combined,RRT,6
+SOFA7,1.19,1.13,1.26,2,combined,RRT,6
+charlson_comorbidity_index11 - 157,1.54,1.11,2.10,2,combined,RRT,6
+charlson_comorbidity_index16 and above6,0.60,0.03,3.34,2,combined,RRT,6
+charlson_comorbidity_index6 - 107,1.49,1.26,1.76,2,combined,RRT,6
+ventilation_bin2,1.81,1.44,2.30,2,combined,RRT,6
+pressor7,1.20,0.93,1.57,2,combined,RRT,6
+(Intercept)8,0.84,0.04,18.72,3,combined,RRT,10
+ethnicity_white8,0.98,0.64,1.50,3,combined,RRT,10
+anchor_age8,0.97,0.95,0.98,3,combined,RRT,10
+gender8,0.93,0.65,1.33,3,combined,RRT,10
+anchor_year_group2011 - 20138,1.38,0.78,2.43,3,combined,RRT,10
+anchor_year_group2014 - 20168,1.36,0.86,2.18,3,combined,RRT,10
+anchor_year_group2017 - 20198,2.79,1.56,5.08,3,combined,RRT,10
+SOFA8,1.11,0.98,1.26,3,combined,RRT,10
+charlson_comorbidity_index11 - 158,1.13,0.52,2.46,3,combined,RRT,10
+charlson_comorbidity_index6 - 108,1.44,0.97,2.14,3,combined,RRT,10
+ventilation_bin3,2.27,1.00,5.49,3,combined,RRT,10
+pressor8,0.42,0.06,2.32,3,combined,RRT,10
+(Intercept)9,0.07,0.05,0.10,4,combined,RRT,16
+ethnicity_white9,0.61,0.55,0.67,4,combined,RRT,16
+anchor_age9,0.98,0.97,0.98,4,combined,RRT,16
+gender9,0.98,0.89,1.07,4,combined,RRT,16
+anchor_year_group2011 - 20139,0.73,0.58,0.91,4,combined,RRT,16
+anchor_year_group2014 - 20169,1.66,1.44,1.92,4,combined,RRT,16
+anchor_year_group2017 - 20199,0.88,0.68,1.12,4,combined,RRT,16
+SOFA9,1.28,1.23,1.32,4,combined,RRT,16
+charlson_comorbidity_index11 - 159,1.84,1.47,2.30,4,combined,RRT,16
+charlson_comorbidity_index16 and above7,2.36,0.68,6.28,4,combined,RRT,16
+charlson_comorbidity_index6 - 109,2.11,1.89,2.35,4,combined,RRT,16
+ventilation_bin4,0.81,0.73,0.89,4,combined,RRT,16
+pressor9,1.10,0.99,1.22,4,combined,RRT,16
+(Intercept)10,0.05,0.04,0.05,SOFA all,combined,VP,100
+ethnicity_white10,1.21,1.15,1.27,SOFA all,combined,VP,100
+anchor_age10,1.01,1.01,1.01,SOFA all,combined,VP,100
+gender10,1.00,0.97,1.04,SOFA all,combined,VP,100
+anchor_year_group2011 - 201310,1.32,1.22,1.43,SOFA all,combined,VP,100
+anchor_year_group2014 - 201610,1.43,1.35,1.52,SOFA all,combined,VP,100
+anchor_year_group2017 - 201910,1.25,1.13,1.38,SOFA all,combined,VP,100
+SOFA10,1.31,1.30,1.32,SOFA all,combined,VP,100
+charlson_comorbidity_index11 - 1510,0.77,0.70,0.85,SOFA all,combined,VP,100
+charlson_comorbidity_index16 and above8,0.83,0.51,1.33,SOFA all,combined,VP,100
+charlson_comorbidity_index6 - 1010,0.83,0.80,0.87,SOFA all,combined,VP,100
+ventilation_bin5,2.52,2.43,2.62,SOFA all,combined,VP,100
+rrt5,1.19,1.10,1.28,SOFA all,combined,VP,100
+(Intercept)11,0.06,0.05,0.07,1,combined,VP,0
+ethnicity_white11,1.19,1.12,1.27,1,combined,VP,0
+anchor_age11,1.01,1.01,1.01,1,combined,VP,0
+gender11,0.98,0.93,1.02,1,combined,VP,0
+anchor_year_group2011 - 201311,1.28,1.14,1.43,1,combined,VP,0
+anchor_year_group2014 - 201611,1.36,1.26,1.48,1,combined,VP,0
+anchor_year_group2017 - 201911,1.01,0.87,1.18,1,combined,VP,0
+SOFA11,1.26,1.24,1.28,1,combined,VP,0
+charlson_comorbidity_index11 - 1511,0.78,0.68,0.89,1,combined,VP,0
+charlson_comorbidity_index16 and above9,0.79,0.40,1.47,1,combined,VP,0
+charlson_comorbidity_index6 - 1011,0.84,0.79,0.89,1,combined,VP,0
+ventilation_bin6,2.64,2.51,2.77,1,combined,VP,0
+rrt6,1.30,1.15,1.47,1,combined,VP,0
+(Intercept)12,0.00,0.00,0.02,2,combined,VP,6
+ethnicity_white12,1.14,0.87,1.47,2,combined,VP,6
+anchor_age12,1.03,1.02,1.04,2,combined,VP,6
+gender12,1.13,0.90,1.41,2,combined,VP,6
+anchor_year_group2011 - 201312,1.07,0.74,1.55,2,combined,VP,6
+anchor_year_group2014 - 201612,1.39,1.05,1.84,2,combined,VP,6
+anchor_year_group2017 - 201912,1.18,0.79,1.78,2,combined,VP,6
+SOFA12,1.45,1.32,1.61,2,combined,VP,6
+charlson_comorbidity_index11 - 1512,0.76,0.47,1.25,2,combined,VP,6
+charlson_comorbidity_index16 and above10,1.03,0.17,19.79,2,combined,VP,6
+charlson_comorbidity_index6 - 1012,0.82,0.63,1.06,2,combined,VP,6
+ventilation_bin7,3.12,2.45,3.98,2,combined,VP,6
+rrt7,1.18,0.91,1.54,2,combined,VP,6
+(Intercept)13,19159.34,0.00,NA,3,combined,VP,10
+ethnicity_white13,0.64,0.03,4.62,3,combined,VP,10
+anchor_age13,1.04,0.97,1.11,3,combined,VP,10
+gender13,0.93,0.15,7.53,3,combined,VP,10
+anchor_year_group2011 - 201313,114052213.04,0.00,NA,3,combined,VP,10
+anchor_year_group2014 - 201613,13.37,1.99,265.68,3,combined,VP,10
+anchor_year_group2017 - 201913,129486334.65,0.00,NA,3,combined,VP,10
+SOFA13,1.70,0.80,5.17,3,combined,VP,10
+charlson_comorbidity_index11 - 1513,0.16,0.01,4.75,3,combined,VP,10
+charlson_comorbidity_index6 - 1013,0.73,0.08,5.31,3,combined,VP,10
+ventilation_bin8,0.00,NA,13990655050872400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.00,3,combined,VP,10
+rrt8,0.43,0.05,2.45,3,combined,VP,10
+(Intercept)14,0.02,0.02,0.03,4,combined,VP,16
+ethnicity_white14,1.25,1.15,1.35,4,combined,VP,16
+anchor_age14,1.01,1.01,1.02,4,combined,VP,16
+gender14,1.04,0.98,1.11,4,combined,VP,16
+anchor_year_group2011 - 201314,1.39,1.22,1.59,4,combined,VP,16
+anchor_year_group2014 - 201614,1.50,1.37,1.65,4,combined,VP,16
+anchor_year_group2017 - 201914,1.51,1.29,1.76,4,combined,VP,16
+SOFA14,1.39,1.35,1.42,4,combined,VP,16
+charlson_comorbidity_index11 - 1514,0.75,0.64,0.87,4,combined,VP,16
+charlson_comorbidity_index16 and above11,0.87,0.39,1.96,4,combined,VP,16
+charlson_comorbidity_index6 - 1014,0.83,0.77,0.89,4,combined,VP,16
+ventilation_bin9,2.27,2.12,2.42,4,combined,VP,16
+rrt9,1.10,1.00,1.22,4,combined,VP,16

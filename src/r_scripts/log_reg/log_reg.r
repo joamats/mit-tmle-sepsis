@@ -1,5 +1,6 @@
 # Logistic regression in R
 library(tidyverse)
+library(table1)
 library(dplyr)
 library(aod)
 
@@ -19,6 +20,10 @@ df2$SOFA_new[df2$SOFA >= 11
 
 df2$SOFA_new[df2$SOFA >= 16] <- "16 and above"
 
+# Assign eICU years to MIMIC year bins
+df2$anchor_year_group[df2$anchor_year_group == "2014"] <- "2014 - 2016" 
+df2$anchor_year_group[df2$anchor_year_group == "2015"] <- "2014 - 2016" 
+
 # Define factor variables
 df2$SOFA_new <- factor(df2$SOFA_new)
 df2$charlson_comorbidity_index <- factor(df2$charlson_comorbidity_index)
@@ -29,7 +34,7 @@ df2$anchor_year_group <- factor(df2$anchor_year_group)
 # Regression for SOFA all separately -> Ventilation
 mylogit <- glm(ventilation_bin ~ ethnicity_white + anchor_age + 
                  gender + anchor_year_group + SOFA + charlson_comorbidity_index + rrt + pressor, 
-               data = df2, family = "binomial")
+               data = df2, family=binomial(link='logit'))
 
 # summary(mylogit) // for a glimpse at the results
 
@@ -47,7 +52,7 @@ SOFA_list = levels(df2$SOFA_new)
 log_models = lapply(SOFA_list, function(x){
   glm(ventilation_bin ~ ethnicity_white + anchor_age + 
         gender + anchor_year_group + SOFA + charlson_comorbidity_index + rrt + pressor,
-      data = subset(df2, SOFA_new == x) ,na.action = na.omit)
+      data = subset(df2, SOFA_new == x), na.action = na.omit, family=binomial(link='logit'))
   
 })
 
@@ -69,7 +74,7 @@ for (i in 1:length(SOFA_list)) {
 # Regression for SOFA all separately -> RRT
 mylogit <- glm(rrt ~ ethnicity_white + anchor_age + 
                  gender + anchor_year_group + SOFA + charlson_comorbidity_index + ventilation_bin + pressor, 
-               data = df2, family = "binomial")
+               data = df2, family=binomial(link='logit'))
 
 res_store_new <- as.data.frame(exp(cbind(OR = coef(mylogit), confint(mylogit))) )
 res_store_new$model <- "SOFA all"
@@ -77,13 +82,13 @@ res_store_new$cohort <- "combined"
 res_store_new$outcome <- "RRT"
 res_store <- rbind(res_store, res_store_new)
 
-# Regression SOFA 0-5
+# Regression SOFA levels
 
 # Loop over them and create model for each
 log_models = lapply(SOFA_list, function(x){
   glm(rrt ~ ethnicity_white + anchor_age + 
         gender + anchor_year_group + SOFA + charlson_comorbidity_index + ventilation_bin + pressor,
-      data = subset(df2, SOFA_new == x) ,na.action = na.omit)
+      data = subset(df2, SOFA_new == x) ,na.action = na.omit, family=binomial(link='logit'))
   
 })
 
@@ -105,7 +110,7 @@ for (i in 1:length(SOFA_list)) {
 # Regression for SOFA all separately -> Vasopressors
 mylogit <- glm(pressor ~ ethnicity_white + anchor_age + 
                  gender + anchor_year_group + SOFA + charlson_comorbidity_index + ventilation_bin + rrt, 
-               data = df2, family = "binomial")
+               data = df2, family=binomial(link='logit'))
 
 res_store_new <- as.data.frame(exp(cbind(OR = coef(mylogit), confint(mylogit))) )
 res_store_new$model <- "SOFA all"
@@ -119,7 +124,7 @@ res_store <- rbind(res_store, res_store_new)
 log_models = lapply(SOFA_list, function(x){
   glm(pressor ~ ethnicity_white + anchor_age + 
         gender + anchor_year_group + SOFA + charlson_comorbidity_index + ventilation_bin + rrt,
-      data = subset(df2, SOFA_new == x) ,na.action = na.omit)
+      data = subset(df2, SOFA_new == x), na.action = na.omit, family=binomial(link='logit'))
   
 })
 
