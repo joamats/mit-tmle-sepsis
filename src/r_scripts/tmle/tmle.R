@@ -29,7 +29,7 @@ run_tmle_sofa <- function(data_sofa, treatment) {
     result <- tmle(Y, A, W , family = "binomial", 
                     g.SL.library = c("SL.glm", "SL.glmnet", "SL.bayesglm","SL.mean"),
                     Q.SL.library = c("SL.glm", "SL.glmnet", "SL.stepAIC","SL.mean","SL.earth","SL.ranger","SL.gam", "SL.bayesglm","SL.glm.interaction", "SL.biglasso"),
-                    gbound = c(0.01, 1)
+                    gbound = c(0.05, 0.95)
                     )
 
     data_result <- list("data" = data_sofa, "result" = result)
