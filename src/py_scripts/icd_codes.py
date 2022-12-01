@@ -157,10 +157,14 @@ if __name__ == '__main__':
     # Get the mapping ICD codes - disease type
     disease_map = pd.read_csv("data\ICD_codes\map_icd_codes.csv")
 
+    # First let's create a column for each disease
+    for index, row in disease_map.iterrows():
+        df[row.disease_type] = np.nan
+    
     # Go over each ICD code for disease type, make true if our code matches
     for index, row in tqdm(disease_map.iterrows(), total=len(disease_map)):
 
-        df[row.disease_type] = df.icd_10.apply(lambda x: 1 if row.icd_10 in x else np.nan)
+        df[row.disease_type] = df.apply(lambda x: 1 if row.icd_10 in x.icd_10 else x[row.disease_type], axis=1)
 
     # Get unique disease types names
     unique_disease_types = disease_map.disease_type.unique()
