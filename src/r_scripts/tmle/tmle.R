@@ -41,7 +41,7 @@ run_tmle_sofa <- function(data_sofa, treatment) {
 # run TMLE by SOFA only (main analysis)
 tmle_stratified_sofas <- function(sepsis_data, treatment, cohort, df) {
 
-    sofa_ranges <- list(list(0,100), list(0, 5), list(6,10), list(11, 15), list(16, 100))
+    sofa_ranges <- list(list(0,100), list(0, 3), list(4,6), list(7, 10), list(11, 100))
 
     for (sofa in sofa_ranges) {
 

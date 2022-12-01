@@ -26,8 +26,6 @@ for (treatment in treatments) {
     # Stratified SOFAs
     df <- tmle_stratified_sofas(data, treatment, cohort, df)
 
-    # Stratified SOFAs && Year - plots as outputs
-    #tmle_stratified_sofas_year(sepsis_data, treatment, cohort)
 }
 
-write.csv(df, "results/TMLE_gbounds.csv")
+write.csv(df, "results/TMLE.csv")
