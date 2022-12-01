@@ -13,15 +13,15 @@ library(psych)
 source("src/r_scripts/utils/rebuild_data.R")
 
 # Without Super Learner Library 
-run_ltmle_abar_w_slLib <- function(sepsis_data, abar, Anodes, Lnodes) {
+run_ltmle_abar_w_slLib <- function(sepsis_data, t,c, Anodes, Lnodes) {
     result <- ltmle(data = sepsis_data, 
-        Anodes = Anodes,  # Treatment Nodes
-        Lnodes = Lnodes, # Time-Dependent Covariate Nodes
-        Ynodes = c("death_bin"), # Outcome Nodes
-        abar = abar, # binary matrix of counterfactual
-        gbounds = c(0.05, 0.95), # Lower and Upper bounds on estimated cumulative probabilities
-        Qform=NULL,
-        gform=NULL
+                    Anodes = Anodes,  # Treatment Nodes
+                    Lnodes = Lnodes, # Time-Dependent Covariate Nodes
+                    Ynodes = c("death_bin"), # Outcome Nodes
+                    abar = list(treament = t, control = c), # binary matrix of counterfactual
+                    gbounds = c(0.05, 0.95), # Lower and Upper bounds on estimated cumulative probabilities
+                    Qform=NULL,
+                    gform=NULL,
     )
     return(result)
 }
@@ -69,17 +69,22 @@ ltmle_stratified_sofas <- function(sepsis_data, treatment, cohort, df) {
     # cut data by SOFA score and run LTMLE by 2x2 WITH SL library
     sofa_ranges <- list(list(0,100), list(0, 5), list(6,10), list(11, 15), list(16, 100))
 
-    abars <- c(c(0,0), c(0,1), c(1,0), c(1,1))
-    analyses <- list('Non-white & Non-Treatment',
-                       'Non-white & Yes-Treatment',
-                       'White & Non-Treatment',
-                       'White & Yes-Treatment'
+    # treatments
+    ts <- c(c(0,0), c(1,0), c(0,0), c(1,0))
+    # controls
+    cs <- c(c(0,1), c(1,1), c(1,0), c(1,1))
+    
+    analyses <- list('Non-white',
+                     'White',
+                     'Non-Treatment',
+                     'Yes-Treatment'
                     )
 
     # Go through different analyses
     for (i in 1:4) {
 
-        abar <- c(abars[2*(i-1) + 1], abars[2*i]) 
+        t <- c(ts[2*(i-1) + 1], ts[2*i]) 
+        c <- c(cs[2*(i-1) + 1], cs[2*i]) 
         analysis <- analyses[i]
 
         for (sofa in sofa_ranges) {
@@ -89,11 +94,11 @@ ltmle_stratified_sofas <- function(sepsis_data, treatment, cohort, df) {
             data_sofa <- rebuild_data(data_between_sofa(sepsis_data, start, end), treatment)
 
             # Run LTMLE by 2x2 w/ SL library
-            result_run_ltmle_abar_00_wlib <- run_ltmle_abar_w_slLib(data_sofa, abar, Anodes, Lnodes)
-            log <- summary(result_run_ltmle_abar_00_wlib)
+            ATE <- run_ltmle_abar_w_slLib(data_sofa, t,c, Anodes, Lnodes)
+            log <- summary(ATE)
 
             # split CIs
-            ci <- gsub( "c", "", as.character(log$treatment["CI"])) 
+            ci <- gsub( "c", "", as.character(log$effect.measures$ATE["CI"])) 
             ci <- gsub( "[()]", "", ci) 
             i_ci <- as.double(strsplit(ci, split=', ')[[1]][1])
             s_ci <- as.double(strsplit(ci, split=', ')[[1]][2])
@@ -104,9 +109,9 @@ ltmle_stratified_sofas <- function(sepsis_data, treatment, cohort, df) {
                                    analysis,
                                    start,
                                    end,
-                                   log$treatment["estimate"][1],
-                                   log$treatment["std.dev"],
-                                   log$treatment["pvalue"][1],
+                                   log$effect.measures$ATE["estimate"][1],
+                                   log$effect.measures$ATE["std.dev"],
+                                   log$effect.measures$ATE["pvalue"][1],
                                    i_ci,    
                                    s_ci,
                                    nrow(data_sofa)
