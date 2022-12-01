@@ -70,7 +70,7 @@ tmle_stratified_sofas <- function(sepsis_data, treatment, cohort, df) {
                                treatment,
                                start,
                                end,
-                               toString(result$result$estimates$EY$psi),
+                               toString(result$result$estimates$ATE$psi),
                                i_ci,
                                s_ci,
                                toString(result$result$estimates$ATE$pvalue),
