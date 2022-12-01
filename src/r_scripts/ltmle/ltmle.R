@@ -69,10 +69,10 @@ ltmle_stratified_sofas <- function(sepsis_data, treatment, cohort, df) {
     # cut data by SOFA score and run LTMLE by 2x2 WITH SL library
     sofa_ranges <- list(list(0,100), list(0, 5), list(6,10), list(11, 15), list(16, 100))
 
-    # treatments
-    ts <- c(c(0,0), c(1,0), c(0,0), c(1,0))
     # controls
-    cs <- c(c(0,1), c(1,1), c(1,0), c(1,1))
+    cs <- c(c(0,0), c(1,0), c(0,0), c(0,1))
+    # controls
+    ts <- c(c(0,1), c(1,1), c(1,0), c(1,1))
     
     analyses <- list('Non-white',
                      'White',
