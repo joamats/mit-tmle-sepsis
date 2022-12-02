@@ -100,7 +100,7 @@ if __name__ == '__main__':
     args = parse_args()
     df = run_query(sql_query_path = args.sql_query_path)
 
-    if "eICU" in args.destination_path:
+    if args.destination_path  == "data/eICU_data.csv":
         df = combine_treatment_eICU(df, args.destination_path)
     
     df.to_csv(args.destination_path)
