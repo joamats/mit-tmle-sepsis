@@ -9,9 +9,176 @@ yug.hospitaldischargeyear as anchor_year_group,
 -- newly added 
 vent_1, vent_2, vent_3, vent_4, vent_5, vent_6,
 rrt_1,
-pressor_1, pressor_2, pressor_3, pressor_4
+pressor_1, pressor_2, pressor_3, pressor_4, 
+apachepatientresultO.apachescore, apachepatientresultO.acutephysiologyscore, apachepatientresultO.apache_pred_hosp_mort,
+hospitaladmitoffset_OASIS,
+gcs_OASIS,
+heartrate_OASIS,
+ibp_mean_OASIS,
+respiratoryrate_OASIS,
+temperature_OASIS,
+urineoutput_OASIS,
+electivesurgery_OASIS
 
-FROM `db_name.my_eICU.yugang` as yug
+FROM `db_name.my_eICU.yugang` as yug 
+
+-- Pre-ICU stay LOS -> Mapping according to OASIS -> convert from hours to minutes
+LEFT JOIN(
+  SELECT patientunitstayid, CASE
+    WHEN COUNT(hospitaladmitoffset) < (0.17*60) THEN 5
+    WHEN (COUNT(hospitaladmitoffset) >= (0.17*60) OR COUNT(hospitaladmitoffset) <= (4.94*60) ) THEN 3
+    WHEN (COUNT(hospitaladmitoffset) >= (4.94*60) OR COUNT(hospitaladmitoffset) <= (24*60) ) THEN 0
+    WHEN (COUNT(hospitaladmitoffset) >= (24.01*60) OR COUNT(hospitaladmitoffset) <= (311.80*60) ) THEN 2
+    WHEN COUNT(hospitaladmitoffset) > (311.80*60) THEN 1
+    ELSE NULL
+    END AS hospitaladmitoffset_OASIS
+
+  FROM `physionet-data.eicu_crd.patient`
+  GROUP BY patientunitstayid
+)
+AS hospitaladmitoffsetO
+ON hospitaladmitoffsetO.patientunitstayid = yug.patientunitstayid
+
+-- Age -> Mapping according to OASIS in R
+-- <24 = 0, 24-53 = 3, 54-77 = 6, 78-89 =9 ,>90 =7
+
+-- GCS -> Mapping according to OASIS
+LEFT JOIN(
+  SELECT patientunitstayid, CASE
+    WHEN COUNT(gcs) < 8 THEN 10
+    WHEN (COUNT(gcs) >=8 OR COUNT(gcs) <=13) THEN 4
+    WHEN COUNT(gcs) =14 THEN 3
+    WHEN COUNT(gcs) =15 THEN 0
+    ELSE NULL
+    END AS gcs_OASIS
+
+  FROM `physionet-data.eicu_crd_derived.pivoted_gcs`
+  WHERE (chartoffset > 0 AND chartoffset <= 1440 ) -- convert hours to minutes -> 60*24=1440
+  GROUP BY patientunitstayid
+)
+AS gcsO
+ON gcsO.patientunitstayid = yug.patientunitstayid
+
+-- Heart rate -> Mapping according to OASIS
+LEFT JOIN(
+  SELECT patientunitstayid, CASE
+    WHEN COUNT(heartrate) < 33 THEN 4
+    WHEN (COUNT(heartrate) >=33 OR COUNT(heartrate) <=88) THEN 0
+    WHEN (COUNT(heartrate) >=89 OR COUNT(heartrate) <=106) THEN 1
+    WHEN (COUNT(heartrate) >=107 OR COUNT(heartrate) <=125) THEN 3
+    WHEN COUNT(heartrate) >125 THEN 6
+    ELSE NULL
+    END AS heartrate_OASIS
+
+  FROM `physionet-data.eicu_crd_derived.pivoted_vital`
+  WHERE (chartoffset > 0 AND chartoffset <= 1440 ) -- convert hours to minutes -> 60*24=1440
+  GROUP BY patientunitstayid
+)
+AS heartrateO
+ON heartrateO.patientunitstayid = yug.patientunitstayid
+
+-- Mean arterial pressure -> Mapping according to OASIS
+LEFT JOIN(
+  SELECT patientunitstayid, CASE
+    WHEN COUNT(ibp_mean) < 20.65 THEN 4
+    WHEN (COUNT(ibp_mean) >=20.65 OR COUNT(ibp_mean) <=50.99) THEN 3
+    WHEN (COUNT(ibp_mean) >=51 OR COUNT(ibp_mean) <=61.32) THEN 2
+    WHEN (COUNT(ibp_mean) >=61.33 OR COUNT(ibp_mean) <=143.44) THEN 0
+    WHEN COUNT(ibp_mean) >143.44 THEN 3
+    ELSE NULL
+    END AS ibp_mean_OASIS
+
+  FROM `physionet-data.eicu_crd_derived.pivoted_vital`
+  WHERE (chartoffset > 0 AND chartoffset <= 1440 ) -- convert hours to minutes -> 60*24=1440
+  GROUP BY patientunitstayid
+)
+AS ibp_meanO
+ON ibp_meanO.patientunitstayid = yug.patientunitstayid
+
+
+-- Respiratory rate -> Mapping according to OASIS
+LEFT JOIN(
+  SELECT patientunitstayid, CASE
+    WHEN COUNT(respiratoryrate) < 6 THEN 10
+    WHEN (COUNT(respiratoryrate) >=6 OR COUNT(respiratoryrate) <=12) THEN 1
+    WHEN (COUNT(respiratoryrate) >=13 OR COUNT(respiratoryrate) <=22) THEN 0
+    WHEN (COUNT(respiratoryrate) >=23 OR COUNT(respiratoryrate) <=30) THEN 1
+    WHEN (COUNT(respiratoryrate) >=31 OR COUNT(respiratoryrate) <=44) THEN 6
+    WHEN COUNT(respiratoryrate) >44 THEN 9
+    ELSE NULL
+    END AS respiratoryrate_OASIS
+
+  FROM `physionet-data.eicu_crd_derived.pivoted_vital`
+  WHERE (chartoffset > 0 AND chartoffset <= 1440 ) -- convert hours to minutes -> 60*24=1440
+  GROUP BY patientunitstayid
+)
+AS respiratoryrateO
+ON respiratoryrateO.patientunitstayid = yug.patientunitstayid
+
+-- Temperature first 24h -> Mapping according to OASIS
+LEFT JOIN(
+  SELECT patientunitstayid, CASE
+    WHEN COUNT(temperature) < 33.22 THEN 3
+    WHEN (COUNT(temperature) >=33.22 OR COUNT(temperature) <=35.93) THEN 4
+    WHEN (COUNT(temperature) >=35.94 OR COUNT(temperature) <=36.39) THEN 2
+    WHEN (COUNT(temperature) >=36.40 OR COUNT(temperature) <=36.88) THEN 0
+    WHEN (COUNT(temperature) >=36.89 OR COUNT(temperature) <=39.88) THEN 2
+    WHEN COUNT(temperature) >39.88 THEN 6
+    ELSE NULL
+    END AS temperature_OASIS
+
+  FROM `physionet-data.eicu_crd_derived.pivoted_vital`
+  WHERE (chartoffset > 0 AND chartoffset <= 1440 ) -- convert hours to minutes -> 60*24=1440
+  GROUP BY patientunitstayid
+)
+AS temperatureO
+ON temperatureO.patientunitstayid = yug.patientunitstayid
+
+-- Urine output first 24h -> Mapping according to OASIS
+LEFT JOIN(
+  SELECT patientunitstayid, CASE
+    WHEN COUNT(urineoutput) <671 THEN 10
+    WHEN (COUNT(urineoutput) >=671 OR COUNT(urineoutput) <=1426.99) THEN 5
+    WHEN (COUNT(urineoutput) >=1427 OR COUNT(urineoutput) <=2543.99) THEN 1
+    WHEN (COUNT(urineoutput) >=2544 OR COUNT(urineoutput) <=6896) THEN 0
+    WHEN COUNT(urineoutput) >6896 THEN 8
+    ELSE NULL
+    END AS urineoutput_OASIS
+
+  FROM `db_name.icu_elos.pivoted_uo_24h`
+  GROUP BY patientunitstayid
+)
+AS urineoutputO
+ON urineoutputO.patientunitstayid = yug.patientunitstayid
+
+-- Ventilation -> Mapping according to OASIS in R -> No 0, Yes 9
+
+-- Elective surgery -> Mapping according to OASIS
+LEFT JOIN(
+  SELECT patientunitstayid, CASE
+    WHEN electivesurgery = 1 THEN 0
+    WHEN electivesurgery = 0 THEN 6
+    ELSE NULL
+    END AS electivesurgery_OASIS
+
+  FROM `physionet-data.eicu_crd.apachepredvar`
+)
+AS electivesurgeryO
+ON electivesurgeryO.patientunitstayid = yug.patientunitstayid
+
+
+-- APACHE IV
+LEFT JOIN(
+  SELECT patientunitstayid, 
+  apachescore,
+  acutephysiologyscore,
+  predictedhospitalmortality as apache_pred_hosp_mort
+  FROM `physionet-data.eicu_crd.apachepatientresult`
+  WHERE apacheversion = "IVa"
+)
+AS apachepatientresultO
+ON apachepatientresultO.patientunitstayid = yug.patientunitstayid
+
 
 -- ventilation events
 LEFT JOIN (
@@ -185,4 +352,3 @@ ON icustay_detail.patientunitstayid = yug.patientunitstayid
 WHERE icustay_detail.unitvisitnumber = 1
 AND yug.ethnicity != "Other/Unknown"
 AND yug.age != "16" AND yug.age != "17"
-
