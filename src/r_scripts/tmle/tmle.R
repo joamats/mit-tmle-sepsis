@@ -10,17 +10,25 @@ run_tmle_sofa <- function(data_sofa, treatment) {
 
     if(treatment == "ventilation_bin") {
 
-        W <- data_sofa[, c("source","anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index","rrt", "pressor")]
+        W <- data_sofa[, c("source","anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index",
+                           "rrt", "pressor",
+                           "hypertension", "heart_failure", "ckd", "copd", "asthma")]
         A <- data_sofa$ventilation_bin
 
     } else if(treatment == "rrt") {
 
-        W <- data_sofa[, c("source","anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index", "pressor", "ventilation_bin")]
+        W <- data_sofa[, c("source","anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index",
+                           "pressor", "ventilation_bin",
+                           "hypertension", "heart_failure", "ckd", "copd", "asthma")]
+
         A <- data_sofa$rrt
 
     } else if(treatment == "pressor") {
 
-        W <- data_sofa[, c("source","anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index", "rrt", "ventilation_bin")]
+        W <- data_sofa[, c("source","anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index",
+                           "rrt", "ventilation_bin",
+                           "hypertension", "heart_failure", "ckd", "copd", "asthma")]
+                           
         A <- data_sofa$pressor
     }
 

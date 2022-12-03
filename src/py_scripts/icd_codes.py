@@ -224,18 +224,14 @@ if __name__ == '__main__':
         # Join with the missing data csv
         df = df1.set_index(key).join(df2.set_index("pid").drop("Unnamed: 0", axis=1), rsuffix='_')
 
-        df.hypertension = df.apply(lambda row: 1 if ((row.hypertension != np.nan) | (row.hypertension_ != np.nan)) else np.nan, axis=1)
-        df.heart_failure = df.apply(lambda row: 1 if ((row.heart_failure != np.nan) | (row.heart_failure_ != np.nan)) else np.nan, axis=1)
-        df.ckd = df.apply(lambda row: max(row.ckd, row.ckd_) if ((row.ckd != np.nan) | (row.ckd_ != np.nan)) else np.nan, axis=1)
-        df.copd = df.apply(lambda row: 1 if ((row.copd != np.nan) | (row.copd_ != np.nan)) else np.nan, axis=1)
-        df.asthma = df.apply(lambda row: 1 if ((row.asthma != np.nan) | (row.asthma_ != np.nan)) else np.nan, axis=1)
-
-
     # Get together
     df_all = df_sepsis.set_index(key).join(df, rsuffix="_")
 
-    # Remove unnamed columns
-    #df_all = df_all.loc[:, ~df_all.columns.str.contains('^Unnamed')]
+    df_all.hypertension = df_all.apply(lambda row: 1 if ((row.hypertension == 1) | (row.hypertension_ == 1)) else np.nan, axis=1)
+    df_all.heart_failure = df_all.apply(lambda row: 1 if ((row.heart_failure == 1) | (row.heart_failure_ == 1)) else np.nan, axis=1)
+    df_all.ckd = df_all.apply(lambda row: max(row.ckd, row.ckd_) if ((row.ckd != 0) | (row.ckd_ != 0)) else np.nan, axis=1)
+    df_all.copd = df_all.apply(lambda row: 1 if ((row.copd == 1) | (row.copd_ == 1)) else np.nan, axis=1)
+    df_all.asthma = df_all.apply(lambda row: 1 if ((row.asthma == 1) | (row.asthma_ != 1)) else np.nan, axis=1)
 
     print(f"Cancer patients: {len(df)}")
     print(f"Sepsis patients: {len(df_sepsis)}")
