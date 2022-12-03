@@ -35,7 +35,7 @@ for i, t in enumerate(treatments):
     axes[i].set_title(t_dict[t])
     axes[0].set(ylabel="ATE (%)\nTreated vs. Not Treated")
 
-    axes[i].set_xticklabels(["0 - 3", "4 - 6", "7 - 10", "> 10"])
+    axes[i].set_xticklabels(["0-3", "4-6", "7-10", ">10"])
     axes[i].set_xticks([0, 4, 7, 11])
 
 fig.supxlabel('SOFA Range')

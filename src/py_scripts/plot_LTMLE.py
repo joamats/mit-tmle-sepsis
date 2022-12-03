@@ -49,7 +49,7 @@ for i, a in enumerate(analyses):
         axes[0,j].set_title(t_dict[t])
         axes[i,0].set(ylabel=a_dict[a])
         
-        axes[-1,j].set_xticklabels(["0 - 3", "4 - 6", "7 - 10", "> 10"])
+        axes[-1,j].set_xticklabels(["0-3", "4-6", "7-10", ">10"])
         axes[-1,j].set_xticks([0, 4, 7, 11])
 
 
