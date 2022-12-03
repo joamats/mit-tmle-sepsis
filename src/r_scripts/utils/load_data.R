@@ -73,7 +73,8 @@ load_data <- function(cohort){
 
   # Return just keeping columns of interest
   return(sepsis_data[, c("gender", "los", "ventilation_bin", "pressor", "rrt", "death_bin", "ethnicity_white",
-                         "charlson_cont", "charlson_comorbidity_index", "anchor_age", "SOFA", "anchor_year_group")])
+                         "charlson_cont", "charlson_comorbidity_index", "anchor_age", "SOFA", "anchor_year_group",
+                         "hypertension", "heart_failure", "ckd", "copd", "asthma")])
 }
 
 get_merged_datasets <- function() {
