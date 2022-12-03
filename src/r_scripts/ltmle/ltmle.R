@@ -74,8 +74,6 @@ ltmle_stratified_sofas <- function(sepsis_data, treatment, cohort, df) {
     Anodes <- get_anodes(treatment)
     Lnodes <- get_lnodes(treatment)
 
-    data_sofa <- rebuild_data(sepsis_data, treatment)
-
     # cut data by SOFA score and run LTMLE by 2x2 WITH SL library
     sofa_ranges <- list(list(0,100), list(0, 3), list(4,6), list(7, 10), list(11, 100))
 

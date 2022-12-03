@@ -210,6 +210,9 @@ if __name__ == '__main__':
 
         key = "subject_id"
 
+        df_all = df_sepsis.set_index(key).join(df, rsuffix="_")
+
+
     elif args.dataset == "eICU":
         df_sepsis = pd.read_csv("data\eICU_data.csv")
         # Combine vent, rrt, vasopressor columns into one of each only
@@ -224,16 +227,16 @@ if __name__ == '__main__':
         # Join with the missing data csv
         df = df1.set_index(key).join(df2.set_index("pid").drop("Unnamed: 0", axis=1), rsuffix='_')
 
-    # Get together
-    df_all = df_sepsis.set_index(key).join(df, rsuffix="_")
+        # Get together
+        df_all = df_sepsis.set_index(key).join(df, rsuffix="_")
 
-    df_all.hypertension = df_all.apply(lambda row: 1 if ((row.hypertension == 1) | (row.hypertension_ == 1)) else np.nan, axis=1)
-    df_all.heart_failure = df_all.apply(lambda row: 1 if ((row.heart_failure == 1) | (row.heart_failure_ == 1)) else np.nan, axis=1)
-    df_all.ckd = df_all.apply(lambda row: max(row.ckd, row.ckd_) if ((row.ckd != 0) | (row.ckd_ != 0)) else np.nan, axis=1)
-    df_all.copd = df_all.apply(lambda row: 1 if ((row.copd == 1) | (row.copd_ == 1)) else np.nan, axis=1)
-    df_all.asthma = df_all.apply(lambda row: 1 if ((row.asthma == 1) | (row.asthma_ != 1)) else np.nan, axis=1)
+        df_all.hypertension = df_all.apply(lambda row: 1 if ((row.hypertension == 1) | (row.hypertension_ == 1)) else np.nan, axis=1)
+        df_all.heart_failure = df_all.apply(lambda row: 1 if ((row.heart_failure == 1) | (row.heart_failure_ == 1)) else np.nan, axis=1)
+        df_all.ckd = df_all.ckd_ # vlues are all in ckd_
+        df_all.copd = df_all.apply(lambda row: 1 if ((row.copd == 1) | (row.copd_ == 1)) else np.nan, axis=1)
+        df_all.asthma = df_all.apply(lambda row: 1 if ((row.asthma == 1) | (row.asthma_ != 1)) else np.nan, axis=1)
 
-    print(f"Cancer patients: {len(df)}")
+    print(f"Patients with Past Disease: {len(df)}")
     print(f"Sepsis patients: {len(df_sepsis)}")
     print(f"Final patients: {len(df_all)}")
 

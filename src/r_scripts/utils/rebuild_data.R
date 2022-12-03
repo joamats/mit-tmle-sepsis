@@ -22,6 +22,11 @@ rebuild_data <- function(sepsis_data, treatment) {
     }
 
     sepsis_data_new$anchor_year_group1  <- sepsis_data[, c("anchor_year_group")]
+    sepsis_data_new$hypertension1 <- sepsis_data[, c("hypertension")]
+    sepsis_data_new$heart_failure1 <- sepsis_data[, c("heart_failure")]
+    sepsis_data_new$ckd1 <- sepsis_data[, c("ckd")]
+    sepsis_data_new$copd1 <- sepsis_data[, c("copd")]
+    sepsis_data_new$asthma1 <- sepsis_data[, c("asthma")]
 
 
     sepsis_data_new$source2 <- sepsis_data[, c("source")]
@@ -42,6 +47,12 @@ rebuild_data <- function(sepsis_data, treatment) {
     }
 
     sepsis_data_new$anchor_year_group2  <- sepsis_data[, c("anchor_year_group")]
+    sepsis_data_new$hypertension2 <- sepsis_data[, c("hypertension")]
+    sepsis_data_new$heart_failure2 <- sepsis_data[, c("heart_failure")]
+    sepsis_data_new$ckd2 <- sepsis_data[, c("ckd")]
+    sepsis_data_new$copd2 <- sepsis_data[, c("copd")]
+    sepsis_data_new$asthma2 <- sepsis_data[, c("asthma")]    
+    
     sepsis_data_new$death_bin <- sepsis_data[,c('death_bin')]
 
     return(na.omit(sepsis_data_new))
@@ -52,15 +63,8 @@ rebuild_data <- function(sepsis_data, treatment) {
 data_between_sofa <- function(sepsis_data, sofa_low_inclusive, sofa_high_inclusive) {
 
     res <- sepsis_data[sepsis_data$SOFA <= sofa_high_inclusive & sepsis_data$SOFA >= sofa_low_inclusive,
-        c("source","anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index","anchor_year_group", "ventilation_bin", "death_bin", "rrt", "pressor")]
+        c("source","anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index","anchor_year_group", "ventilation_bin", "death_bin", "rrt", "pressor",
+         "hypertension", "heart_failure", "ckd", "copd", "asthma")]
     
-    return(na.omit(res))
-}
-
-# Get data within SOFA and years ranges
-data_between_sofa_and_anchor_year_group <- function(sepsis_data, sofa_low_inclusive, sofa_high_inclusive,ayg_value) {
-    
-    res <- sepsis_data[sepsis_data$SOFA <= sofa_high_inclusive & sepsis_data$SOFA >= sofa_low_inclusive & sepsis_data$anchor_year_group == ayg_value,
-                       c("source","anchor_age","gender","ethnicity_white","SOFA","charlson_comorbidity_index", "ventilation_bin", "death_bin", "rrt", "pressor")]
     return(na.omit(res))
 }
