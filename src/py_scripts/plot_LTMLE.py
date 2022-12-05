@@ -43,7 +43,7 @@ for i, a in enumerate(analyses):
         axes[i,j].set(ylabel=None)
         axes[i,j].errorbar(x=df_temp.sofa_start, y=df_temp.psi,
                            yerr=((df_temp.psi- df_temp.iCI), (df_temp.sCI-df_temp.psi)),
-                           fmt='-o', c=colors[j], ecolor="tab:gray", elinewidth=.7, linewidth=2)
+                           fmt='-o', c=colors[j], ecolor="tab:gray", elinewidth=.7, linewidth=2, capsize=4)
         axes[i,j].axhline(y=0, xmin=0, xmax=1, c="black", linewidth=.7, linestyle='--')
         axes[i,j].set_ylim([-12, 12])
         axes[0,j].set_title(t_dict[t])
