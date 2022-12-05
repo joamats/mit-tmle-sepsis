@@ -1,8 +1,22 @@
-SELECT yug.*, 
+DROP TABLE IF EXISTS `db_name.my_eICU.OASIS`;
+
+CREATE TABLE `db_name.my_eICU.OASIS` AS
+
+WITH tt3 AS (
+    WITH tt2 AS (
+      WITH tt AS (
+
+SELECT yug.*,
+yug.patientunitstayid as pid, 
 -- to match MIMIC's names
 yug.Charlson as charlson_comorbidity_index,
 yug.ethnicity as race,
-yug.age as anchor_age,
+
+CASE 
+WHEN yug.age = "> 89" THEN 91
+ELSE CAST(yug.age AS INT64) 
+END AS anchor_age,
+
 yug.sofa_admit as SOFA, 
 yug.hospitaldischargeyear as anchor_year_group,
 
@@ -39,7 +53,7 @@ LEFT JOIN(
 AS hospitaladmitoffsetO
 ON hospitaladmitoffsetO.patientunitstayid = yug.patientunitstayid
 
--- Age -> Mapping according to OASIS in R
+-- Age -> Mapping according to OASIS below
 -- <24 = 0, 24-53 = 3, 54-77 = 6, 78-89 =9 ,>90 =7
 
 -- GCS -> Mapping according to OASIS
@@ -151,7 +165,7 @@ LEFT JOIN(
 AS urineoutputO
 ON urineoutputO.patientunitstayid = yug.patientunitstayid
 
--- Ventilation -> Mapping according to OASIS in R -> No 0, Yes 9
+-- Ventilation -> Mapping according to OASIS, see below -> No 0, Yes 9
 
 -- Elective surgery -> Mapping according to OASIS
 LEFT JOIN(
@@ -297,7 +311,6 @@ LEFT JOIN(
 AS infusiondrug
 ON infusiondrug.patientunitstayid = yug.patientunitstayid
 
-
 -- medication
 LEFT JOIN(
   SELECT patientunitstayid, COUNT(drugname) as pressor_3
@@ -352,3 +365,62 @@ ON icustay_detail.patientunitstayid = yug.patientunitstayid
 WHERE icustay_detail.unitvisitnumber = 1
 AND yug.ethnicity != "Other/Unknown"
 AND yug.age != "16" AND yug.age != "17"
+)
+
+
+SELECT *
+
+    , CASE
+    WHEN anchor_age < 24 THEN 0
+    WHEN (anchor_age >= 24 OR anchor_age <= 53) THEN 3
+    WHEN (anchor_age >= 54 OR anchor_age <= 77) THEN 6
+    WHEN (anchor_age >= 78 OR anchor_age <= 89) THEN 9
+    WHEN anchor_age > 90 THEN 7
+    ELSE NULL
+    END AS age_OASIS
+
+    , CASE
+    WHEN vent_1 = 1 THEN 9
+    WHEN vent_2 = 1 THEN 9
+    WHEN vent_3 = 1 THEN 9
+    WHEN vent_4 = 1 THEN 9
+    WHEN vent_5 = 1 THEN 9
+    WHEN vent_6 = 1 THEN 9
+    ELSE 0
+    END AS vent_OASIS,
+
+  IFNULL(gcs_OASIS, 10) AS gcs_OASIS_W, 
+  IFNULL(urineoutput_OASIS, 10) AS urineoutput_OASIS_W, 
+  IFNULL(electivesurgery_OASIS, 6) AS electivesurgery_OASIS_W, 
+  IFNULL(temperature_OASIS, 6) AS temperature_OASIS_W, 
+  IFNULL(respiratoryrate_OASIS, 10) AS respiratoryrate_OASIS_W,
+  IFNULL(heartrate_OASIS, 6) AS heartrate_OASIS_W,
+  IFNULL(ibp_mean_oasis, 4) AS ibp_mean_oasis_W,
+
+  IFNULL(gcs_OASIS, 0) AS gcs_OASIS_B, 
+  IFNULL(urineoutput_OASIS, 0) AS urineoutput_OASIS_B, 
+  IFNULL(electivesurgery_OASIS, 0) AS electivesurgery_OASIS_B, 
+  IFNULL(temperature_OASIS, 0) AS temperature_OASIS_B, 
+  IFNULL(respiratoryrate_OASIS, 0) AS respiratoryrate_OASIS_B,
+  IFNULL(heartrate_OASIS, 0) AS heartrate_OASIS_B,
+  IFNULL(ibp_mean_oasis, 0) AS ibp_mean_oasis_B
+
+FROM tt)
+
+--Compute overall scores -> Fist Worst, then Best Case Scenario
+ SELECT *,
+
+    (hospitaladmitoffset_OASIS + gcs_OASIS_W + heartrate_OASIS_W +
+    ibp_mean_OASIS_W + respiratoryrate_OASIS_W + temperature_OASIS_W +
+    urineoutput_OASIS_W + electivesurgery_OASIS_W + age_OASIS + vent_OASIS) AS score_OASIS_W
+
+FROM tt2)
+
+ SELECT *,
+ 
+    (hospitaladmitoffset_OASIS + gcs_OASIS_B + heartrate_OASIS_B +
+    ibp_mean_OASIS_B + respiratoryrate_OASIS_B + temperature_OASIS_B +
+    urineoutput_OASIS_B + electivesurgery_OASIS_B + age_OASIS + vent_OASIS) AS score_OASIS_B
+
+FROM tt3
+
