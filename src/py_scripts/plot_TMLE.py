@@ -40,4 +40,4 @@ for i, t in enumerate(treatments):
 
 fig.supxlabel('SOFA Range')
 
-fig.savefig("results/Paper/TMLE.png", dpi=700)
+fig.savefig("results/paper/fig2_TMLE.png", dpi=700)

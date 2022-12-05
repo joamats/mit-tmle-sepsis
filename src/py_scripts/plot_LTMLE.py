@@ -57,4 +57,4 @@ fig.supxlabel('SOFA Range')
 fig.supylabel('ATE (%)')
     
 
-fig.savefig("results/Paper/LTMLE.png", dpi=700)
+fig.savefig("results/paper/LTMLE.png", dpi=700)
