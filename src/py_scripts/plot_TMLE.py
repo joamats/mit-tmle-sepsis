@@ -29,7 +29,8 @@ for i, t in enumerate(treatments):
     df_temp = df[df.treatment == t]
     axes[i].set(xlabel=None)
     axes[i].set(ylabel=None)
-    axes[i].errorbar(x=df_temp.sofa_start, y=df_temp.psi, yerr=((df_temp.psi- df_temp.i_ci), (df_temp.s_ci-df_temp.psi)), fmt='-o', c=colors[i], ecolor='tab:gray', elinewidth=.7, linewidth=2)
+    axes[i].errorbar(x=df_temp.sofa_start, y=df_temp.psi, yerr=((df_temp.psi- df_temp.i_ci), (df_temp.s_ci-df_temp.psi)), fmt='-o', c=colors[i],
+                     ecolor='tab:gray', elinewidth=.4, linewidth=1.5, capsize=4, markeredgewidth=.4)
     axes[i].axhline(y=0, xmin=0, xmax=1, c="black", linewidth=.7, linestyle='--')
     axes[i].set_ylim([-20, 20])
     axes[i].set_title(t_dict[t])
