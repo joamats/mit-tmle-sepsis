@@ -57,7 +57,7 @@ m_e_df$gender <- factor(df$gender, levels = c(0, 1),
 
 m_e_df$pressor <- factor(m_e_df$pressor)
 m_e_df$rrt <- factor(m_e_df$rrt)
-m_e_df$ventilation_bin <- factor(m_e_df$ventilation_bin)
+m_e_df$vent <- factor(m_e_df$vent)
 
 m_e_df$ethnicity_white <- factor(m_e_df$ethnicity_white, levels = c(0, 1), 
                            labels = c('Non-White', 'White'))
@@ -91,7 +91,7 @@ label(m_e_df$charlson_comorbidity_index) <- "Charlson index categorical"
 
 label(m_e_df$pressor) <- "Vasopressor"
 
-label(m_e_df$ventilation_bin)       <- "Invasive ventilation"
+label(m_e_df$vent)       <- "Invasive ventilation"
 
 label(m_e_df$death_bin)       <- "In-hospital mortality"
 label(m_e_df$source)    <- "Cohort"
@@ -108,7 +108,7 @@ render.strat <- function (label, n, ...) {
 }
 
 # Create table1 object
-tbl1 <- table1(~ death_bin + source + pressor + ventilation_bin + rrt +
+tbl1 <- table1(~ death_bin + source + pressor + vent + rrt +
                  age_new + anchor_age + gender + SOFA_new + SOFA  + los + los_s + los_d +
                   charlson_comorbidity_index + charlson_cont
                | ethnicity_white, data=m_e_df, render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
@@ -119,7 +119,7 @@ t1flex(tbl1) %>%
   save_as_docx(path="results/Table1_m_e.docx")
 
 # Create table1 object for MIMIC 
-tbl1 <- table1(~ death_bin + source + pressor + ventilation_bin + rrt +
+tbl1 <- table1(~ death_bin + source + pressor + vent + rrt +
                  age_new + anchor_age + gender + SOFA_new + SOFA  + los + los_s + los_d +
                  charlson_comorbidity_index + charlson_cont
                | ethnicity_white, data= subset(m_e_df, source==1), render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
@@ -130,7 +130,7 @@ t1flex(tbl1) %>%
   save_as_docx(path="results/Table1_MIMIC.docx")
 
 # Create table1 object for eICU 
-tbl1 <- table1(~ death_bin + source + pressor + ventilation_bin + rrt +
+tbl1 <- table1(~ death_bin + source + pressor + vent + rrt +
                  age_new + anchor_age + gender + SOFA_new + SOFA  + los + los_s + los_d +
                  charlson_comorbidity_index + charlson_cont
                | ethnicity_white, data= subset(m_e_df, source==0), render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",

@@ -18,7 +18,7 @@ df.sCI = df.sCI * 100
 treatments = df.treatment.unique()
 analyses = df.analysis.unique()
 
-t_dict = dict(zip(["ventilation_bin", "rrt", "pressor"],
+t_dict = dict(zip(["vent", "rrt", "pressor"],
                   ["Mechanical Ventilation", "RRT", "Vasopressor(s)"]))
 
 a_dict = {
