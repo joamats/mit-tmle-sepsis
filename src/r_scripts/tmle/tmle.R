@@ -16,7 +16,7 @@ run_tmle_sofa <- function(data_sofa, treatment) {
 
     } else if(treatment == "rrt") {
 
-        W <- data_sofa[, append(confounders, c("rrt", "pressor"))]
+        W <- data_sofa[, append(confounders, c("ventilation_bin", "pressor"))]
         A <- data_sofa$rrt
 
     } else if(treatment == "pressor") {
