@@ -39,17 +39,27 @@ get_lnodes <- function(treatment) {
 
     if (treatment == "ventilation_bin") {
 
-        l1 <- c("source1","gender1", "anchor_age1", "charlson_comorbidity_index1", "SOFA1", "pressor1", "rrt1", "anchor_year_group1")
-        l2 <- c("source2","gender2", "anchor_age2", "charlson_comorbidity_index2", "SOFA2", "pressor2", "rrt2", "anchor_year_group2")
+        l1 <- c("source1","gender1", "anchor_age1", "charlson_comorbidity_index1", "SOFA1", "pressor1", "rrt1", #"anchor_year_group1",
+                "hypertension1", "heart_failure1", "ckd1", "copd1", "asthma1")
+
+        l2 <- c("source2","gender2", "anchor_age2", "charlson_comorbidity_index2", "SOFA2", "pressor2", "rrt2", #"anchor_year_group2",
+                "hypertension2", "heart_failure2", "ckd2", "copd2", "asthma2")
 
     } else if (treatment == "rrt") {
 
-        l1 <- c("source1","gender1", "anchor_age1", "charlson_comorbidity_index1", "SOFA1", "pressor1", "ventilation_bin1", "anchor_year_group1")
-        l2 <- c("source2","gender2", "anchor_age2", "charlson_comorbidity_index2", "SOFA2", "pressor2", "ventilation_bin2", "anchor_year_group2")
+        l1 <- c("source1","gender1", "anchor_age1", "charlson_comorbidity_index1", "SOFA1", "pressor1", "vent1", #"anchor_year_group1",
+                "hypertension1", "heart_failure1", "ckd1", "copd1", "asthma1")
+
+        l2 <- c("source2","gender2", "anchor_age2", "charlson_comorbidity_index2", "SOFA2", "pressor2", "vent2", #"anchor_year_group2",
+                "hypertension2", "heart_failure2", "ckd2", "copd2", "asthma2")
 
     } else if (treatment == "pressor") {
-        l1 <- c("source1","gender1", "anchor_age1", "charlson_comorbidity_index1", "SOFA1", "rrt1", "ventilation_bin1", "anchor_year_group1")
-        l2 <- c("source2","gender2", "anchor_age2", "charlson_comorbidity_index2", "SOFA2", "rrt2", "ventilation_bin2", "anchor_year_group2")
+        l1 <- c("source1","gender1", "anchor_age1", "charlson_comorbidity_index1", "SOFA1", "rrt1", "vent1", #"anchor_year_group1",
+                "hypertension1", "heart_failure1", "ckd1", "copd1", "asthma1")
+        
+        l2 <- c("source2","gender2", "anchor_age2", "charlson_comorbidity_index2", "SOFA2", "rrt2", "vent2", #"anchor_year_group2",
+                "hypertension2", "heart_failure2", "ckd2", "copd2", "asthma2")
+
     }
 
     Lnodes <- c(l1, l2)
@@ -63,8 +73,6 @@ ltmle_stratified_sofas <- function(sepsis_data, treatment, cohort, df) {
 
     Anodes <- get_anodes(treatment)
     Lnodes <- get_lnodes(treatment)
-
-    data_sofa <- rebuild_data(sepsis_data, treatment)
 
     # cut data by SOFA score and run LTMLE by 2x2 WITH SL library
     sofa_ranges <- list(list(0,100), list(0, 3), list(4,6), list(7, 10), list(11, 100))

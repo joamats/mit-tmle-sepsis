@@ -32,14 +32,14 @@ replace sofa_group = 4 if sofa >15 & sofa !=.
 putexcel set log_reg_results, replace sheet(MIMIC, replace)
 putexcel A1="SOFA" B1="OR" C1="OR lCI" D1="OR uCI" E1="p-value"
 
-    logistic ventilation_bin ethnicity_white anchor_age female i.anchor_year sofa i.charlson_comorbidity_index rrt pressor
+    logistic vent ethnicity_white anchor_age female i.anchor_year sofa i.charlson_comorbidity_index rrt pressor
     matrix res= r(table)
     putexcel A2=("Ventilation all") B2=res[1,1] C2=res[5,1] D2=res[6,1] E2=res[4,1]
 
 local row=3
 forval i=1/4  {          
         
-    logistic ventilation_bin ethnicity_white anchor_age female i.anchor_year sofa i.charlson_comorbidity_index rrt pressor if sofa_group == `i' // repeform logistic across all sofa groups, then groups 1-4
+    logistic vent ethnicity_white anchor_age female i.anchor_year sofa i.charlson_comorbidity_index rrt pressor if sofa_group == `i' // repeform logistic across all sofa groups, then groups 1-4
 	matrix res= r(table)
 	putexcel A`row'=("`i'") B`row'=res[1,1] C`row'=res[5,1] D`row'=res[6,1] E`row'=res[4,1]
 	local row=`row'+1
@@ -48,14 +48,14 @@ forval i=1/4  {
 	
 * LogReg on race and renal replacement therapy
 
-    logistic rrt ethnicity_white anchor_age female i.anchor_year sofa i.charlson_comorbidity_index ventilation_bin pressor // across all sofa groups
+    logistic rrt ethnicity_white anchor_age female i.anchor_year sofa i.charlson_comorbidity_index vent pressor // across all sofa groups
     matrix res= r(table)
     putexcel A7=("RRT all") B7=res[1,1] C7=res[5,1] D7=res[6,1] E7=res[4,1]
 
 local row=8
 forval i=1/4  {          
         
-    logistic rrt ethnicity_white anchor_age female i.anchor_year sofa i.charlson_comorbidity_index ventilation_bin pressor if sofa_group == `i' // repeform logistic across all sofa groups, then groups 1-4
+    logistic rrt ethnicity_white anchor_age female i.anchor_year sofa i.charlson_comorbidity_index vent pressor if sofa_group == `i' // repeform logistic across all sofa groups, then groups 1-4
 	matrix res= r(table)
 	putexcel A`row'=("`i'") B`row'=res[1,1] C`row'=res[5,1] D`row'=res[6,1] E`row'=res[4,1]
 	local row=`row'+1
@@ -64,14 +64,14 @@ forval i=1/4  {
 
 * LogReg on race and vasopressors
 
-    logistic pressor ethnicity_white anchor_age female i.anchor_year sofa i.charlson_comorbidity_index ventilation_bin rrt // repeform logistic across all sofa groups, then groups 1-4
+    logistic pressor ethnicity_white anchor_age female i.anchor_year sofa i.charlson_comorbidity_index vent rrt // repeform logistic across all sofa groups, then groups 1-4
     matrix res= r(table)
     putexcel A12=("vasopressor all") B12=res[1,1] C12=res[5,1] D12=res[6,1] E12=res[4,1]
 
 local row=13
 forval i=1/4  {          
         
-   logistic pressor ethnicity_white anchor_age female i.anchor_year sofa i.charlson_comorbidity_index ventilation_bin rrt if sofa_group == `i' // repeform logistic across all sofa groups, then groups 1-4
+   logistic pressor ethnicity_white anchor_age female i.anchor_year sofa i.charlson_comorbidity_index vent rrt if sofa_group == `i' // repeform logistic across all sofa groups, then groups 1-4
 	matrix res= r(table)
 	putexcel A`row'=("`i'") B`row'=res[1,1] C`row'=res[5,1] D`row'=res[6,1] E`row'=res[4,1]
 	local row=`row'+1

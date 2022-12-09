@@ -21,7 +21,7 @@ replace i_ci  = i_ci*100
 replace s_ci = s_ci*100
 
 replace treatment = "Pressor" if treatment == "pressor"
-replace treatment = "Ventilation" if treatment == "ventilation_bin"
+replace treatment = "Ventilation" if treatment == "vent"
 replace treatment = "RRT" if treatment == "rrt"
 gen name = cohort+" "+treatment
 
