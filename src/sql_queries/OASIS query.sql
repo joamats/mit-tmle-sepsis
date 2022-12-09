@@ -2,28 +2,15 @@ DROP TABLE IF EXISTS `db_name.my_eICU.OASIS`;
 
 CREATE TABLE `db_name.my_eICU.OASIS` AS
 
-WITH tt3 AS (
-    WITH tt2 AS (
-      WITH tt AS (
-
-SELECT yug.*,
-yug.patientunitstayid as pid, 
--- to match MIMIC's names
-yug.Charlson as charlson_comorbidity_index,
-yug.ethnicity as race,
+Select
 
 CASE 
 WHEN yug.age = "> 89" THEN 91
 ELSE CAST(yug.age AS INT64) 
-END AS anchor_age,
-
-yug.sofa_admit as SOFA, 
-yug.hospitaldischargeyear as anchor_year_group,
 
 -- newly added 
 vent_1, vent_2, vent_3, vent_4, vent_5, vent_6,
-rrt_1,
-pressor_1, pressor_2, pressor_3, pressor_4, 
+
 apachepatientresultO.apachescore, apachepatientresultO.acutephysiologyscore, apachepatientresultO.apache_pred_hosp_mort,
 hospitaladmitoffset_OASIS,
 gcs_OASIS,
@@ -72,6 +59,18 @@ LEFT JOIN(
 )
 AS gcsO
 ON gcsO.patientunitstayid = yug.patientunitstayid
+
+LEFT JOIN(
+SELECT patientunitstayid, MIN(physicalExamPath) AS GCS
+FROM `physionet-data.eicu_crd.physicalexam`
+WHERE  (
+(physicalExamPath LIKE "notes/Progress Notes/Physical Exam/Physical Exam/Neurologic/GCS/_" OR
+physicalExamPath LIKE "notes/Progress Notes/Physical Exam/Physical Exam/Neurologic/GCS/__")
+AND (physicalExamOffset > 0 AND physicalExamOffset <= 1440 ) 
+)
+GROUP BY patientunitstayid
+AS GCS_piv
+
 
 -- Heart rate -> Mapping according to OASIS
 LEFT JOIN(
@@ -181,19 +180,6 @@ AS electivesurgeryO
 ON electivesurgeryO.patientunitstayid = yug.patientunitstayid
 
 
--- APACHE IV
-LEFT JOIN(
-  SELECT patientunitstayid, 
-  apachescore,
-  acutephysiologyscore,
-  predictedhospitalmortality as apache_pred_hosp_mort
-  FROM `physionet-data.eicu_crd.apachepatientresult`
-  WHERE apacheversion = "IVa"
-)
-AS apachepatientresultO
-ON apachepatientresultO.patientunitstayid = yug.patientunitstayid
-
-
 -- ventilation events
 LEFT JOIN (
   SELECT patientunitstayid, COUNT(event) as vent_1
@@ -267,106 +253,7 @@ LEFT JOIN(
 )
 AS treatment
 ON treatment.patientunitstayid = yug.patientunitstayid
-
-
--- pivoted infusions table to get vasopressors
-LEFT JOIN(
-  SELECT patientunitstayid, CASE
-    WHEN COUNT(dopamine) >= 1 THEN 1
-    WHEN COUNT(dobutamine) >= 1 THEN 1
-    WHEN COUNT(norepinephrine) >= 1 THEN 1
-    WHEN COUNT(phenylephrine) >= 1 THEN 1
-    WHEN COUNT(epinephrine) >= 1 THEN 1
-    WHEN COUNT(vasopressin) >= 1 THEN 1
-    WHEN COUNT(milrinone) >= 1 THEN 1
-    ELSE NULL
-    END AS pressor_1  
-
-  FROM `physionet-data.eicu_crd_derived.pivoted_infusion`
-  GROUP BY patientunitstayid
 )
-AS pivoted_infusion
-ON pivoted_infusion.patientunitstayid = yug.patientunitstayid
-
--- infusions table to get vasopressors
-LEFT JOIN(
-  SELECT patientunitstayid, COUNT(drugname) as pressor_2
-  FROM `physionet-data.eicu_crd.infusiondrug`
-  WHERE(
-    LOWER(drugname) LIKE '%dopamine%' OR
-    LOWER(drugname) LIKE '%dobutamine%' OR
-    LOWER(drugname) LIKE '%norepinephrine%' OR
-    LOWER(drugname) LIKE '%phenylephrine%' OR
-    LOWER(drugname) LIKE '%epinephrine%' OR
-    LOWER(drugname) LIKE '%vasopressin%' OR
-    LOWER(drugname) LIKE '%milrinone%' OR
-    LOWER(drugname) LIKE '%dobutrex%' OR
-    LOWER(drugname) LIKE '%neo synephrine%' OR
-    LOWER(drugname) LIKE '%neo-synephrine%' OR
-    LOWER(drugname) LIKE '%neosynephrine%' OR
-    LOWER(drugname) LIKE '%neosynsprine%'
-  )
-  GROUP BY patientunitstayid
-)
-AS infusiondrug
-ON infusiondrug.patientunitstayid = yug.patientunitstayid
-
--- medication
-LEFT JOIN(
-  SELECT patientunitstayid, COUNT(drugname) as pressor_3
-  FROM `physionet-data.eicu_crd.medication`
-  WHERE(
-    LOWER(drugname) LIKE '%dopamine%' OR
-    LOWER(drugname) LIKE '%dobutamine%' OR
-    LOWER(drugname) LIKE '%norepinephrine%' OR
-    LOWER(drugname) LIKE '%phenylephrine%' OR
-    LOWER(drugname) LIKE '%epinephrine%' OR
-    LOWER(drugname) LIKE '%vasopressin%' OR
-    LOWER(drugname) LIKE '%milrinone%' OR
-    LOWER(drugname) LIKE '%dobutrex%' OR
-    LOWER(drugname) LIKE '%neo synephrine%' OR
-    LOWER(drugname) LIKE '%neo-synephrine%' OR
-    LOWER(drugname) LIKE '%neosynephrine%' OR
-    LOWER(drugname) LIKE '%neosynsprine%'
-  )
-  GROUP BY patientunitstayid
-)
-AS medication
-ON medication.patientunitstayid = yug.patientunitstayid
-
--- pivoted med
-LEFT JOIN(
-  SELECT patientunitstayid, CASE
-    WHEN SUM(dopamine) >= 1 THEN 1
-    WHEN SUM(dobutamine) >= 1 THEN 1
-    WHEN SUM(norepinephrine) >= 1 THEN 1
-    WHEN SUM(phenylephrine) >= 1 THEN 1
-    WHEN SUM(epinephrine) >= 1 THEN 1
-    WHEN SUM(vasopressin) >= 1 THEN 1
-    WHEN SUM(milrinone) >= 1 THEN 1
-    ELSE NULL
-    END AS pressor_4
-
-  FROM `physionet-data.eicu_crd_derived.pivoted_med`
-  GROUP BY patientunitstayid
-)
-AS pivoted_med
-ON pivoted_med.patientunitstayid = yug.patientunitstayid
-
--- exclude non-first stays
-LEFT JOIN(
-  SELECT patientunitstayid, unitvisitnumber
-  FROM `physionet-data.eicu_crd_derived.icustay_detail`
-) 
-AS icustay_detail
-ON icustay_detail.patientunitstayid = yug.patientunitstayid
-
--- yug.ethnicity != "Other/Unknown"
-WHERE icustay_detail.unitvisitnumber = 1
-AND yug.ethnicity != "Other/Unknown"
-AND yug.age != "16" AND yug.age != "17"
-)
-
 
 SELECT *
 

@@ -1,4 +1,4 @@
-select icu.*, pat.anchor_age,pat.anchor_year_group,sf.SOFA,rrt.rrt, weight.weight_admit,fd_uo.urineoutput,
+select icu.*, adm.adm_type, adm.adm_elective, pat.anchor_age,pat.anchor_year_group,sf.SOFA,rrt.rrt, weight.weight_admit,fd_uo.urineoutput,
 charlson.charlson_comorbidity_index, (pressor.stay_id = icu.stay_id) as pressor,ad.discharge_location as discharge_location, pat.dod,
 InvasiveVent.InvasiveVent_hr,Oxygen.Oxygen_hr,HighFlow.HighFlow_hr,NonInvasiveVent.NonInvasiveVent_hr,Trach.Trach_hr,
 ABS(TIMESTAMP_DIFF(pat.dod,icu.icu_outtime,DAY)) as dod_icuout_offset
@@ -60,6 +60,21 @@ on NonInvasiveVent.stay_id = icu.stay_id
 left join (SELECT stay_id, sum(TIMESTAMP_DIFF(endtime,starttime,HOUR)) as Trach_hr
 FROM `physionet-data.mimiciv_derived.ventilation` where ventilation_status = "Trach" group by stay_id) as Trach
 on Trach.stay_id = icu.stay_id
+
+-- Add admission type
+-- Mapping: 
+-- Emergency: ‘AMBULATORY OBSERVATION’, ‘DIRECT EMER.’, ‘URGENT’, ‘EW EMER.’, ‘DIRECT OBSERVATION’, ‘EU OBSERVATION’, ‘OBSERVATION ADMIT’
+-- Elective: ‘ELECTIVE’, ‘SURGICAL SAME DAY ADMISSION’
+
+left join (SELECT hadm_id, admission_type as adm_type,
+CASE
+    WHEN (admission_type LIKE "%ELECTIVE%" OR
+     admission_type LIKE "%SURGICAL SAME DAY ADMISSION%") 
+     THEN 1
+     ELSE 0
+     END AS adm_elective
+FROM `physionet-data.mimiciv_hosp.admissions`) as adm
+on adm.hadm_id = icu.hadm_id
 
 WHERE (icu.first_icu_stay IS TRUE AND icu.first_hosp_stay IS TRUE)
 AND (discharge_location is not null OR abs(timestamp_diff(pat.dod,icu.icu_outtime,DAY)) < 4)
