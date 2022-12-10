@@ -6,7 +6,7 @@ source("src/r_scripts/tmle/plot_results.R")
 # TMLE by SOFA
 run_tmle_sofa <- function(data_sofa, treatment) {
 
-    confounders <- c("source","anchor_age","gender","ethnicity_white","SOFA","charlson_cont")#,
+    confounders <- c("source","anchor_age","gender","ethnicity_white","SOFA","charlson_cont",
                      "hypertension", "heart_failure", "ckd", "copd", "asthma")
 
     if(treatment == "ventilation_bin") {
@@ -32,7 +32,8 @@ run_tmle_sofa <- function(data_sofa, treatment) {
                    A = A,
                    W = W,
                    family = "binomial", 
-                   gbound = c(0.05, 0.95)
+                   gbound = c(0.05, 0.95),
+                   g.SL.library = c("SL.glm", "tmle.SL.dbarts2", "SL.glmnet")
                   )
 
     log <- summary(result)

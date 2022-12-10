@@ -17,3 +17,6 @@ xgboost
 flextable
 table1
 gdata
+dbarts
+dbarts2
+glmnet
