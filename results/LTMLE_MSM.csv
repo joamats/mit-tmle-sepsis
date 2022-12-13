@@ -1,0 +1,5 @@
+"","treatment","sofa_start","sofa_end","psi","std_dev","pvalue","iCI","sCI","n"
+"1","ventilation_bin",0,3,20753,"ventilation_bin",0,3,20753,"ventilation_bin"
+"2","ventilation_bin",4,6,20447,"ventilation_bin",4,6,20447,"ventilation_bin"
+"3","ventilation_bin",7,10,11878,"ventilation_bin",7,10,11878,"ventilation_bin"
+"4","ventilation_bin",11,100,4604,"ventilation_bin",11,100,4604,"ventilation_bin"
