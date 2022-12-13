@@ -24,4 +24,4 @@ for (treatment in treatments) {
     }
 }
 
-write.csv(df, "results/TMLE_SL1.csv")
+write.csv(df, "results/TMLE_emergency_only.csv")

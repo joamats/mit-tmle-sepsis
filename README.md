@@ -59,8 +59,13 @@ After getting credentialing at PhysioNet, you must sign the data use agreement a
 
 Having all the necessary tables for the cohort generation query in your project, run the following command to fetch the data as a dataframe that will be saved as CSV in your local project. Make sure you have all required files and folders.
 
+For main data run:
 ```sh
 python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/mimic_table.sql --destination_path data/MIMIC_data.csv
+```
+For ICD data run:
+```sh
+python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/icd_MIMIC/icd_codes.sql --destination_path data/ICD_codes/MIMIC/raw_icd_codes.csv
 ```
 
 #### eICU
@@ -74,7 +79,17 @@ Finally, run:
 ```sh
 python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/eICU_table.sql --destination_path data/eICU_data.csv
 ```
+For ICD data run frist:
 
+```sh
+python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/icd_eICU/diseases_dx_ph.sql --destination_path data/ICD_codes/eICU/dx_ph_diseases.csv
+```
+
+Then run:
+
+```sh
+python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/icd_eICU/icd_codes.sql --destination_path data/ICD_codes/eICU/raw_icd_codes.csv
+```
 
 ### 4. Run the different analyses
 #### 4.1 Logistic Regression
