@@ -5,7 +5,7 @@ import seaborn as sb
 import matplotlib
 matplotlib.use('TKAgg')
 
-plot_name = "TMLE_SL0"
+plot_name = "TMLE_SL3"
 df = pd.read_csv(f"results\{plot_name}.csv")
 
 # Remove overall result
