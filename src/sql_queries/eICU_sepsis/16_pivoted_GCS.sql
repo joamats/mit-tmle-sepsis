@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS `protean-chassis-368116.my_eICU.pivoted_gcs2`;
+DROP TABLE IF EXISTS `db_name.my_eICU.pivoted_gcs2`;
 
-CREATE TABLE `protean-chassis-368116.my_eICU.pivoted_gcs2` AS
+CREATE TABLE `db_name.my_eICU.pivoted_gcs2` AS
 
 with nc as
 (
@@ -131,13 +131,13 @@ ORDER BY patientunitstayid;
 
 
 -- Create second table for our project only -> minimum value in first 24h
-DROP TABLE IF EXISTS `protean-chassis-368116.my_eICU.OASIS_GCS`;
+DROP TABLE IF EXISTS `db_name.my_eICU.OASIS_GCS`;
 
-CREATE TABLE `protean-chassis-368116.my_eICU.OASIS_GCS` AS
+CREATE TABLE `db_name.my_eICU.OASIS_GCS` AS
 
 SELECT patientunitstayid, min(gcs) as gcs
   
-FROM `protean-chassis-368116.my_eICU.pivoted_gcs2`
+FROM `db_name.my_eICU.pivoted_gcs2`
 WHERE chartoffset > 0 AND chartoffset <= 1440
 GROUP BY patientunitstayid
 ORDER BY patientunitstayid

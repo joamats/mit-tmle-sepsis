@@ -1,6 +1,3 @@
-DROP TABLE IF EXISTS `db_name.my_eICU.OASIS`;
-
-CREATE TABLE `db_name.my_eICU.OASIS` AS
 
 WITH tt3 AS (
     WITH tt2 AS (
@@ -32,6 +29,7 @@ ibp_mean_OASIS,
 respiratoryrate_OASIS,
 temperature_OASIS,
 urineoutput_OASIS,
+adm_elective,
 electivesurgery_OASIS
 
 FROM `db_name.my_eICU.yugang` as yug 
@@ -66,8 +64,7 @@ LEFT JOIN(
     ELSE NULL
     END AS gcs_OASIS
 
-  FROM `physionet-data.eicu_crd_derived.pivoted_gcs`
-  WHERE (chartoffset > 0 AND chartoffset <= 1440 ) -- convert hours to minutes -> 60*24=1440
+  FROM `db_name.my_eICU.OASIS_GCS`
   GROUP BY patientunitstayid
 )
 AS gcsO
@@ -167,15 +164,16 @@ ON urineoutputO.patientunitstayid = yug.patientunitstayid
 
 -- Ventilation -> Mapping according to OASIS, see below -> No 0, Yes 9
 
--- Elective surgery -> Mapping according to OASIS
+-- Elective surgery and admissions -> Mapping according to OASIS
 LEFT JOIN(
-  SELECT patientunitstayid, CASE
-    WHEN electivesurgery = 1 THEN 0
-    WHEN electivesurgery = 0 THEN 6
+  SELECT patientunitstayid, adm_elective
+  , CASE
+    WHEN new_elective_surgery = 1 THEN 0
+    WHEN new_elective_surgery = 0 THEN 6
     ELSE NULL
     END AS electivesurgery_OASIS
 
-  FROM `physionet-data.eicu_crd.apachepredvar`
+  FROM `db_name.my_eICU.pivoted_elective`
 )
 AS electivesurgeryO
 ON electivesurgeryO.patientunitstayid = yug.patientunitstayid
