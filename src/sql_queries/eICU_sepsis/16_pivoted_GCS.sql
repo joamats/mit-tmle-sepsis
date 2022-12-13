@@ -123,10 +123,6 @@ AS gcseyes_physical
 ON gcseyes_physical.patientunitstayid = ncproc.patientunitstayid
 
 
-WHERE ncproc.gcs IS NOT NULL
-OR ncproc.gcsmotor IS NOT NULL
-OR ncproc.gcsverbal IS NOT NULL
-OR ncproc.gcseyes IS NOT NULL
 ORDER BY patientunitstayid;
 
 

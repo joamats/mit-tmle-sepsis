@@ -170,7 +170,8 @@ LEFT JOIN(
   , CASE
     WHEN new_elective_surgery = 1 THEN 0
     WHEN new_elective_surgery = 0 THEN 6
-    ELSE NULL
+    ELSE 0
+    -- Analysed admission table -> In most cases -> if elective surgery is NULL -> there was no surgery or emergency surgery
     END AS electivesurgery_OASIS
 
   FROM `db_name.my_eICU.pivoted_elective`
