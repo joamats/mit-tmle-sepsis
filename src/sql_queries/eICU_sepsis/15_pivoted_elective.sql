@@ -73,8 +73,9 @@ WHERE adm.patientunitstayid IS NOT NULL
 AND apache.patientunitstayid IS NOT NULL
 ORDER BY apache.patientunitstayid;
 
+-- Update information in columns stemming from apache table with information from patient table
 UPDATE `db_name.my_eICU.pivoted_elective`
 SET adm_elective = adm_elective_pat, new_elective_surgery = adm_elective_pat
 WHERE adm_elective IS NULL
-AND (new_elective_surgery IS NULL AND adm_elective_pat = 1)
+AND new_elective_surgery IS NULL;
 
