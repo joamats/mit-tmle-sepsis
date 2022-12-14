@@ -4,9 +4,6 @@ source("src/r_scripts/tmle/plot_results.R")
 
 # Get merged datasets' data
 data <- get_merged_datasets()
-data <- data[which(data$adm_elective == 0),] 
-# subset dataframe to emergency admission only
-
 
 # List with possible invasive treatments
 treatments <- list("ventilation_bin", "rrt", "pressor")

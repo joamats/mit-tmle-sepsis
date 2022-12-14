@@ -76,7 +76,7 @@ load_data <- function(cohort){
   # Return just keeping columns of interest
   return(sepsis_data[, c("gender", "los", "ventilation_bin", "pressor", "rrt", "death_bin", "ethnicity_white",
                          "charlson_cont", "charlson_comorbidity_index", "anchor_age", "SOFA", "anchor_year_group",
-                         "hypertension", "heart_failure", "ckd", "copd", "asthma")])
+                         "hypertension", "heart_failure", "ckd", "copd", "asthma", "adm_elective")])
 }
 
 get_merged_datasets <- function() {
@@ -85,9 +85,11 @@ get_merged_datasets <- function() {
   eicu_data <- load_data("eICU")
   # merge both datasets 
   data <- combine(mimic_data, eicu_data)
-  
+
   # add column to keep the cohort source and control for it
   data <- data %>% mutate(source = ifelse(source == "mimic_data", 1, 0))
+  data <- data[which(data$adm_elective == 0),] 
+  # subset dataframe to emergency admission only
 
   write.csv(data, "data/MIMIC_eICU.csv")
 
