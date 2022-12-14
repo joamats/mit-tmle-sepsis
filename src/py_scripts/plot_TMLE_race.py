@@ -5,8 +5,8 @@ import seaborn as sb
 import matplotlib
 matplotlib.use('TKAgg')
 
-plot_name = "TMLE_SL3"
-df = pd.read_csv(f"results\{plot_name}.csv")
+plot_name = "TMLE_emergency_only"
+df = pd.read_csv(f"results/{plot_name}.csv")
 
 # Remove overall result
 df = df[~((df.sofa_start == 0) & (df.sofa_end == 100))]

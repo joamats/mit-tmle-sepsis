@@ -5,7 +5,7 @@ import seaborn as sb
 import matplotlib
 matplotlib.use('TKAgg')
 
-df = pd.read_csv("results\TMLE.csv")
+df = pd.read_csv("results/TMLE.csv")
 
 # Remove overall result
 df = df[df.race == 'all']
