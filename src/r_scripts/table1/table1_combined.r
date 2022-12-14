@@ -30,15 +30,28 @@ m_e_df$age_new[m_e_df$age_new >= 85] <- "85 and higher"
 ##########SOFA############
 m_e_df$SOFA_new = m_e_df$SOFA
 m_e_df$SOFA_new[m_e_df$SOFA >= 0 
-                 & m_e_df$SOFA <= 5] <- "0 - 5"
+                 & m_e_df$SOFA <= 3] <- "0 - 3"
 
-m_e_df$SOFA_new[m_e_df$SOFA >= 6 
-                 & m_e_df$SOFA <= 10] <- "6 - 10"
+m_e_df$SOFA_new[m_e_df$SOFA >= 4 
+                 & m_e_df$SOFA <= 6] <- "4 - 6"
 
-m_e_df$SOFA_new[m_e_df$SOFA >= 11 
-                 & m_e_df$SOFA <= 15] <- "11 - 15"
+m_e_df$SOFA_new[m_e_df$SOFA >= 7 
+                 & m_e_df$SOFA <= 10] <- "7 - 10"
 
-m_e_df$SOFA_new[m_e_df$SOFA >= 16] <- "16 and above"
+m_e_df$SOFA_new[m_e_df$SOFA >= 11] <- "11 and above"
+
+##########Charlson############
+m_e_df$charlson_new = m_e_df$charlson_cont
+m_e_df$charlson_new[m_e_df$charlson_cont >= 0 
+                & m_e_df$charlson_cont <= 3] <- "0 - 3"
+
+m_e_df$charlson_new[m_e_df$charlson_cont >= 4 
+                & m_e_df$charlson_cont <= 6] <- "4 - 6"
+
+m_e_df$charlson_new[m_e_df$charlson_cont >= 7 
+                & m_e_df$charlson_cont <= 10] <- "7 - 10"
+
+m_e_df$charlson_new[m_e_df$charlson_cont >= 11] <- "11 and above"
 
 # LOS groups
 m_e_df$los[m_e_df$los < 0] <- 0 # clean data to have minimum of 0 days
@@ -57,13 +70,15 @@ m_e_df$gender <- factor(df$gender, levels = c(0, 1),
 
 m_e_df$pressor <- factor(m_e_df$pressor)
 m_e_df$rrt <- factor(m_e_df$rrt)
-m_e_df$vent <- factor(m_e_df$vent)
+m_e_df$ventilation_bin <- factor(m_e_df$ventilation_bin)
+m_e_df$source <- factor(m_e_df$source, levels = c(0, 1), 
+                        labels = c('eICU', 'MIMIC') )
 
 m_e_df$ethnicity_white <- factor(m_e_df$ethnicity_white, levels = c(0, 1), 
                            labels = c('Non-White', 'White'))
 
-m_e_df$SOFA_new <- factor(m_e_df$SOFA_new, levels = c('0 - 5', '6 - 10','11 - 15', '16 and above' ))
-m_e_df$charlson_comorbidity_index <- factor(m_e_df$charlson_comorbidity_index, levels = c('0 - 5', '6 - 10','11 - 15', '16 and above' ))
+m_e_df$SOFA_new <- factor(m_e_df$SOFA_new, levels = c('0 - 3', '4 - 6','7 - 10', '11 and above' ))
+m_e_df$charlson_new <- factor(m_e_df$charlson_new, levels = c('0 - 3', '4 - 6','7 - 10', '11 and above' ))
 
 
 label(m_e_df$age_new)    <- "Age by group"
@@ -75,7 +90,7 @@ units(m_e_df$anchor_age)       <- "years"
 label(m_e_df$gender)       <- "Sex"
 
 label(m_e_df$SOFA)          <- "SOFA overall"
-label(m_e_df$SOFA_new)          <- "SOFA"
+label(m_e_df$SOFA_new)      <- "SOFA categorical"
 
 label(m_e_df$los)       <- "Length of stay"
 units(m_e_df$los)       <- "days"
@@ -87,16 +102,17 @@ label(m_e_df$los_s)       <- "Length of stay, if survived"
 units(m_e_df$los_s)       <- "days"
 
 label(m_e_df$charlson_cont)       <- "Charlson index continuous"
-label(m_e_df$charlson_comorbidity_index) <- "Charlson index categorical"
+label(m_e_df$charlson_new) <- "Charlson index categorical"
 
 label(m_e_df$pressor) <- "Vasopressor"
 
-label(m_e_df$vent)       <- "Invasive ventilation"
+label(m_e_df$ventilation_bin)       <- "Invasive ventilation"
 
 label(m_e_df$death_bin)       <- "In-hospital mortality"
 label(m_e_df$source)    <- "Cohort"
 label(m_e_df$rrt)      <- "Renal replacement therapy"
 
+# Functions to add commas between 1,000
 render.categorical <- function(x, ...) {
   c("", sapply(stats.apply.rounding(stats.default(x)), function(y) with(y,
                                                                         sprintf("%s (%s%%)", prettyNum(FREQ, big.mark=","), PCT))))
@@ -107,35 +123,35 @@ render.strat <- function (label, n, ...) {
           label, prettyNum(n, big.mark=","))
 }
 
-# Create table1 object
-tbl1 <- table1(~ death_bin + source + pressor + vent + rrt +
+# Create table1 object for both cohorts
+tbl1 <- table1(~ death_bin + source + pressor + ventilation_bin + rrt +
                  age_new + anchor_age + gender + SOFA_new + SOFA  + los + los_s + los_d +
-                  charlson_comorbidity_index + charlson_cont
+                 charlson_new + charlson_cont
                | ethnicity_white, data=m_e_df, render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
                render.categorical=render.categorical, render.strat=render.strat)
 
 # Convert to flextable
-t1flex(tbl1) %>% 
-  save_as_docx(path="results/Table1_m_e.docx")
+#t1flex(tbl1) %>% save_as_docx(path='/results/Table1_m_e.docx')
+# Tbl1 function currently not working with relative paths -> user needs to set his/her absolute path
 
 # Create table1 object for MIMIC 
-tbl1 <- table1(~ death_bin + source + pressor + vent + rrt +
+tbl1 <- table1(~ death_bin + source + pressor + ventilation_bin + rrt +
                  age_new + anchor_age + gender + SOFA_new + SOFA  + los + los_s + los_d +
-                 charlson_comorbidity_index + charlson_cont
-               | ethnicity_white, data= subset(m_e_df, source==1), render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
+                 charlson_new + charlson_cont
+               | ethnicity_white, data= subset(m_e_df, source=='MIMIC'), render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
                render.categorical=render.categorical, render.strat=render.strat)
 
 # Convert MIMIC table to flextable
-t1flex(tbl1) %>% 
-  save_as_docx(path="results/Table1_MIMIC.docx")
+#t1flex(tbl1) %>% save_as_docx(path="results/Table1_MIMIC.docx")
+# Tbl1 function currently not working with relative paths -> user needs to set his/her absolute path
 
 # Create table1 object for eICU 
-tbl1 <- table1(~ death_bin + source + pressor + vent + rrt +
+tbl1 <- table1(~ death_bin + source + pressor + ventilation_bin + rrt +
                  age_new + anchor_age + gender + SOFA_new + SOFA  + los + los_s + los_d +
-                 charlson_comorbidity_index + charlson_cont
-               | ethnicity_white, data= subset(m_e_df, source==0), render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
+                 charlson_new + charlson_cont
+               | ethnicity_white, data= subset(m_e_df, source=='eICU'), render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
                render.categorical=render.categorical, render.strat=render.strat)
 
 # Convert MIMIC table to flextable
-t1flex(tbl1) %>% 
-  save_as_docx(path="results/Table1_eICU.docx")
+#t1flex(tbl1) %>%  save_as_docx(path="results/Table1_eICU.docx")
+# Tbl1 function currently not working with relative paths -> user needs to set his/her absolute path

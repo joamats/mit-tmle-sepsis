@@ -88,8 +88,8 @@ get_merged_datasets <- function() {
 
   # add column to keep the cohort source and control for it
   data <- data %>% mutate(source = ifelse(source == "mimic_data", 1, 0))
-  data <- data[which(data$adm_elective == 0),] 
-  # subset dataframe to emergency admission only
+  #data <- data[which(data$adm_elective == 0),] 
+  # subset dataframe to emergency admission only for sensitivity analysis
 
   write.csv(data, "data/MIMIC_eICU.csv")
 

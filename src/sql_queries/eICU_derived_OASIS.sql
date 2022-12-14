@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS `db_name.my_eICU.OASIS`;
+DROP TABLE IF EXISTS `db_name.my_eICU.derived_OASIS`;
 
-CREATE TABLE `db_name.my_eICU.OASIS` AS
+CREATE TABLE `db_name.my_eICU.derived_OASIS` AS
 
 Select
 
