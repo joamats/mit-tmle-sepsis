@@ -48,13 +48,11 @@ reorganize_data <- function(data, treatment) {
 
 ltmle_MSM <- function(data, Anodes) {
 
-    summary.measures <- array(1:4, dim = c(4, 1, 1))
-    colnames(summary.measures) <- "level"
+    summary.measures <- array(1:1, dim = c(2, 1, 1))
+    colnames(summary.measures) <- c("level")
 
     rs <- list(function (row) c(0, 0),
-            function (row) c(1, 0),
-            function (row) c(0, 1),
-            function (row) c(1, 1))
+               function (row) c(0, 1))
 
     ATE <- ltmleMSM(data = data, 
                     Anodes = Anodes,
@@ -62,13 +60,13 @@ ltmle_MSM <- function(data, Anodes) {
                     regimes = rs,
                     gbounds = c(0.05, 0.95),
                     summary.measures = summary.measures, 
-                    working.msm = "Y ~ level"
+                    working.msm = "Y ~ rrt + pressor + SOFA"
                     )
 
     log <- summary(ATE)
     print(log)
 
-    return (log)
+    return (ATE)
 }
 
 run_ltmleMSM <- function(sepsis_data, treatment, df) {
@@ -76,7 +74,7 @@ run_ltmleMSM <- function(sepsis_data, treatment, df) {
     Anodes <- get_anodes(treatment)
     
     # cut data by SOFA score and run LTMLE by 2x2 WITH SL library
-    sofa_ranges <- list(list(0, 3), list(4,6), list(7, 10), list(11, 100))
+    sofa_ranges <- list(list(0, 3))#, list(4,6), list(7, 10), list(11, 100))
    
     for (sofa in sofa_ranges) {
 
@@ -87,6 +85,9 @@ run_ltmleMSM <- function(sepsis_data, treatment, df) {
         data_sofa <- reorganize_data(data_sofa, treatment)
 
         log <- ltmle_MSM(data_sofa, Anodes)
+
+        print(log)
+        print(log$effect.measures$ATE)
 
         # Append to df
         df[nrow(df) + 1,] <- c(treatment,
@@ -101,7 +102,7 @@ run_ltmleMSM <- function(sepsis_data, treatment, df) {
                                 ) 
     }
 
-    return (df)
+    return (log)
 }
 
 # Get merged datasets' data
@@ -120,8 +121,8 @@ colnames(df) <- c("treatment", "sofa_start", "sofa_end",
 # Go through all treatments
 for (treatment in treatments) {
     # Stratified SOFAs, append
-    df <- run_ltmleMSM(data, treatment, df)
+    log <- run_ltmleMSM(data, treatment, df)
 }
 
 # Save results
-write.csv(df, "results/LTMLE_MSM.csv")  
+#write.csv(df, "results/LTMLE_MSM.csv")  
