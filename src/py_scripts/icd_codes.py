@@ -103,7 +103,7 @@ def icd_9_to_10(original_file, dataset):
 
     df = pd.read_csv(original_file)
 
-    conversions = pd.read_csv("data\ICD_codes\ICD10_Formatted.csv")[['ICD-9', 'ICD-10']]
+    conversions = pd.read_csv("data/ICD_codes/ICD10_Formatted.csv")[['ICD-9', 'ICD-10']]
 
     mapping = dict(zip(conversions['ICD-9'], conversions['ICD-10']))
 
@@ -134,7 +134,7 @@ def parse_args():
                         help="Insert your original file with ICD codes")
 
     parser.add_argument("--result_file",
-                        default="data\MIMIC_data2.csv",
+                        default="data/MIMIC_data2.csv",
                         help="Insert your target path for the disease ICD 10 codes only file")
 
     parser.add_argument("--dataset",
@@ -155,7 +155,7 @@ if __name__ == '__main__':
     # 2. Encode ICD codes into columns
 
     # Get the mapping ICD codes - disease type
-    disease_map = pd.read_csv("data\ICD_codes\map_icd_codes.csv")
+    disease_map = pd.read_csv("data/ICD_codes/map_icd_codes.csv")
 
     # First let's create a column for each disease
     for index, row in disease_map.iterrows():
@@ -203,26 +203,26 @@ if __name__ == '__main__':
     # 3. Combine existing dataset with ICD codes
 
     if args.dataset == "MIMIC":
-        df_sepsis = pd.read_csv("data\MIMIC_data.csv")
+        df_sepsis = pd.read_csv("data/MIMIC_data.csv")
 
-        df.to_csv("data\ICD_codes\MIMIC\processed_icd_codes.csv")
-        df = pd.read_csv("data\ICD_codes\MIMIC\processed_icd_codes.csv")
+        df.to_csv("data/ICD_codes/MIMIC/processed_icd_codes.csv")
+        df = pd.read_csv("data/ICD_codes/MIMIC/processed_icd_codes.csv")
 
         key = "subject_id"
 
-        df_all = df_sepsis.set_index(key).join(df, rsuffix="_")
+        df_all = df_sepsis.join(df, rsuffix="_")
 
 
     elif args.dataset == "eICU":
-        df_sepsis = pd.read_csv("data\eICU_data.csv")
+        df_sepsis = pd.read_csv("data/eICU_data.csv")
         # Combine vent, rrt, vasopressor columns into one of each only
         df_sepsis = combine_treatment_eICU(df_sepsis)
 
         key = "patientunitstayid"
 
-        df.to_csv("data\ICD_codes\eICU\processed_icd_codes.csv")
-        df1 = pd.read_csv("data\ICD_codes\eICU\processed_icd_codes.csv")
-        df2 = pd.read_csv("data\ICD_codes\eICU\dx_ph_diseases.csv")
+        df.to_csv("data/ICD_codes/eICU/processed_icd_codes.csv")
+        df1 = pd.read_csv("data/ICD_codes/eICU/processed_icd_codes.csv")
+        df2 = pd.read_csv("data/ICD_codes/eICU/dx_ph_diseases.csv")
 
         # Join with the missing data csv
         df = df1.set_index(key).join(df2.set_index("pid").drop("Unnamed: 0", axis=1), rsuffix='_')
