@@ -409,6 +409,10 @@ FROM tt)
 --Compute overall scores -> Fist Worst, then Best Case Scenario
  SELECT *,
 
+    (hospitaladmitoffset_OASIS + gcs_OASIS + heartrate_OASIS +
+    ibp_mean_OASIS + respiratoryrate_OASIS + temperature_OASIS +
+    urineoutput_OASIS + electivesurgery_OASIS + age_OASIS + vent_OASIS) AS score_OASIS_Nulls,
+
     (hospitaladmitoffset_OASIS + gcs_OASIS_W + heartrate_OASIS_W +
     ibp_mean_OASIS_W + respiratoryrate_OASIS_W + temperature_OASIS_W +
     urineoutput_OASIS_W + electivesurgery_OASIS_W + age_OASIS + vent_OASIS) AS score_OASIS_W
