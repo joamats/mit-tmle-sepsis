@@ -96,3 +96,5 @@ get_merged_datasets <- function() {
   return (data)
 
 }
+
+get_merged_datasets()
