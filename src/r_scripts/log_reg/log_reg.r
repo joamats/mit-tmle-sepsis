@@ -4,21 +4,27 @@ library(table1)
 library(dplyr)
 library(aod)
 
-df = read_csv('data/MIMIC_eICU.csv')
+df = read_csv('data/MIMIC_eICU_ICD.csv')
 df2 = df
 
 ##########SOFA############
 df2$SOFA_new = df2$SOFA
 df2$SOFA_new[df2$SOFA >= 0 
-                  & df2$SOFA <= 5] <- "0 - 5"
+                  & df2$SOFA <= 3] <- "0 - 3"
+df2$SOFA_new[df2$SOFA >= 4 
+                  & df2$SOFA <= 6] <- "4 - 6"
+df2$SOFA_new[df2$SOFA >= 7 
+                  & df2$SOFA <= 10] <- "7 - 10"
+df2$SOFA_new[df2$SOFA >= 11] <- "11 and above"
 
-df2$SOFA_new[df2$SOFA >= 6 
-                  & df2$SOFA <= 10] <- "6 - 10"
-
-df2$SOFA_new[df2$SOFA >= 11 
-                  & df2$SOFA <= 15] <- "11 - 15"
-
-df2$SOFA_new[df2$SOFA >= 16] <- "16 and above"
+df2$charlson_new = df2$charlson_cont
+df2$charlson_new[df2$charlson_cont >= 0 
+                  & df2$charlson_cont <= 3] <- "0 - 3"
+df2$charlson_new[df2$charlson_cont >= 4 
+                  & df2$charlson_cont <= 6] <- "4 - 6"
+df2$charlson_new[df2$charlson_cont >= 7 
+                  & df2$charlson_cont <= 10] <- "7 - 10"
+df2$charlson_new[df2$charlson_cont >= 11] <- "11 and above"
 
 # Assign eICU years to MIMIC year bins
 df2$anchor_year_group[df2$anchor_year_group == "2014"] <- "2014 - 2016" 
@@ -26,14 +32,19 @@ df2$anchor_year_group[df2$anchor_year_group == "2015"] <- "2014 - 2016"
 
 # Define factor variables
 df2$SOFA_new <- factor(df2$SOFA_new)
-df2$charlson_comorbidity_index <- factor(df2$charlson_comorbidity_index)
+df2$charlson_new <- factor(df2$charlson_new)
 df2$anchor_year_group <- factor(df2$anchor_year_group)
+df2$hypertension <- factor(df2$hypertension)
+df2$heart_failure <- factor(df2$heart_failure)
+df2$copd <- factor(df2$copd)
+df2$asthma <- factor(df2$asthma)
+df2$ckd <- factor(df2$ckd)
 
 ### Ventilation
 
 # Regression for SOFA all separately -> Ventilation
-mylogit <- glm(ventilation_bin ~ ethnicity_white + anchor_age + 
-                 gender + anchor_year_group + SOFA + charlson_comorbidity_index + rrt + pressor, 
+mylogit <- glm(ventilation_bin ~ ethnicity_white + anchor_age + hypertension + heart_failure + copd + asthma + ckd +
+                 gender + anchor_year_group + SOFA + charlson_new + rrt + pressor, 
                data = df2, family=binomial(link='logit'))
 
 # summary(mylogit) // for a glimpse at the results
@@ -43,15 +54,15 @@ res_store$model <- "SOFA all"
 res_store$cohort <- "combined"
 res_store$outcome <- "Ventilation"
 
-# Regression SOFA 0-5
+# Regression SOFA categories
 
 #Get all column names to run regression on
 SOFA_list = levels(df2$SOFA_new)
 
 #Loop over them and create model for each
 log_models = lapply(SOFA_list, function(x){
-  glm(ventilation_bin ~ ethnicity_white + anchor_age + 
-        gender + anchor_year_group + SOFA + charlson_comorbidity_index + rrt + pressor,
+  glm(ventilation_bin ~ ethnicity_white + anchor_age + hypertension + heart_failure + copd + asthma + ckd +
+        gender + anchor_year_group + SOFA + charlson_new + rrt + pressor,
       data = subset(df2, SOFA_new == x), na.action = na.omit, family=binomial(link='logit'))
   
 })
@@ -72,8 +83,8 @@ for (i in 1:length(SOFA_list)) {
 ### RRT
 
 # Regression for SOFA all separately -> RRT
-mylogit <- glm(rrt ~ ethnicity_white + anchor_age + 
-                 gender + anchor_year_group + SOFA + charlson_comorbidity_index + ventilation_bin + pressor, 
+mylogit <- glm(rrt ~ ethnicity_white + anchor_age + hypertension + heart_failure + copd + asthma + ckd +
+                 gender + anchor_year_group + SOFA + charlson_new + ventilation_bin + pressor, 
                data = df2, family=binomial(link='logit'))
 
 res_store_new <- as.data.frame(exp(cbind(OR = coef(mylogit), confint(mylogit))) )
@@ -86,8 +97,8 @@ res_store <- rbind(res_store, res_store_new)
 
 # Loop over them and create model for each
 log_models = lapply(SOFA_list, function(x){
-  glm(rrt ~ ethnicity_white + anchor_age + 
-        gender + anchor_year_group + SOFA + charlson_comorbidity_index + ventilation_bin + pressor,
+  glm(rrt ~ ethnicity_white + anchor_age + hypertension + heart_failure + copd + asthma + ckd +
+        gender + anchor_year_group + SOFA + charlson_new + ventilation_bin + pressor,
       data = subset(df2, SOFA_new == x) ,na.action = na.omit, family=binomial(link='logit'))
   
 })
@@ -108,8 +119,8 @@ for (i in 1:length(SOFA_list)) {
 ### Vasopressors
 
 # Regression for SOFA all separately -> Vasopressors
-mylogit <- glm(pressor ~ ethnicity_white + anchor_age + 
-                 gender + anchor_year_group + SOFA + charlson_comorbidity_index + ventilation_bin + rrt, 
+mylogit <- glm(pressor ~ ethnicity_white + anchor_age + hypertension + heart_failure + copd + asthma + ckd +
+                 gender + anchor_year_group + SOFA + charlson_new + ventilation_bin + rrt, 
                data = df2, family=binomial(link='logit'))
 
 res_store_new <- as.data.frame(exp(cbind(OR = coef(mylogit), confint(mylogit))) )
@@ -122,8 +133,8 @@ res_store <- rbind(res_store, res_store_new)
 
 # Loop over them and create model for each
 log_models = lapply(SOFA_list, function(x){
-  glm(pressor ~ ethnicity_white + anchor_age + 
-        gender + anchor_year_group + SOFA + charlson_comorbidity_index + ventilation_bin + rrt,
+  glm(pressor ~ ethnicity_white + anchor_age + hypertension + heart_failure + copd + asthma + ckd +
+        gender + anchor_year_group + SOFA + charlson_new + ventilation_bin + rrt,
       data = subset(df2, SOFA_new == x), na.action = na.omit, family=binomial(link='logit'))
   
 })
@@ -143,9 +154,9 @@ for (i in 1:length(SOFA_list)) {
 
 res_store$SOFA_start[res_store$model == "SOFA all"] <- 100
 res_store$SOFA_start[res_store$model == "1"] <- 0
-res_store$SOFA_start[res_store$model == "2"] <- 6
-res_store$SOFA_start[res_store$model == "3"] <- 10
-res_store$SOFA_start[res_store$model == "4"] <- 16
+res_store$SOFA_start[res_store$model == "2"] <- 4
+res_store$SOFA_start[res_store$model == "3"] <- 7
+res_store$SOFA_start[res_store$model == "4"] <- 11
 
 
 write.csv(res_store, 
