@@ -5,7 +5,7 @@ library(tmle)
 
 data_between <- function(sepsis_data, sev_low, sev_high, sev_type) {
 
-    if sev_type == 'SOFA' {
+    if (sev_type == 'SOFA') {
 
         res <- sepsis_data[sepsis_data$SOFA <= sev_high & sepsis_data$SOFA >= sev_low,
         c("source","anchor_age","gender","ethnicity_white","SOFA","charlson_cont",
@@ -13,7 +13,7 @@ data_between <- function(sepsis_data, sev_low, sev_high, sev_type) {
           "hypertension", "heart_failure", "ckd", "copd", "asthma")]
 
 
-    } else if sev_type == 'OASIS' {
+    } else if (sev_type == 'OASIS') {
 
         res <- sepsis_data[sepsis_data$OASIS_B <= sev_high & sepsis_data$OASIS_B >= sev_low,
         c("source","anchor_age","gender","ethnicity_white","OASIS_B","charlson_cont",
@@ -27,31 +27,30 @@ data_between <- function(sepsis_data, sev_low, sev_high, sev_type) {
 # TMLE
 run_tmle <- function(data, treatment, sev_type) {
 
-    if sev_type == "SOFA" {
+    if (sev_type == "SOFA") {
 
         confounders <- c("source","anchor_age","gender","ethnicity_white","SOFA","charlson_cont",
                      "hypertension", "heart_failure", "ckd", "copd", "asthma")
     
-    } else if sev_type == "OASIS" {
+    } else if (sev_type == "OASIS") {
 
         confounders <- c("source","anchor_age","gender","ethnicity_white","OASIS_B","charlson_cont",
                      "hypertension", "heart_failure", "ckd", "copd", "asthma")
     }
 
-    if(treatment == "ventilation_bin") {
+    if (treatment == "ventilation_bin") {
 
         W <- data[, append(confounders, c("rrt", "pressor"))]
         A <- data$ventilation_bin
 
-    } else if(treatment == "rrt") {
+    } else if (treatment == "rrt") {
 
         W <- data[, append(confounders, c("ventilation_bin", "pressor"))]
         A <- data$rrt
 
-    } else if(treatment == "pressor") {
+    } else if (treatment == "pressor") {
 
-        W <- data[, append(confounders, c("rrt", "ventilation_bin"))]
-                           
+        W <- data[, append(confounders, c("rrt", "ventilation_bin"))]         
         A <- data$pressor
     }
 
@@ -62,14 +61,13 @@ run_tmle <- function(data, treatment, sev_type) {
                    W = W,
                    family = "binomial", 
                    gbound = c(0.05, 0.95),
-                   #g.SL.library = c("SL.xgboost", "SL.svm"),
-                   #Q.SL.library = c("SL.xgboost", "SL.svm"),
+                   g.SL.library = c("SL.svm", "SL.xgboost"),
+                   Q.SL.library = c("SL.svm", "SL.xgboost"),
                   )
 
-    log <- summary(result)
-    print(log)
+    print(summary(result))
 
-    return(log)
+    return(result)
 }
 
 
@@ -102,23 +100,28 @@ tmle_stratified <- function(sepsis_data, treatment, race, df, sev_type) {
         } # else, nothing because race = "all" needs no further filtering
 
         data <- data_between(sepsis_data, start, end, sev_type)
-        log <- run_tmle(data, treatment, sev_type)
+        result <- run_tmle(data, treatment, sev_type)
 
         df[nrow(df) + 1,] <- c(treatment,
                                race,
                                start,
                                end,
-                               log$estimates$ATE$psi,
-                               log$estimates$ATE$CI[1],
-                               log$estimates$ATE$CI[2],
-                               log$estimates$ATE$pvalue,
-                               nrow(data)
+                               result$estimates$ATE$psi[[1]],
+                               result$estimates$ATE$CI[1],
+                               result$estimates$ATE$CI[2],
+                               result$estimates$ATE$pvalue[[1]],
+                               nrow(data),
+                               result$g$coef[[1]],
+                               result$g$coef[[2]],
+                               result$Qinit$coef[[1]],
+                               result$Qinit$coef[[2]],
+                               result$g$AUC[[1]],
+                               result$Qinit$Rsq[[1]]
                               ) 
     }  
 
     # Saves file as we go
     write.csv(df, paste0("results/", fn,".csv"))
-    
 }
 
 
@@ -130,9 +133,11 @@ treatments <- list("ventilation_bin", "rrt", "pressor")
 races <- list("all", "non-white", "white")
 
 # Dataframe to hold results
-df <- data.frame(matrix(ncol=9, nrow=0))
+df <- data.frame(matrix(ncol=15, nrow=0))
 colnames(df) <- c("treatment", "race", "sev_start", "sev_end",
-                    "psi", "i_ci","s_ci", "pvalue", "n")
+                    "psi", "i_ci","s_ci", "pvalue", "n",
+                    "g_SVM", "g_XGBoost", "Q_SVM", "Q_XGBoost",
+                    "g_AUC", "Q_R2")
 
 # Go through all treatments
 for (treatment in treatments) {
