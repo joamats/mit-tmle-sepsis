@@ -5,7 +5,7 @@ library(dplyr)
 library(flextable)
 library(magrittr)
 
-df = read_csv('data/MIMIC_eICU.csv', show_col_types = FALSE)
+df = read_csv('data/MIMIC_eICU_ICD.csv', show_col_types = FALSE)
 m_e_df = df
 
 ##########SOFA############
@@ -58,7 +58,7 @@ label(m_e_df$ethnicity_white) <- "Race"
 # Functions to add commas between 1,000
 render.categorical <- function(x, ...) {
   c("", sapply(stats.apply.rounding(stats.default(x)), function(y) with(y,
-                       sprintf("%s (%s%%)", prettyNum(FREQ, big.mark=","), PCT))))
+                                                                        sprintf("%s (%s%%)", prettyNum(FREQ, big.mark=","), PCT))))
 }
 
 render.strat <- function (label, n, ...) {
@@ -72,3 +72,4 @@ tbl1 <- table1(~ rrt + ventilation_bin + pressor + ethnicity_white | death_bin*S
 
 # Convert to flextable
 t1flex(tbl1) %>% save_as_docx(path="results/Table_posA_m_e.docx")
+
