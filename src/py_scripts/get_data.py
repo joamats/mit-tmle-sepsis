@@ -2,7 +2,43 @@ import argparse
 from tqdm import tqdm
 import pandas as pd
 import numpy as np
+import sys
 tqdm.pandas()
+
+def run_query(sql_query_path, destination_path):
+
+    # Access data using Google BigQuery.
+    import os
+    from dotenv import load_dotenv
+
+    # Load env file 
+    load_dotenv()
+
+    # Get GCP's secrets
+    KEYS_FILE = os.getenv("KEYS_FILE")
+    PROJECT_ID = os.getenv("PROJECT_ID")
+
+    # Set environment variables
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = KEYS_FILE
+
+    # Establish connection with BigQuery
+    from google.cloud import bigquery
+    BigQuery_client = bigquery.Client()
+
+    # Read query
+    with open(sql_query_path, 'r') as fd:
+        query = fd.read()
+
+    # Replace the project id by the coder's project id in GCP
+    my_query = query.replace("physionet-data", PROJECT_ID).replace("db_name", PROJECT_ID, -1)
+
+    # Make request to BigQuery with our query
+    df = BigQuery_client.query(my_query).to_dataframe()
+
+    # Save to CSV
+    df.to_csv(destination_path)
+
+    return df
 
 # Combine the info from multiple columns into 3 distinct columns for each of the 3 treatments in eICU data
 def cat_rrt(rrt):  
@@ -129,14 +165,6 @@ def icd_9_to_10(original_file, dataset):
 def parse_args():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--original_file",
-                        default="data/ICD_codes/eICU/raw_icd_codes.csv",
-                        help="Insert your original file with ICD codes")
-
-    parser.add_argument("--result_file",
-                        default="data/eICU_data.csv",
-                        help="Insert your target path for the disease ICD 10 codes only file")
-
     parser.add_argument("--dataset",
                     default="eICU",
                     help="Insert the dataset to work with")
@@ -147,10 +175,34 @@ if __name__ == '__main__':
 
     args = parse_args()
 
+    # First, let's fetch the data
+
+    if args.dataset == "MIMIC":
+        run_query("src/sql_queries/mimic_table.sql",
+                  "data/MIMIC_data.csv")
+
+        icd_codes_file = "data/ICD_codes/MIMIC/raw_icd_codes.csv"
+        result_file = "data/MIMIC_data.csv"
+
+        run_query("src/sql_queries/icd_MIMIC/icd_codes.sql",
+                  icd_codes_file)
+
+    elif args.dataset == "eICU":
+        run_query("src/sql_queries/eICU_table.sql",
+                  "data/eICU_data.csv")
+        run_query("src/sql_queries/icd_eICU/diseases_dx_ph.sql",
+                  "data/ICD_codes/eICU/dx_ph_diseases.csv")
+
+        icd_codes_file = "data/ICD_codes/eICU/raw_icd_codes.csv"
+        result_file = "data/eICU_data.csv"
+
+        run_query("src/sql_queries/icd_eICU/icd_codes.sql",
+                  icd_codes_file)
+                  
     # 1. Convert ICD-9 to ICD-10 codes
 
     # Read the file to process with disease patients
-    df = icd_9_to_10(args.original_file, args.dataset)
+    df = icd_9_to_10(icd_codes_file, args.dataset)
 
     # 2. Encode ICD codes into columns
 
@@ -242,4 +294,4 @@ if __name__ == '__main__':
     print(f"Final patients: {len(df_all)}")
 
     # Save DataFrame
-    df_all.to_csv(args.result_file)
+    df_all.to_csv(result_file)
