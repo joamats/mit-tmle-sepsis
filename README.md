@@ -60,21 +60,12 @@ After getting credentialing at PhysioNet, you must sign the data use agreement a
 Having all the necessary tables for the cohort generation query in your project, run the following command to fetch the data as a dataframe that will be saved as CSV in your local project. Make sure you have all required files and folders.
 
 For main data run:
-```sh
-python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/mimic_table.sql --destination_path data/MIMIC_data.csv
-```
-
-Then, you need to run these commands to get the ICD data for comorbidities from GCP:
-```sh
-python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/icd_MIMIC/icd_codes.sql --destination_path data/ICD_codes/MIMIC/raw_icd_codes.csv
-```
 ```py
-python3 data/get_gcp_data.py --sql_query_path "data/sql/dx_MIMIC/diagnoses.sql" --destination_path "data/dx_MIMIC/icd_9_and_10.csv"
-```
+python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/mimic_table.sql --destination_path data/MIMIC_data.csv
 
-Translate, Map, Encode and Join Cancer ICD-10 codes:
-``` py
-python3 data/icd_codes/cancer_patients.py --original_file data/dx_MIMIC/icd_9_and_10.csv --result_file data/table_MIMIC.csv --dataset "MIMIC"
+python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/icd_MIMIC/icd_codes.sql --destination_path data/ICD_codes/MIMIC/raw_icd_codes.csv
+
+python3 src/py_scripts/icd_codes.py --original_file data/ICD_codes/MIMIC/raw_icd_codes.csv --result_file data/table_MIMIC.csv --dataset "MIMIC"
 ```
 
 ICD-9 to ICD-10 translation based on this [GitHub Repo](https://github.com/AtlasCUMC/ICD10-ICD9-codes-conversion)
@@ -85,33 +76,16 @@ The generation of the eICU cohort is a bit more complex.
 
 First, you must run all the queries present in the folder **src/sql_queries/eICU_sepsis** sequentially, in your GCP project. More detailed instructions can be found in that folder. The generated tables will be necessary to run the final query. This can take a while.
 
-Finally, for the data run:
-
-```sh
-python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/eICU_table.sql --destination_path data/eICU_data.csv
-```
-
-For ICD codes, first get mapping table:
-
-```sh
-python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/icd_eICU/diseases_dx_ph.sql --destination_path data/ICD_codes/eICU/dx_ph_diseases.csv
-```
-Then, fetch ICD codes:
-
-```py
-python3 data/get_gcp_data.py --sql_query_path "data/sql/dx_eICU/diagnoses.sql" --destination_path "data/dx_eICU/icd_9_and_10.csv"
-```
-
-Then, translate, map, encode and join ICD-10 codes for comorbidities:
-
-``` py
-python3 data/icd_codes/cancer_patients.py --original_file data/dx_eICU/icd_9_and_10.csv --result_file data/table_eICU.csv --dataset "eICU"
-```
-
 Finally, run:
 
-```sh
-python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/icd_eICU/icd_codes.sql --destination_path data/ICD_codes/eICU/raw_icd_codes.csv
+```py
+python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/eICU_table.sql --destination_path data/eICU_data.csv 
+
+python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/icd_eICU/diseases_dx_ph.sql --destination_path data/ICD_codes/eICU/dx_ph_diseases.csv
+
+python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/icd_eICU/icd_codes.sql --destination_path data/ICD_codes/eICU/raw_icd_codes.csv 
+
+python3 src/py_scripts/icd_codes.py --original_file data/ICD_codes/eICU/raw_icd_codes.csv --result_file data/table_eICU.csv --dataset 'eICU' 
 ```
 
 ### 4. Run the different analyses

@@ -40,6 +40,10 @@ load_data <- function(cohort){
     sepsis_data <- sepsis_data %>% mutate(copd = ifelse(!is.na(copd), 1, 0))
     sepsis_data <- sepsis_data %>% mutate(asthma = ifelse(!is.na(asthma), 1, 0))
 
+    sepsis_data$OASIS_W <- sepsis_data$oasis
+    sepsis_data$OASIS_N <- sepsis_data$oasis
+    sepsis_data$OASIS_B <- sepsis_data$oasis
+
 
   } else if (file_path == "data/eICU_data.csv") {
     
@@ -68,6 +72,11 @@ load_data <- function(cohort){
     sepsis_data <- sepsis_data %>% mutate(copd = ifelse(!is.na(copd), 1, 0))
     sepsis_data <- sepsis_data %>% mutate(asthma = ifelse(!is.na(asthma), 1, 0))
 
+    sepsis_data$OASIS_W <- sepsis_data$score_OASIS_W      # worst case scenario
+    sepsis_data$OASIS_N <- sepsis_data$score_OASIS_Nulls  # embracing the nulls
+    sepsis_data$OASIS_B <- sepsis_data$score_OASIS_B      # best case scenario
+
+
 
   } else {
     print("Wrong path or file name.")
@@ -76,7 +85,8 @@ load_data <- function(cohort){
   # Return just keeping columns of interest
   return(sepsis_data[, c("gender", "los", "ventilation_bin", "pressor", "rrt", "death_bin", "ethnicity_white",
                          "charlson_cont", "charlson_comorbidity_index", "anchor_age", "SOFA", "anchor_year_group",
-                         "hypertension", "heart_failure", "ckd", "copd", "asthma", "adm_elective")])
+                         "hypertension", "heart_failure", "ckd", "copd", "asthma", "adm_elective",
+                         "OASIS_W", "OASIS_N", "OASIS_B")])
 }
 
 get_merged_datasets <- function() {
@@ -88,11 +98,11 @@ get_merged_datasets <- function() {
 
   # add column to keep the cohort source and control for it
   data <- data %>% mutate(source = ifelse(source == "mimic_data", 1, 0))
-  #data <- data[which(data$adm_elective == 0),] 
-  # subset dataframe to emergency admission only for sensitivity analysis
 
   write.csv(data, "data/MIMIC_eICU.csv")
 
   return (data)
 
 }
+
+get_merged_datasets()

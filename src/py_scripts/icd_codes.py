@@ -130,15 +130,15 @@ def parse_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--original_file",
-                        default="data/ICD_codes/MIMIC/raw_icd_codes.csv",
+                        default="data/ICD_codes/eICU/raw_icd_codes.csv",
                         help="Insert your original file with ICD codes")
 
     parser.add_argument("--result_file",
-                        default="data/MIMIC_data2.csv",
+                        default="data/eICU_data.csv",
                         help="Insert your target path for the disease ICD 10 codes only file")
 
     parser.add_argument("--dataset",
-                    default="MIMIC",
+                    default="eICU",
                     help="Insert the dataset to work with")
 
     return parser.parse_args()

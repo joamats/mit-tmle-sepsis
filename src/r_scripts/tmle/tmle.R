@@ -33,7 +33,6 @@ run_tmle_sofa <- function(data_sofa, treatment) {
                    W = W,
                    family = "binomial", 
                    gbound = c(0.05, 0.95),
-                   g.SL.library = c("SL.glm")
                    #1: g.SL.library = c("SL.glm", "tmle.SL.dbarts2", "SL.glmnet")
                    #2: g.SL.library = c("SL.randomForest","SL.glm","SL.earth","SL.stepAIC","SL.biglasso","SL.glm.interaction","SL.nnet","tmle.SL.dbarts2", "SL.glmnet")
                    #3: g.SL.library = c("SL.xgboost","SL.bartMachine", "SL.svm")
