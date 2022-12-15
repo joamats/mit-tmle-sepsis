@@ -82,6 +82,9 @@ tmle_stratified <- function(sepsis_data, treatment, race, df, sev_type) {
     } else if (sev_type == 'OASIS') {
         sev_ranges <- list(list(0, 37), list(38, 45), list(46, 51), list(52, 100))
     }
+
+    fn <- paste0("TMLE_", sev_type)
+
         
     for (sev in sev_ranges) {
         
@@ -113,13 +116,16 @@ tmle_stratified <- function(sepsis_data, treatment, race, df, sev_type) {
                               ) 
     }  
 
-    return (df)
+    # Saves file as we go
+    write.csv(df, paste0("results/", fn,".csv"))
+    
 }
 
 
 data <- read.csv('data/MIMIC_eICU.csv')
 
-# List with possible invasive treatments
+sev_type <- "SOFA"
+
 treatments <- list("ventilation_bin", "rrt", "pressor")
 races <- list("all", "non-white", "white")
 
@@ -131,8 +137,6 @@ colnames(df) <- c("treatment", "race", "sev_start", "sev_end",
 # Go through all treatments
 for (treatment in treatments) {
     for (race in races){
-        df <- tmle_stratified(data, treatment, race, df, sev_type)
+        tmle_stratified(data, treatment, race, df, sev_type)
     }
 }
-
-write.csv(df, "results/TMLE_OASIS.csv")
