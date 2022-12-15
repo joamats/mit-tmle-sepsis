@@ -234,7 +234,7 @@ if __name__ == '__main__':
         df_all.heart_failure = df_all.apply(lambda row: 1 if ((row.heart_failure == 1) | (row.heart_failure_ == 1)) else np.nan, axis=1)
         df_all.ckd = df_all.ckd_ # vlues are all in ckd_
         df_all.copd = df_all.apply(lambda row: 1 if ((row.copd == 1) | (row.copd_ == 1)) else np.nan, axis=1)
-        df_all.asthma = df_all.apply(lambda row: 1 if ((row.asthma == 1) | (row.asthma_ != 1)) else np.nan, axis=1)
+        df_all.asthma = df_all.apply(lambda row: 1 if ((row.asthma == 1) | (row.asthma_ == 1)) else np.nan, axis=1)
 
     print(f"Patients with Past Disease: {len(df)}")
     print(f"Sepsis patients: {len(df_sepsis)}")
