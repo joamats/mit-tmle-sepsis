@@ -59,14 +59,17 @@ After getting credentialing at PhysioNet, you must sign the data use agreement a
 
 Having all the necessary tables for the cohort generation query in your project, run the following command to fetch the data as a dataframe that will be saved as CSV in your local project. Make sure you have all required files and folders.
 
-For main data run:
+
 ```py
-python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/mimic_table.sql --destination_path data/MIMIC_data.csv
-
-python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/icd_MIMIC/icd_codes.sql --destination_path data/ICD_codes/MIMIC/raw_icd_codes.csv
-
-python3 src/py_scripts/icd_codes.py --original_file data/ICD_codes/MIMIC/raw_icd_codes.csv --result_file data/table_MIMIC.csv --dataset "MIMIC"
+python3 src/py_scripts/get_data.py --dataset "MIMIC"
 ```
+
+```py
+python3 src/py_scripts/get_data.py --dataset "eICU"
+```
+
+And combine both:
+source("src/r_scripts/utils/load_data.R")
 
 ICD-9 to ICD-10 translation based on this [GitHub Repo](https://github.com/AtlasCUMC/ICD10-ICD9-codes-conversion)
 
