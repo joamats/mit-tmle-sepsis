@@ -7,18 +7,18 @@ data <- read.csv('data/MIMIC_eICU.csv')
 
 # List with possible invasive treatments
 treatments <- list("ventilation_bin", "rrt", "pressor")
-races <- list("all", "non-white", "white")
+races <- list("non-white", "white")#, 'all'
 
 # Dataframe to hold results
 df <- data.frame(matrix(ncol=9, nrow=0))
-colnames(df) <- c("treatment", "race", "sofa_start", "sofa_end",
+colnames(df) <- c("treatment", "race", "sev_start", "sev_end",
                     "psi", "i_ci","s_ci", "pvalue", "n")
 
 # Go through all treatments
 for (treatment in treatments) {
     for (race in races){
-        df <- tmle_stratified_sofas(data, treatment, race, df)
+        df <- tmle_stratified(data, treatment, race, df)
     }
 }
 
-write.csv(df, "results/TMLE_emergency_only.csv")
+write.csv(df, "results/TMLE_OASIS.csv")
