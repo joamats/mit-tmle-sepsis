@@ -8,6 +8,9 @@ matplotlib.use('TKAgg')
 plot_name = "TMLE_OASIS"
 df = pd.read_csv(f"results/{plot_name}.csv")
 
+conversion_dict = dict(zip(df.sev_start.unique(), range(4)))
+df.sev_start = df.sev_start.apply(lambda x: conversion_dict[x])
+
 # Transform into percentages
 df.psi = df.psi * 100
 df.i_ci = df.i_ci * 100
@@ -18,7 +21,6 @@ races = df.race.unique()
 
 t_dict = dict(zip(["ventilation_bin", "rrt", "pressor"],
                   ["Mechanical Ventilation", "RRT", "Vasopressor(s)"]))
-colors = ["tab:orange", "tab:green", "tab:blue"]
 
 fig, axes = plt.subplots(1, len(treatments),
                          sharex=True, sharey=True,
@@ -50,12 +52,12 @@ for i, t in enumerate(treatments):
                      label="White")
 
     axes[i].axhline(y=0, xmin=0, xmax=1, c="black", linewidth=.7, linestyle='--')
-    axes[i].set_ylim([-20, 20])
+    axes[i].set_ylim([-25, 25])
     axes[i].set_title(t_dict[t])
     axes[0].set(ylabel="ATE (%)\nTreated vs. Not Treated")
     axes[2].legend(bbox_to_anchor=(1.05, 0.7), loc='upper left')
     axes[i].set_xticklabels(["0-37", "38-45", "46-51", ">51"])
-    axes[i].set_xticks([0, 38, 46, 52])
+    axes[i].set_xticks(range(4))
 
 fig.supxlabel('OASIS Range')
 
