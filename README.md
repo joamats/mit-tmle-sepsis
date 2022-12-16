@@ -60,36 +60,20 @@ After getting credentialing at PhysioNet, you must sign the data use agreement a
 Having all the necessary tables for the cohort generation query in your project, run the following command to fetch the data as a dataframe that will be saved as CSV in your local project. Make sure you have all required files and folders.
 
 
-```py
+```sh
 python3 src/py_scripts/get_data.py --dataset "MIMIC"
 ```
 
-```py
+```sh
 python3 src/py_scripts/get_data.py --dataset "eICU"
 ```
 
 And combine both:
+```sh
 source("src/r_scripts/utils/load_data.R")
-
-ICD-9 to ICD-10 translation based on this [GitHub Repo](https://github.com/AtlasCUMC/ICD10-ICD9-codes-conversion)
-
-#### eICU
-
-The generation of the eICU cohort is a bit more complex. 
-
-First, you must run all the queries present in the folder **src/sql_queries/eICU_sepsis** sequentially, in your GCP project. More detailed instructions can be found in that folder. The generated tables will be necessary to run the final query. This can take a while.
-
-Finally, run:
-
-```py
-python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/eICU_table.sql --destination_path data/eICU_data.csv 
-
-python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/icd_eICU/diseases_dx_ph.sql --destination_path data/ICD_codes/eICU/dx_ph_diseases.csv
-
-python3 src/py_scripts/pull_data.py --sql_query_path src/sql_queries/icd_eICU/icd_codes.sql --destination_path data/ICD_codes/eICU/raw_icd_codes.csv 
-
-python3 src/py_scripts/icd_codes.py --original_file data/ICD_codes/eICU/raw_icd_codes.csv --result_file data/table_eICU.csv --dataset 'eICU' 
 ```
+
+ICD-9 to ICD-10 translation based on this [GitHub Repo](https://github.com/AtlasCUMC/ICD10-ICD9-codes-conversion).
 
 ### 4. Run the different analyses
 #### 4.1 Logistic Regression
@@ -107,18 +91,8 @@ source("src/r_scripts/log_reg/create_csv.R")
 Targetted Maximum Likelihood Estimation was used to delineate the average treatment effect for one of the interventions. Data was stratified by race and SOFA category. Running the following command allows to replicate the obtained results.
 
 ```sh
-source("src/r_scripts/tmle/run_analyses.R")
+source("src/r_scripts/tmle.R")
 ```
-
-#### 4.3 LTMLE
-Longitudinal Targetted Maximum Likelihood Estimation was applied as sensitivity analysis method, reporting an ATE as if all patients were randomly assigned to a treatment. Running the following command allows to replicate the obtained results.
-
-```sh
-source("src/r_scripts/ltmle/run_analyses.R")
-```
-#### 4.4 Create Forest Plot
-Forest plot is created with the Stata commands present in the file **src\stata_scripts\forest_plots.do**.
-
 ## How to contribute
 We are actively working on this project.
 Feel free to raise questions opening an issue, to fork this project and submit pull requests!
