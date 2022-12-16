@@ -26,7 +26,7 @@ vim <- varimpact(Y=data$death_bin,
                                 ),
                 Q.library = libs,
                 g.library = libs,
-                verbose_reduction = TRUE
+                quantile_probs_numeric = c(0,1)
                 )
 
 print(vim)
