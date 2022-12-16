@@ -128,7 +128,8 @@ tmle_stratified <- function(sepsis_data, treatment, race, df, sev_type) {
 
 data <- read.csv('data/MIMIC_eICU.csv')
 
-sev_type <- "SOFA"
+# Put either "SOFA" or "OASIS" to run the analysis on the desired score
+sev_type <- "OASIS"
 
 treatments <- list("ventilation_bin", "rrt", "pressor")
 races <- list("all", "non-white", "white")
