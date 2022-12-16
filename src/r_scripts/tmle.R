@@ -61,8 +61,8 @@ run_tmle <- function(data, treatment, sev_type) {
                    W = W,
                    family = "binomial", 
                    gbound = c(0.05, 0.95),
-                   g.SL.library = c("SL.svm", "SL.xgboost"),
-                   Q.SL.library = c("SL.svm", "SL.xgboost"),
+                   g.SL.library = c("SL.xgboost", "SL.svm"),
+                   Q.SL.library = c("SL.xgboost", "SL.svm"),
                   )
 
     print(summary(result))
@@ -118,10 +118,9 @@ tmle_stratified <- function(sepsis_data, treatment, race, df, sev_type) {
                                result$g$AUC[[1]],
                                result$Qinit$Rsq[[1]]
                               ) 
-    }  
-
-    # Saves file as we go
-    write.csv(df, paste0("results/", fn,".csv"))
+        # Saves file as we go
+        write.csv(df, paste0("results/", fn,".csv"))
+    }     
 }
 
 
@@ -136,7 +135,7 @@ races <- list("all", "non-white", "white")
 df <- data.frame(matrix(ncol=15, nrow=0))
 colnames(df) <- c("treatment", "race", "sev_start", "sev_end",
                     "psi", "i_ci","s_ci", "pvalue", "n",
-                    "g_SVM", "g_XGBoost", "Q_SVM", "Q_XGBoost",
+                    "g_XGBoost", "g_SVM", "Q_XGBoost", "Q_SVM",
                     "g_AUC", "Q_R2")
 
 # Go through all treatments
