@@ -5,7 +5,7 @@ source("src/r_scripts/load_data.R")
 
 data <- read.csv('data/MIMIC_eICU.csv')
 
-libs <- c("SL.svm", "SL.xgboost")
+libs <- c("SL.xgboost")
 
 vim <- varimpact(Y=data$death_bin,
                  data %>% select(c(gender,
@@ -26,7 +26,8 @@ vim <- varimpact(Y=data$death_bin,
                                 ),
                 Q.library = libs,
                 g.library = libs,
-                quantile_probs_numeric = c(0,1)
+                quantile_probs_numeric = c(0,1),
+                verbose_tmle = TRUE
                 )
 
 print(vim)
