@@ -136,9 +136,10 @@ races <- list("all", "non-white", "white")
 # Dataframe to hold results
 df <- data.frame(matrix(ncol=15, nrow=0))
 colnames(df) <- c("treatment", "race", "sev_start", "sev_end",
-                    "psi", "i_ci","s_ci", "pvalue", "n",
-                    "g_XGBoost", "g_SVM", "Q_XGBoost", "Q_SVM",
-                    "g_AUC", "Q_R2")
+                  "psi", "i_ci","s_ci", "pvalue", "n",
+                  "g_XGBoost", "g_SVM",
+                  "Q_XGBoost", "Q_SVM",
+                  "g_AUC", "Q_R2")
 
 # Go through all treatments
 for (treatment in treatments) {
