@@ -5,11 +5,11 @@ import seaborn as sb
 import matplotlib
 matplotlib.use('TKAgg')
 
-plot_name = "TMLE_SL3"
+plot_name = "TMLE_SOFA"
 df = pd.read_csv(f"results/{plot_name}.csv")
 
 # Remove overall result
-df = df[~((df.sofa_start == 0) & (df.sofa_end == 100))]
+df = df[~((df.sev_start == 0) & (df.sev_end == 100))]
 
 # Transform into percentages
 df.psi = df.psi * 100
@@ -38,14 +38,14 @@ for i, t in enumerate(treatments):
     axes[i].set(xlabel=None)
     axes[i].set(ylabel=None)
     
-    axes[i].errorbar(x=df_temp1.sofa_start,
+    axes[i].errorbar(x=df_temp1.sev_start,
                      y=df_temp1.psi,
                      yerr=((df_temp1.psi- df_temp1.i_ci), (df_temp1.s_ci-df_temp1.psi)),
                      fmt='-o', c='dimgray', ecolor='dimgray',
                      elinewidth=.4, linewidth=1.5, capsize=4, markeredgewidth=.4,
                      label="Non-White")
 
-    axes[i].errorbar(x=df_temp2.sofa_start,
+    axes[i].errorbar(x=df_temp2.sev_start,
                      y=df_temp2.psi,
                      yerr=((df_temp2.psi- df_temp2.i_ci), (df_temp2.s_ci-df_temp2.psi)),
                      fmt='-o', c='firebrick', ecolor='firebrick',
