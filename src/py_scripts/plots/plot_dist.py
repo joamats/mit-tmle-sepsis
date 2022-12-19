@@ -29,10 +29,10 @@ r_dict = dict(zip(range(2), ["Non-White", "White"]))
 
 fig, axes = plt.subplots(1, 3,
                          sharex=True, sharey=True,
-                         figsize=(8.5,2.5),
+                         figsize=(8.25,3),
                          constrained_layout=True)
 
-fig.suptitle('Distribution of Patients, across SOFA ranges and treatment')
+fig.suptitle('Distribution of Patients, across SOFA ranges and treatment\n')
 
 w = [-.7, .7] 
 
@@ -52,7 +52,8 @@ for i, t in enumerate(t_dict.keys()):
                     height=df_temp[df_temp[t]==0].groupby('sofa_start')[t].count()/1000,
                     width=w[1],
                     label=f"{r}\nNot Treated",
-                    color=colors1[j]
+                    color=colors1[j],
+                    edgecolor='white'
                     )
 
         axes[i].bar(x=[i + w[j]/2 for i in sofas_start],
@@ -61,6 +62,8 @@ for i, t in enumerate(t_dict.keys()):
                     label=f"{r}\nTreated",
                     bottom=df_temp[df_temp[t]==0].groupby('sofa_start')[t].count()/1000,
                     color=colors2[j],
+                    hatch="//",
+                    edgecolor='white'
                     )
             
     axes[i].set(xlabel=None)
@@ -70,9 +73,8 @@ for i, t in enumerate(t_dict.keys()):
     axes[i].set_xticklabels(["0-3", "4-6", "7-10", ">10"])
     axes[i].set_xticks([0., 4., 7., 11.])
     axes[0].set(ylabel="Number of Patients\n(thousands)")
-    axes[2].legend(bbox_to_anchor=(1.05, 1.05), loc='upper left')
+    axes[2].legend(bbox_to_anchor=(1.05, 1.02), loc='upper left')
 
-
-fig.supxlabel('SOFA Range')
+fig.supxlabel('\nSOFA Range              ')
 
 fig.savefig(f"results/paper/fig4_TMLE_dist.png", dpi=200)
