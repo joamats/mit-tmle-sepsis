@@ -43,7 +43,7 @@ run_tmle <- function(data, treatment, sev_type) {
         W <- data[, append(confounders, c("rrt", "pressor"))]
         A <- data$ventilation_bin
 
-    } else if (treatment == "rrt") {
+   } else if (treatment == "rrt") {
 
         W <- data[, append(confounders, c("ventilation_bin", "pressor"))]
         A <- data$rrt
@@ -120,7 +120,10 @@ tmle_stratified <- function(sepsis_data, treatment, race, df, sev_type) {
                               ) 
         # Saves file as we go
         write.csv(df, paste0("results/", fn,".csv"))
-    }     
+    }  
+
+    return(df)   
+    
 }
 
 
@@ -142,6 +145,6 @@ colnames(df) <- c("treatment", "race", "sev_start", "sev_end",
 # Go through all treatments
 for (treatment in treatments) {
     for (race in races){
-        tmle_stratified(data, treatment, race, df, sev_type)
+        df <- tmle_stratified(data, treatment, race, df, sev_type)
     }
 }

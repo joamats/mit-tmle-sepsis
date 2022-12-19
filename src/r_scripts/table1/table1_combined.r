@@ -127,7 +127,7 @@ label(m_e_df$charlson_cont)       <- "Charlson index continuous"
 label(m_e_df$charlson_new) <- "Charlson index categorical"
 
 label(m_e_df$pressor)         <- "Vasopressor"
-label(m_e_df$ventilation_bin) <- "Invasive ventilation"
+label(m_e_df$ventilation_bin) <- "Mechanical ventilation"
 label(m_e_df$rrt)             <- "Renal replacement therapy"
 label(m_e_df$death_bin)       <- "In-hospital mortality"
 label(m_e_df$source)          <- "Cohort"
