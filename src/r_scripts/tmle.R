@@ -43,7 +43,7 @@ run_tmle <- function(data, treatment, sev_type) {
         W <- data[, append(confounders, c("rrt", "pressor"))]
         A <- data$ventilation_bin
 
-    } else if (treatment == "rrt") {
+   } else if (treatment == "rrt") {
 
         W <- data[, append(confounders, c("ventilation_bin", "pressor"))]
         A <- data$rrt

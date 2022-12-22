@@ -9,7 +9,7 @@ df = pd.read_csv("data/MIMIC_eICU.csv")[['SOFA', 'OASIS_W', 'OASIS_N', 'OASIS_B'
 df.source = df.source.apply(lambda x: "MIMIC" if x==1 else "eICU")
 
 methods = ['OASIS_W', 'OASIS_N', 'OASIS_B']
-titles = ['Pessimistic Scenarios', 'With Missing Patients', 'Optimistic Scenarios' ]
+titles = ['Pessimistic Scenario', 'With Missing Patients', 'Optimistic Scenario' ]
 
 fig, axes = plt.subplots(1, 3,
                          sharex=True, sharey=True,

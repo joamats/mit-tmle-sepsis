@@ -360,7 +360,6 @@ LEFT JOIN(
 AS icustay_detail
 ON icustay_detail.patientunitstayid = yug.patientunitstayid
 
--- yug.ethnicity != "Other/Unknown"
 WHERE icustay_detail.unitvisitnumber = 1
 AND yug.ethnicity != "Other/Unknown"
 AND yug.age != "16" AND yug.age != "17"
