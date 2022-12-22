@@ -241,7 +241,7 @@ if __name__ == '__main__':
     # if several CKD, takes the highest one
     df['ckd'] = df.ckd1
     for i, c in enumerate(ckds):
-        df.ckd = df.apply(lambda row: i if row[c] == 1 else row.ckd, axis=1)
+        df.ckd = df.apply(lambda row: i+1 if row[c] == 1 else row.ckd, axis=1)
 
 
     print(f"After groupping by patient, N = {len(df)}")
