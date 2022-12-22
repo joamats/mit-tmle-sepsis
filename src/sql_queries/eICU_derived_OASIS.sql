@@ -1,51 +1,119 @@
-DROP TABLE IF EXISTS `db_name.my_eICU.derived_OASIS`;
 
-CREATE TABLE `db_name.my_eICU.derived_OASIS` AS
+-- ------------------------------------------------------------------
+-- Title: Oxford Acute Severity of Illness Score (OASIS)
+-- This query extracts the Oxford acute severity of illness score.
+-- This score is a measure of severity of illness for patients in the ICU.
+-- The score is calculated on the first day of each ICU patients' stay.
+-- OASIS score was originally created for MIMIC
+-- This script creates a pivoted table containing the OASIS score in eICU 
+-- ------------------------------------------------------------------
 
-Select
+-- Reference for OASIS:
+--    Johnson, Alistair EW, Andrew A. Kramer, and Gari D. Clifford.
+--    "A new severity of illness scale using a subset of acute physiology and chronic health evaluation data elements shows comparable predictive accuracy*."
+--    Critical care medicine 41, no. 7 (2013): 1711-1718.
+-- https://alistairewj.github.io/project/oasis/
 
-CASE 
-WHEN yug.age = "> 89" THEN 91
-ELSE CAST(yug.age AS INT64) 
+-- Variables used in OASIS (first 24h only):
+--  Heart rate, MAP, Temperature, Respiratory rate
+--  (sourced FROM `physionet-data.eicu_crd_derived.pivoted_vital`)
+--  GCS
+--  (sourced FROM `physionet-data.eicu_crd_derived.pivoted_vital` and `physionet-data.eicu_crd_derived.physicalexam`)
+--  Urine output 
+--  (sourced  FROM `physionet-data.eicu_crd_derived.pivoted_uo`)
+--  Pre-ICU in-hospital length of stay 
+--  (sourced FROM `physionet-data.eicu_crd.patient`)
+--  Age 
+--  (sourced FROM `physionet-data.eicu_crd.patient`)
+--  Elective surgery 
+--  (sourced FROM `physionet-data.eicu_crd.patient`, `physionet-data.eicu_crd.admissiondx` and `physionet-data.eicu_crd.apachepredvar`)
+--  Ventilation status 
+--  (sourced FROM `physionet-data.eicu_crd_derived.ventilation_events`, `physionet-data.eicu_crd_derived.debug_vent_tags`, `physionet-data.eicu_crd.apacheapsvar`, 
+--   `physionet-data.eicu_crd.apachepredvar`, and `physionet-data.eicu_crd.respiratorycare`)
+
+
+-- Regarding missing values:
+-- Elective stay: If there is no information on surgery in an elective stay, we assumed all cases to be -> "no elective surgery"
+-- There are a lot of missing values, especially for urine output. Hence, we have created 3 OASIS summary scores:
+-- 1) No imputation, values as is with missings. 2) Imputation by assuming a Best Case scenario. 3) Imputation by assuming a Worst Case scenario. 
+
+-- Note:
+--  The score is calculated for *all* ICU patients, with the assumption that the user will subselect appropriate patientunitstayid.
+
+DROP TABLE IF EXISTS pivoted_OASIS; --CASCADE;
+CREATE TABLE pivoted_OASIS AS
+
+--WITH pivoted_gcs_OASIS AS (
+--    WITH pivoted_vent_OASIS AS (
+--      WITH admission_OASIS AS (
+SELECT pivoted_OASIS.*,
+pivoted_OASIS.patientunitstayid as pid,
 
 -- newly added 
-vent_1, vent_2, vent_3, vent_4, vent_5, vent_6,
+  vent_1, vent_2, vent_3, vent_4, vent_5, vent_6,
+  pre_ICU_LOS_OASIS,
+  GCS_OASIS,
+  heartrate_OASIS,
+  MAP_OASIS,
+  respiratoryrate_OASIS,
+  temperature_OASIS,
+  urineoutput_OASIS,
+  electivesurgery_OASIS
 
-apachepatientresultO.apachescore, apachepatientresultO.acutephysiologyscore, apachepatientresultO.apache_pred_hosp_mort,
-hospitaladmitoffset_OASIS,
-gcs_OASIS,
-heartrate_OASIS,
-ibp_mean_OASIS,
-respiratoryrate_OASIS,
-temperature_OASIS,
-urineoutput_OASIS,
-electivesurgery_OASIS
-
-FROM `db_name.my_eICU.yugang` as yug 
-
--- Pre-ICU stay LOS -> Mapping according to OASIS -> convert from hours to minutes
-LEFT JOIN(
-  SELECT patientunitstayid, CASE
+-- Pre-ICU stay LOS -> directly convert from minutes to hours
+ ,CASE
     WHEN COUNT(hospitaladmitoffset) < (0.17*60) THEN 5
     WHEN (COUNT(hospitaladmitoffset) >= (0.17*60) OR COUNT(hospitaladmitoffset) <= (4.94*60) ) THEN 3
     WHEN (COUNT(hospitaladmitoffset) >= (4.94*60) OR COUNT(hospitaladmitoffset) <= (24*60) ) THEN 0
     WHEN (COUNT(hospitaladmitoffset) >= (24.01*60) OR COUNT(hospitaladmitoffset) <= (311.80*60) ) THEN 2
     WHEN COUNT(hospitaladmitoffset) > (311.80*60) THEN 1
     ELSE NULL
-    END AS hospitaladmitoffset_OASIS
+    END AS pre_ICU_LOS_OASIS
+    GROUP BY pid
 
-  FROM `physionet-data.eicu_crd.patient`
-  GROUP BY patientunitstayid
-)
-AS hospitaladmitoffsetO
-ON hospitaladmitoffsetO.patientunitstayid = yug.patientunitstayid
+-- Age 
+-- Change age from string to integer
+  ,CASE 
+  WHEN pivoted_OASIS.age = "> 89" THEN 91
+  ELSE CAST(pivoted_OASIS.age AS INT64) 
+  END AS age_OASIS,
 
--- Age -> Mapping according to OASIS below
--- <24 = 0, 24-53 = 3, 54-77 = 6, 78-89 =9 ,>90 =7
+  , CASE
+    WHEN CAST(age AS INT64) < 24 THEN 0
+    WHEN CAST(age AS INT64) (age >= 24 OR age <= 53) THEN 3
+    WHEN CAST(age AS INT64) (age >= 54 OR age <= 77) THEN 6
+    WHEN CAST(age AS INT64) (age >= 78 OR age <= 89) THEN 9
+    WHEN CAST(age AS INT64) age > 89 THEN 7
+    ELSE NULL
+    END AS age_OASIS
 
--- GCS -> Mapping according to OASIS
+-- Elective admission
+
+-- Mapping
+-- Assume emergency admission if patient came from
+-- Emergency Department, Direct Admit, Chest Pain Center, Other Hospital, Observation
+-- Assume elective admission if patient from other place, e.g. operating room, floor, etc.
+
+  , CASE
+  WHEN 
+    unitAdmitSource  LIKE "Emergency Department"
+    OR unitAdmitSource LIKE "Direct Admit"
+    OR unitAdmitSource LIKE "Chest Pain Center"
+    OR unitAdmitSource LIKE "Other Hospital"
+    OR unitAdmitSource LIKE "Observation"
+    THEN 0
+  ELSE 1
+  END AS adm_elective
+
+FROM `physionet-data.eicu_crd.patient` as pivoted_OASIS 
+
+
+-------------------------
+
+-- GCS -> 1st Source: eicu_crd_derived.pivoted_gcs
 LEFT JOIN(
-  SELECT patientunitstayid, CASE
+  SELECT patientunitstayid AS pid
+  , CASE
     WHEN COUNT(gcs) < 8 THEN 10
     WHEN (COUNT(gcs) >=8 OR COUNT(gcs) <=13) THEN 4
     WHEN COUNT(gcs) =14 THEN 3
@@ -54,27 +122,29 @@ LEFT JOIN(
     END AS gcs_OASIS
 
   FROM `physionet-data.eicu_crd_derived.pivoted_gcs`
-  WHERE (chartoffset > 0 AND chartoffset <= 1440 ) -- convert hours to minutes -> 60*24=1440
-  GROUP BY patientunitstayid
+  GROUP BY pid
 )
-AS gcsO
-ON gcsO.patientunitstayid = yug.patientunitstayid
+AS pivoted_gcs
+ON pivoted_gcs.pid = pivoted_OASIS.pid
 
+-- GCS -> 2nd Source: eicu_crd.physicalexam
 LEFT JOIN(
-SELECT patientunitstayid, MIN(physicalExamPath) AS GCS
-FROM `physionet-data.eicu_crd.physicalexam`
-WHERE  (
-(physicalExamPath LIKE "notes/Progress Notes/Physical Exam/Physical Exam/Neurologic/GCS/_" OR
-physicalExamPath LIKE "notes/Progress Notes/Physical Exam/Physical Exam/Neurologic/GCS/__")
-AND (physicalExamOffset > 0 AND physicalExamOffset <= 1440 ) 
+  SELECT patientunitstayid AS pid, MIN(CAST(physicalexamvalue AS NUMERIC)) AS gcs
+  FROM `physionet-data.eicu_crd.physicalexam`
+  WHERE  (
+  (physicalExamPath LIKE "notes/Progress Notes/Physical Exam/Physical Exam/Neurologic/GCS/_" OR
+  physicalExamPath LIKE "notes/Progress Notes/Physical Exam/Physical Exam/Neurologic/GCS/__")
+  AND
+  (chartoffset > 0 AND chartoffset <= 1440 ) -- convert hours to minutes -> 60*24=1440
+  )
 )
-GROUP BY patientunitstayid
-AS GCS_piv
+AS gcs_exam
+ON gcs_exam.pid = pivoted_OASIS.pid
 
-
--- Heart rate -> Mapping according to OASIS
+-- Heart rate 
 LEFT JOIN(
-  SELECT patientunitstayid, CASE
+  SELECT patientunitstayid AS pid
+  , CASE
     WHEN COUNT(heartrate) < 33 THEN 4
     WHEN (COUNT(heartrate) >=33 OR COUNT(heartrate) <=88) THEN 0
     WHEN (COUNT(heartrate) >=89 OR COUNT(heartrate) <=106) THEN 1
@@ -85,33 +155,41 @@ LEFT JOIN(
 
   FROM `physionet-data.eicu_crd_derived.pivoted_vital`
   WHERE (chartoffset > 0 AND chartoffset <= 1440 ) -- convert hours to minutes -> 60*24=1440
-  GROUP BY patientunitstayid
+  GROUP BY pid
 )
 AS heartrateO
-ON heartrateO.patientunitstayid = yug.patientunitstayid
+ON heartrateO.pid = pivoted_OASIS.pid
 
--- Mean arterial pressure -> Mapping according to OASIS
+-- Mean arterial pressure
 LEFT JOIN(
-  SELECT patientunitstayid, CASE
+  SELECT patientunitstayid AS pid
+  , CASE
     WHEN COUNT(ibp_mean) < 20.65 THEN 4
     WHEN (COUNT(ibp_mean) >=20.65 OR COUNT(ibp_mean) <=50.99) THEN 3
     WHEN (COUNT(ibp_mean) >=51 OR COUNT(ibp_mean) <=61.32) THEN 2
     WHEN (COUNT(ibp_mean) >=61.33 OR COUNT(ibp_mean) <=143.44) THEN 0
     WHEN COUNT(ibp_mean) >143.44 THEN 3
+    
+    WHEN COUNT(nibp_mean) < 20.65 THEN 4
+    WHEN (COUNT(nibp_mean) >=20.65 OR COUNT(nibp_mean) <=50.99) THEN 3
+    WHEN (COUNT(nibp_mean) >=51 OR COUNT(nibp_mean) <=61.32) THEN 2
+    WHEN (COUNT(nibp_mean) >=61.33 OR COUNT(nibp_mean) <=143.44) THEN 0
+    WHEN COUNT(nibp_mean) >143.44 THEN 3
     ELSE NULL
-    END AS ibp_mean_OASIS
+    END AS MAP_OASIS
 
   FROM `physionet-data.eicu_crd_derived.pivoted_vital`
   WHERE (chartoffset > 0 AND chartoffset <= 1440 ) -- convert hours to minutes -> 60*24=1440
-  GROUP BY patientunitstayid
+  GROUP BY pid
 )
-AS ibp_meanO
-ON ibp_meanO.patientunitstayid = yug.patientunitstayid
+AS MAP
+ON MAP.pid = pivoted_OASIS.pid
 
 
--- Respiratory rate -> Mapping according to OASIS
+-- Respiratory rate
 LEFT JOIN(
-  SELECT patientunitstayid, CASE
+  SELECT patientunitstayid AS pid
+  , CASE
     WHEN COUNT(respiratoryrate) < 6 THEN 10
     WHEN (COUNT(respiratoryrate) >=6 OR COUNT(respiratoryrate) <=12) THEN 1
     WHEN (COUNT(respiratoryrate) >=13 OR COUNT(respiratoryrate) <=22) THEN 0
@@ -123,14 +201,15 @@ LEFT JOIN(
 
   FROM `physionet-data.eicu_crd_derived.pivoted_vital`
   WHERE (chartoffset > 0 AND chartoffset <= 1440 ) -- convert hours to minutes -> 60*24=1440
-  GROUP BY patientunitstayid
+  GROUP BY pid
 )
 AS respiratoryrateO
-ON respiratoryrateO.patientunitstayid = yug.patientunitstayid
+ON respiratoryrateO.pid = pivoted_OASIS.pid
 
 -- Temperature first 24h -> Mapping according to OASIS
 LEFT JOIN(
-  SELECT patientunitstayid, CASE
+  SELECT patientunitstayid AS pid
+  , CASE
     WHEN COUNT(temperature) < 33.22 THEN 3
     WHEN (COUNT(temperature) >=33.22 OR COUNT(temperature) <=35.93) THEN 4
     WHEN (COUNT(temperature) >=35.94 OR COUNT(temperature) <=36.39) THEN 2
@@ -142,14 +221,15 @@ LEFT JOIN(
 
   FROM `physionet-data.eicu_crd_derived.pivoted_vital`
   WHERE (chartoffset > 0 AND chartoffset <= 1440 ) -- convert hours to minutes -> 60*24=1440
-  GROUP BY patientunitstayid
+  GROUP BY pid
 )
 AS temperatureO
-ON temperatureO.patientunitstayid = yug.patientunitstayid
+ON temperatureO.pid = pivoted_OASIS.pid
 
 -- Urine output first 24h -> Mapping according to OASIS
 LEFT JOIN(
-  SELECT patientunitstayid, CASE
+  SELECT patientunitstayid AS pid
+  , CASE
     WHEN COUNT(urineoutput) <671 THEN 10
     WHEN (COUNT(urineoutput) >=671 OR COUNT(urineoutput) <=1426.99) THEN 5
     WHEN (COUNT(urineoutput) >=1427 OR COUNT(urineoutput) <=2543.99) THEN 1
@@ -158,23 +238,27 @@ LEFT JOIN(
     ELSE NULL
     END AS urineoutput_OASIS
 
-  FROM `db_name.icu_elos.pivoted_uo_24h`
-  GROUP BY patientunitstayid
+  FROM `physionet-data.eicu_crd_derived.pivoted_uo`
+  WHERE (chartoffset > 0 AND chartoffset <= 1440 ) -- convert hours to minutes -> 60*24=1440
+  GROUP BY pid
 )
 AS urineoutputO
-ON urineoutputO.patientunitstayid = yug.patientunitstayid
+ON urineoutputO.pid = pivoted_OASIS.pid
 
+/*
 -- Ventilation -> Mapping according to OASIS, see below -> No 0, Yes 9
 
--- Elective surgery -> Mapping according to OASIS
+-- Elective surgery and admissions -> Mapping according to OASIS
 LEFT JOIN(
-  SELECT patientunitstayid, CASE
-    WHEN electivesurgery = 1 THEN 0
-    WHEN electivesurgery = 0 THEN 6
-    ELSE NULL
+  SELECT patientunitstayid, adm_elective
+  , CASE
+    WHEN new_elective_surgery = 1 THEN 0
+    WHEN new_elective_surgery = 0 THEN 6
+    ELSE 0
+    -- Analysed admission table -> In most cases -> if elective surgery is NULL -> there was no surgery or emergency surgery
     END AS electivesurgery_OASIS
 
-  FROM `physionet-data.eicu_crd.apachepredvar`
+  FROM `db_name.my_eICU.pivoted_elective`
 )
 AS electivesurgeryO
 ON electivesurgeryO.patientunitstayid = yug.patientunitstayid
@@ -239,32 +323,8 @@ AS respiratorycare
 ON respiratorycare.patientunitstayid = yug.patientunitstayid
 
 
--- treatment table to get RRT
-LEFT JOIN(
-  SELECT patientunitstayid, COUNT(treatmentstring) as rrt_1
-  FROM `physionet-data.eicu_crd.treatment` 
-  WHERE (
-    treatmentstring LIKE "renal|dialysis|C%" OR 
-    treatmentstring LIKE "renal|dialysis|hemodialysis|emergent%" OR 
-    treatmentstring LIKE "renal|dialysis|hemodialysis|for acute renal failure" OR
-    treatmentstring LIKE "renal|dialysis|hemodialysis"
-    )
-  GROUP BY patientunitstayid
-)
-AS treatment
-ON treatment.patientunitstayid = yug.patientunitstayid
-)
 
 SELECT *
-
-    , CASE
-    WHEN anchor_age < 24 THEN 0
-    WHEN (anchor_age >= 24 OR anchor_age <= 53) THEN 3
-    WHEN (anchor_age >= 54 OR anchor_age <= 77) THEN 6
-    WHEN (anchor_age >= 78 OR anchor_age <= 89) THEN 9
-    WHEN anchor_age > 90 THEN 7
-    ELSE NULL
-    END AS age_OASIS
 
     , CASE
     WHEN vent_1 = 1 THEN 9
@@ -297,6 +357,10 @@ FROM tt)
 --Compute overall scores -> Fist Worst, then Best Case Scenario
  SELECT *,
 
+    (hospitaladmitoffset_OASIS + gcs_OASIS + heartrate_OASIS +
+    ibp_mean_OASIS + respiratoryrate_OASIS + temperature_OASIS +
+    urineoutput_OASIS + electivesurgery_OASIS + age_OASIS + vent_OASIS) AS score_OASIS_Nulls,
+
     (hospitaladmitoffset_OASIS + gcs_OASIS_W + heartrate_OASIS_W +
     ibp_mean_OASIS_W + respiratoryrate_OASIS_W + temperature_OASIS_W +
     urineoutput_OASIS_W + electivesurgery_OASIS_W + age_OASIS + vent_OASIS) AS score_OASIS_W
@@ -311,3 +375,4 @@ FROM tt2)
 
 FROM tt3
 
+*/
