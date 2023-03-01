@@ -90,6 +90,9 @@ m_e_df <- m_e_df %>% mutate(los_s = ifelse(death_bin == 0, los_s, NA))
 m_e_df$death_bin <- factor(m_e_df$death_bin, levels = c(0, 1), 
                            labels = c('Survived', 'Died'))
 
+m_e_df$discharge_hosp <- factor(m_e_df$discharge_hosp, levels = c(0, 1), 
+                           labels = c('No Hospice', 'Hospice'))
+
 m_e_df$gender <- factor(m_e_df$gender, levels = c(0, 1), 
                          labels = c('Female', 'Male'))
 
@@ -154,6 +157,7 @@ label(m_e_df$pressor)         <- "Vasopressor"
 label(m_e_df$ventilation_bin) <- "Mechanical ventilation"
 label(m_e_df$rrt)             <- "Renal replacement therapy"
 label(m_e_df$death_bin)       <- "In-hospital mortality"
+label(m_e_df$discharge_hosp)  <- "Discharge to hospice"
 label(m_e_df$source)          <- "Cohort"
 label(m_e_df$adm_elective)    <- "Admission type"
 label(m_e_df$hypertension)    <- "Hypertension"
@@ -190,7 +194,7 @@ t1flex(tbl1) %>%
 
 
 # Create table1 object for MIMIC 
-tbl1 <- table1(~ race_cat + death_bin + source + adm_elective + pressor + ventilation_bin + rrt +
+tbl1 <- table1(~ race_cat + death_bin + discharge_hosp + adm_elective + pressor + ventilation_bin + rrt +
                  age_new + anchor_age + gender + SOFA_new + SOFA + OASIS_cat + OASIS_N + los + los_s + los_d +
                  charlson_new + charlson_cont + hypertension + heart_failure + copd + asthma + ckd
                | ethnicity_white, data= subset(m_e_df, source=='MIMIC'), topclass="Rtable1-grid Rtable1-shade Rtable1-times",
@@ -202,7 +206,7 @@ t1flex(tbl1) %>%
 
 
 # Create table1 object for eICU 
-tbl1 <- table1(~ race_cat + death_bin + source + adm_elective + pressor + ventilation_bin + rrt +
+tbl1 <- table1(~ race_cat + death_bin + adm_elective + pressor + ventilation_bin + rrt +
                  age_new + anchor_age + gender + SOFA_new + SOFA + OASIS_cat + OASIS_N + los + los_s + los_d +
                  charlson_new + charlson_cont + hypertension + heart_failure + copd + asthma + ckd
                | ethnicity_white, data= subset(m_e_df, source=='eICU'), topclass="Rtable1-grid Rtable1-shade Rtable1-times",
@@ -230,3 +234,27 @@ tbl1 <- table1(~ rrt + ventilation_bin + pressor + ethnicity_white | death_bin*O
 
 # Convert to flextable
 t1flex(tbl1) %>% save_as_docx(path="results/table1/Table_posA_OASIS.docx")
+
+
+###############################
+# Table for sanity check
+###############################
+
+# Create unified treatment variable
+m_e_df$treatments  <- 0
+m_e_df$treatments[ m_e_df$rrt == 1] <- 1
+m_e_df$treatments[ m_e_df$ventilation_bin == 1] <- 2
+m_e_df$treatments[ m_e_df$pressor == 1] <- 3
+
+m_e_df$treatments <- factor(m_e_df$treatments, levels = c(0, 1, 2, 3), 
+                           labels = c('No treatment', 'RRT', "MV", "VP"))
+
+# Create table1 object for SOFA
+tbl1 <- table1(~ death_bin | treatments
+              , data=m_e_df, render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
+               render.categorical=render.categorical, render.strat=render.strat)
+
+# Convert to flextable
+t1flex(tbl1) %>% save_as_docx(path="results/table1/Table_sanity_check.docx")
+
+
