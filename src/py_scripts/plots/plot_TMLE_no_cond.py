@@ -46,14 +46,14 @@ for i, t in enumerate(treatments):
                      yerr=((df_temp1.psi- df_temp1.i_ci), (df_temp1.s_ci-df_temp1.psi)),
                      fmt='-o', c='dimgray', ecolor='dimgray',
                      elinewidth=.4, linewidth=1.5, capsize=4, markeredgewidth=.4,
-                     label="Non-White")
+                     label="Racial-ethnic groups")
 
     axes[i].errorbar(x=df_temp2.sev_start,
                      y=df_temp2.psi,
                      yerr=((df_temp2.psi- df_temp2.i_ci), (df_temp2.s_ci-df_temp2.psi)),
                      fmt='-o', c='firebrick', ecolor='firebrick',
                      elinewidth=.4, linewidth=1.5, capsize=4, markeredgewidth=.4,
-                     label="White")
+                     label="White patients")
 
     axes[i].axhline(y=0, xmin=0, xmax=1, c="black", linewidth=.7, linestyle='--')
     axes[i].set_ylim([-27, 27])

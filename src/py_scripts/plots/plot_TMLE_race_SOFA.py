@@ -5,8 +5,8 @@ import seaborn as sb
 import matplotlib
 matplotlib.use('TKAgg')
 
-plot_name = "TMLE_OASIS"
-title = "TMLE across OASIS ranges, for each invasive treatment\n"
+plot_name = "TMLE_SOFA"
+title = "TMLE across SOFA ranges, for each invasive treatment\n"
 df = pd.read_csv(f"results/{plot_name}.csv")
 
 conversion_dict = dict(zip(df.sev_start.unique(), range(4)))
@@ -57,9 +57,9 @@ for i, t in enumerate(treatments):
     axes[i].set_title(t_dict[t])
     axes[0].set(ylabel="ATE (%)\nTreated vs. Not Treated")
     axes[2].legend(bbox_to_anchor=(1.05, 0.7), loc='upper left')
-    axes[i].set_xticklabels(["0-37", "38-45", "46-51", ">51"])
+    axes[i].set_xticklabels(["0-3", "4-6", "7-10", ">10"])
     axes[i].set_xticks(range(4))
 
-fig.supxlabel('\nOASIS Range              ')
+fig.supxlabel('\nSOFA Range              ')
 
-fig.savefig(f"results/paper/fig3b_{plot_name}.png", dpi=1000)
+fig.savefig(f"results/paper/fig3a_{plot_name}.png", dpi=1000)

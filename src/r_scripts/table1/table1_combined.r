@@ -111,8 +111,12 @@ m_e_df$asthma <- factor(m_e_df$asthma, levels = c(0, 1),
 m_e_df$adm_elective <- factor(m_e_df$adm_elective, levels = c(0, 1), 
                         labels = c('Emergency admission', 'Elective admission'))
 
-m_e_df$ckd <- factor(m_e_df$ckd, levels = c(0, 1, 2, 3, 4, 5), 
-                      labels = c('CKD absent', 'CKD Stage 1', 'CKD Stage 2', 'CKD Stage 3', 'CKD Stage 4', 'CKD Stage 5'))
+ # Encode CKD stages as binary
+m_e_df <- within(m_e_df, ckd <- factor(ckd, levels = c(0, 1, 2, 3, 4, 5)))
+m_e_df <- within(m_e_df, ckd <- fct_collapse(ckd,"0"=c("0", "1", "2"), "1"=c("3", "4", "5")))
+
+#m_e_df$ckd <- factor(m_e_df$ckd, levels = c(0, 1), 
+#                      labels = c('CKD absent', 'CKD Stage >=3'))
 
 m_e_df$pressor <- factor(m_e_df$pressor)
 m_e_df$rrt <- factor(m_e_df$rrt)
@@ -183,7 +187,7 @@ tbl1 <- table1(~ death_bin + source + adm_elective + pressor + ventilation_bin +
                  age_new + anchor_age + gender + SOFA_new + SOFA + OASIS_cat + OASIS_N + los + los_s + los_d +
                  charlson_new + charlson_cont + hypertension + heart_failure + copd + asthma + ckd
                | ethnicity_white, data=m_e_df, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
-               render.categorical=render.categorical, render.strat=render.strat)
+               render.categorical=render.categorical, render.strat=render.strat, render.continuous=c(.="Mean (SD)", .="Median (Q2, Q3)"))
 
 # render.missing=NULL, 
 # use if you want to suppress missing lines
@@ -198,7 +202,7 @@ tbl1 <- table1(~ race_cat + death_bin + discharge_hosp + adm_elective + pressor 
                  age_new + anchor_age + gender + SOFA_new + SOFA + OASIS_cat + OASIS_N + los + los_s + los_d +
                  charlson_new + charlson_cont + hypertension + heart_failure + copd + asthma + ckd
                | ethnicity_white, data= subset(m_e_df, source=='MIMIC'), topclass="Rtable1-grid Rtable1-shade Rtable1-times",
-               render.categorical=render.categorical, render.strat=render.strat)
+               render.categorical=render.categorical, render.strat=render.strat, render.continuous=c(.="Mean (SD)", .="Median (Q2, Q3)"))
 
 # Convert MIMIC table to flextable
 t1flex(tbl1) %>% 
@@ -210,7 +214,7 @@ tbl1 <- table1(~ race_cat + death_bin + adm_elective + pressor + ventilation_bin
                  age_new + anchor_age + gender + SOFA_new + SOFA + OASIS_cat + OASIS_N + los + los_s + los_d +
                  charlson_new + charlson_cont + hypertension + heart_failure + copd + asthma + ckd
                | ethnicity_white, data= subset(m_e_df, source=='eICU'), topclass="Rtable1-grid Rtable1-shade Rtable1-times",
-               render.categorical=render.categorical, render.strat=render.strat)
+               render.categorical=render.categorical, render.strat=render.strat, render.continuous=c(.="Mean (SD)", .="Median (Q2, Q3)"))
 
 # Convert MIMIC table to flextable
 t1flex(tbl1) %>% 

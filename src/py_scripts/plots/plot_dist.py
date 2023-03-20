@@ -7,7 +7,7 @@ import matplotlib
 matplotlib.use('TKAgg')
 
 plot_name = "TMLE"
-df = pd.read_csv(f"data\MIMIC_eICU.csv")
+df = pd.read_csv(f"data/MIMIC_eICU.csv")
 
 sofas_start = [0., 4., 7., 11.]
 sofas_end = [3., 6., 10., 100.]
@@ -25,7 +25,7 @@ for s,e in zip(sofas_start, sofas_end):
 t_dict = dict(zip(["ventilation_bin", "rrt", "pressor"],
                   ["Mechanical Ventilation", "RRT", "Vasopressor(s)"]))
 
-r_dict = dict(zip(range(2), ["Non-White", "White"]))
+r_dict = dict(zip(range(2), ["Racial-ethnic groups", "White patients"]))
 
 fig, axes = plt.subplots(1, 3,
                          sharex=True, sharey=True,
