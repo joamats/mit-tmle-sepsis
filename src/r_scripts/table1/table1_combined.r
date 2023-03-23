@@ -254,11 +254,11 @@ m_e_df$treatments <- factor(m_e_df$treatments, levels = c(0, 1, 2, 3),
                            labels = c('No treatment', 'RRT', "MV", "VP"))
 
 # Create table1 object for SOFA
-tbl1 <- table1(~ death_bin | treatments
-              , data=m_e_df, render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
-               render.categorical=render.categorical, render.strat=render.strat)
+tbl1 <- table1(~ ventilation_bin + rrt + pressor | death_bin*SOFA_new,
+              row_wise = TRUE,
+              data=m_e_df, 
+              render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
+              render.categorical=render.categorical, render.strat=render.strat)
 
 # Convert to flextable
 t1flex(tbl1) %>% save_as_docx(path="results/table1/Table_sanity_check.docx")
-
-
