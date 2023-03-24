@@ -3,9 +3,6 @@ import pandas as pd
 
 data = pd.read_csv('data/MIMIC_eICU.csv', low_memory=False)
 
-# Groupby Variable
-groupby = ['death_bin']
-
 # Continuous Variables
 data['los_d'] = data[data.death_bin == 1].los
 data['los_s'] = data[data.death_bin == 0].los
@@ -54,10 +51,14 @@ categ_s = ['death_bin','SOFA_cat', 'ventilation_bin', 'rrt', 'pressor']
 data_s = data
 #.groupby("subject_id").first().reset_index()
 
+# Groupby Variable
+groupby = ['death_bin', 'SOFA_cat']
+
 # Create a TableOne 
 table1_s = TableOne(data_s, columns=categ_s,
                     rename=labls_s, limit=limit_s, order=order_s, 
                     groupby=groupby, categorical=categ_s,
-                    missing=False, overall=False)
+                    missing=False, overall=False,
+                    row_percent = True)
 
 table1_s.to_excel('results/table1/table_sanity.xlsx')
