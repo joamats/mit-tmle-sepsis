@@ -254,8 +254,7 @@ m_e_df$treatments <- factor(m_e_df$treatments, levels = c(0, 1, 2, 3),
                            labels = c('No treatment', 'RRT', "MV", "VP"))
 
 # Create table1 object for SOFA
-tbl1 <- table1(~ ventilation_bin + rrt + pressor | death_bin*SOFA_new,
-              row_wise = TRUE,
+tbl1 <- table1(~ ventilation_bin + rrt + pressor | SOFA_new*death_bin,
               data=m_e_df, 
               render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
               render.categorical=render.categorical, render.strat=render.strat)
