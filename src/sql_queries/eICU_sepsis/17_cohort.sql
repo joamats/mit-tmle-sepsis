@@ -19,7 +19,8 @@ on s3.patientunitstayid = sf.patientunitstayid
 left join (select distinct patientunitstayid from `physionet-data.eicu_crd_derived.pivoted_treatment_vasopressor` ) vaso
 on s3.patientunitstayid = vaso.patientunitstayid
 
-left join (select distinct patientunitstayid from `physionet-data.eicu_crd.intakeoutput` where dialysistotal<>0) as rrtid
+-- Only consider as dialysis if dialysistotal is smaller than -1000ml -> patient got removed at least 1L over whole stay per dialysis
+left join (select distinct patientunitstayid from `physionet-data.eicu_crd.intakeoutput` where dialysistotal< -1000) as rrtid
 on s3.patientunitstayid = rrtid.patientunitstayid 
 
 left join (select distinct patientunitstayid from `db_name.icu_elos.invasive`) as ventid

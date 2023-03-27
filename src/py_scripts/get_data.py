@@ -60,10 +60,6 @@ def cat_vent(vent):
         return 1
     elif vent['vent_4'] > 0:
         return 1
-    elif vent['vent_5'] > 0:
-        return 1
-    elif vent['vent_6'] > 0:
-        return 1
     else: 
         return np.NaN
 

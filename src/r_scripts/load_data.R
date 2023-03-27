@@ -53,8 +53,8 @@ load_data <- function(cohort){
   } else if (file_path == "data/eICU_data.csv") {
 
     # generate dummy var for eICU reliable hospitals -> match with list from Leo
-    rel_hosp <- read.csv("data/eICU Reliable Hosp.csv", header = TRUE, stringsAsFactors = TRUE)
-    sepsis_data <- sepsis_data %>%  mutate(rel_icu = ifelse(sepsis_data$wardid %in% rel_hosp$wardid , 1, 0))
+    rel_hosp <- read.csv("hospitals/reliable_resp_care.csv", header = TRUE, stringsAsFactors = TRUE)
+    sepsis_data <- sepsis_data %>%  mutate(rel_icu = ifelse(sepsis_data$hospitalid %in% rel_hosp$hospitalid , 1, 0))
  
     sepsis_data <- sepsis_data %>% mutate(gender = ifelse(gender == "Female", 1, 0))
 

@@ -6,7 +6,7 @@ import matplotlib
 matplotlib.use('TKAgg')
 
 plot_name = "eICU_TMLE_SOFA"
-title = "eICU TMLE reliable ICUs only, SOFA ranges\n"
+title = "eICU only TMLE after bugs in RRT and vent fixed, SOFA ranges\n"
 df = pd.read_csv(f"results/{plot_name}.csv")
 
 conversion_dict = dict(zip(df.sev_start.unique(), range(4)))

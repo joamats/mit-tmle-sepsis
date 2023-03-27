@@ -18,7 +18,7 @@ yug.sofa_admit as SOFA,
 yug.hospitaldischargeyear as anchor_year_group,
 
 -- newly added 
-vent_1, vent_2, vent_3, vent_4, vent_5, vent_6,
+vent_1, vent_2, vent_3, vent_4,
 rrt_1,
 pressor_1, pressor_2, pressor_3, pressor_4, 
 apachepatientresultO.apachescore, apachepatientresultO.acutephysiologyscore, apachepatientresultO.apache_pred_hosp_mort,
@@ -224,29 +224,33 @@ LEFT JOIN(
 AS apachepredvar
 ON apachepredvar.patientunitstayid = yug.patientunitstayid
 
--- debug vent tags
-LEFT JOIN(
-  SELECT patientunitstayid, COUNT(intubated) as vent_4, COUNT(extubated) as vent_5
-  FROM `physionet-data.eicu_crd_derived.debug_vent_tags`
-  WHERE intubated = 1 OR extubated = 1
-  GROUP BY patientunitstayid
-)
-AS debug_vent_tags
-ON debug_vent_tags.patientunitstayid = yug.patientunitstayid
-
 -- respiratory care table
 LEFT JOIN(
-  SELECT patientunitstayid, CASE
-    WHEN COUNT(airwaytype) >= 1 THEN 1
-    WHEN COUNT(airwaysize) >= 1 THEN 1
-    WHEN COUNT(airwayposition) >= 1 THEN 1
-    WHEN COUNT(cuffpressure) >= 1 THEN 1
-    WHEN COUNT(setapneatv) >= 1 THEN 1
-    ELSE NULL
-    END AS vent_6
+    WITH respcare AS (
 
-  FROM `physionet-data.eicu_crd.respiratorycare`
-  GROUP BY patientunitstayid
+      SELECT patientunitstayid, 
+      COUNT(CASE
+      WHEN (airwaytype LIKE "ETT" 
+      OR airwaytype LIKE "Tracheostomy" 
+      OR airwaytype LIKE "Double-Lumen Tube") THEN 1
+      WHEN cuffpressure BETWEEN 10 and 80 THEN 1
+      ELSE NULL
+      END) AS vent_4
+
+      FROM `physionet-data.eicu_crd.respiratorycare`
+      GROUP BY patientunitstayid
+    )
+  
+  SELECT patientunitstayid, 
+  
+  CASE
+    WHEN COUNT(vent_4) >=1 THEN 1
+    ELSE NULL
+    END AS vent_4
+
+    FROM respcare
+    where vent_4 > 0
+    GROUP BY patientunitstayid
 )
 AS respiratorycare
 ON respiratorycare.patientunitstayid = yug.patientunitstayid
@@ -257,7 +261,7 @@ LEFT JOIN(
   SELECT patientunitstayid, COUNT(treatmentstring) as rrt_1
   FROM `physionet-data.eicu_crd.treatment` 
   WHERE (
-    treatmentstring LIKE "renal|dialysis|C%" OR 
+    treatmentstring LIKE "renal|dialysis|C V%" OR 
     treatmentstring LIKE "renal|dialysis|hemodialysis|emergent%" OR 
     treatmentstring LIKE "renal|dialysis|hemodialysis|for acute renal failure" OR
     treatmentstring LIKE "renal|dialysis|hemodialysis"
@@ -382,8 +386,6 @@ SELECT *
     WHEN vent_2 = 1 THEN 9
     WHEN vent_3 = 1 THEN 9
     WHEN vent_4 = 1 THEN 9
-    WHEN vent_5 = 1 THEN 9
-    WHEN vent_6 = 1 THEN 9
     ELSE 0
     END AS vent_OASIS,
 
