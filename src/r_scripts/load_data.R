@@ -102,6 +102,8 @@ get_merged_datasets <- function() {
   # add column to keep the cohort source and control for it
   data <- data %>% mutate(source = ifelse(source == "mimic_data", 1, 0))
 
+  write.csv(mimic_data, "data/MIMIC.csv")
+  write.csv(eicu_data, "data/eICU.csv")
   write.csv(data, "data/MIMIC_eICU.csv")
 
   return (data)
