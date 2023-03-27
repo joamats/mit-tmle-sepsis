@@ -3,42 +3,42 @@ charlson.charlson_comorbidity_index, (pressor.stay_id = icu.stay_id) as pressor,
 InvasiveVent.InvasiveVent_hr,Oxygen.Oxygen_hr,HighFlow.HighFlow_hr,NonInvasiveVent.NonInvasiveVent_hr,Trach.Trach_hr, oa.oasis,
 ABS(TIMESTAMP_DIFF(pat.dod,icu.icu_outtime,DAY)) as dod_icuout_offset
 
-from physionet-data.mimiciv_derived.icustay_detail as icu 
-inner join physionet-data.mimiciv_derived.sepsis3 as s3
+from `physionet-data.mimiciv_derived.icustay_detail` as icu 
+inner join `physionet-data.mimiciv_derived.sepsis3` as s3
 on s3.stay_id = icu.stay_id
 and s3.sepsis3 is true
 
-left join physionet-data.mimiciv_hosp.patients as pat
+left join `physionet-data.mimiciv_hosp.patients` as pat
 on icu.subject_id = pat.subject_id
-left join physionet-data.mimiciv_hosp.admissions as ad
+left join `physionet-data.mimiciv_hosp.admissions` as ad
 on icu.hadm_id = ad.hadm_id
 
-left join physionet-data.mimiciv_derived.first_day_sofa as sf
+left join `physionet-data.mimiciv_derived.first_day_sofa` as sf
 on icu.stay_id = sf.stay_id 
 
-left join physionet-data.mimiciv_derived.first_day_weight as weight
+left join `physionet-data.mimiciv_derived.first_day_weight` as weight
 on icu.stay_id = weight.stay_id 
 
-left join physionet-data.mimiciv_derived.charlson as charlson
+left join `physionet-data.mimiciv_derived.charlson` as charlson
 on icu.hadm_id = charlson.hadm_id 
 
 left join `physionet-data.mimiciv_derived.first_day_urine_output` as fd_uo
 on icu.stay_id = fd_uo.stay_id 
 
-left join (select distinct stay_id, dialysis_present as rrt  from physionet-data.mimiciv_derived.rrt where dialysis_present = 1) as rrt
+left join (select distinct stay_id, dialysis_present as rrt  from `physionet-data.mimiciv_derived.rrt` where dialysis_present = 1) as rrt
 on icu.stay_id = rrt.stay_id 
 
-left join (select distinct stay_id from  physionet-data.mimiciv_derived.epinephrine
+left join (select distinct stay_id from  `physionet-data.mimiciv_derived.epinephrine`
 union distinct 
-select distinct stay_id from  physionet-data.mimiciv_derived.dobutamine
+select distinct stay_id from  `physionet-data.mimiciv_derived.dobutamine`
 union distinct 
-select distinct stay_id from  physionet-data.mimiciv_derived.dopamine
+select distinct stay_id from  `physionet-data.mimiciv_derived.dopamine`
 union distinct 
-select distinct stay_id from  physionet-data.mimiciv_derived.norepinephrine
+select distinct stay_id from  `physionet-data.mimiciv_derived.norepinephrine`
 union distinct 
-select distinct stay_id from  physionet-data.mimiciv_derived.phenylephrine
+select distinct stay_id from  `physionet-data.mimiciv_derived.phenylephrine`
 union distinct 
-select distinct stay_id from  physionet-data.mimiciv_derived.vasopressin)as pressor
+select distinct stay_id from  `physionet-data.mimiciv_derived.vasopressin`) as pressor
 on icu.stay_id = pressor.stay_id 
 
 left join (SELECT stay_id, sum(TIMESTAMP_DIFF(endtime,starttime,HOUR)) as InvasiveVent_hr
