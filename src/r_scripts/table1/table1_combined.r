@@ -244,15 +244,6 @@ t1flex(tbl1) %>% save_as_docx(path="results/table1/Table_posA_OASIS.docx")
 # Table for sanity check
 ###############################
 
-# Create unified treatment variable
-m_e_df$treatments  <- 0
-m_e_df$treatments[ m_e_df$rrt == 1] <- 1
-m_e_df$treatments[ m_e_df$ventilation_bin == 1] <- 2
-m_e_df$treatments[ m_e_df$pressor == 1] <- 3
-
-m_e_df$treatments <- factor(m_e_df$treatments, levels = c(0, 1, 2, 3), 
-                           labels = c('No treatment', 'RRT', "MV", "VP"))
-
 # Create table1 object for SOFA
 tbl1 <- table1(~ ventilation_bin + rrt + pressor | SOFA_new*death_bin,
               data=m_e_df, 
@@ -261,3 +252,23 @@ tbl1 <- table1(~ ventilation_bin + rrt + pressor | SOFA_new*death_bin,
 
 # Convert to flextable
 t1flex(tbl1) %>% save_as_docx(path="results/table1/Table_sanity_check.docx")
+
+# Same for MIMIC only
+tbl1 <- table1(~ ventilation_bin + rrt + pressor | SOFA_new*death_bin,
+              data=subset(m_e_df, source=="MIMIC"), 
+              overall=FALSE,
+              render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
+              render.categorical=render.categorical, render.strat=render.strat)
+
+# Convert to flextable
+t1flex(tbl1) %>% save_as_docx(path="results/table1/Tbl_san_check_MIMIC.docx")
+
+# Same for eICU only
+tbl1 <- table1(~ ventilation_bin + rrt + pressor | SOFA_new*death_bin,
+              data=subset(m_e_df, source=="eICU"), 
+              overall=FALSE,
+              render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
+              render.categorical=render.categorical, render.strat=render.strat)
+
+# Convert to flextable
+t1flex(tbl1) %>% save_as_docx(path="results/table1/Tbl_san_check_eICU.docx")
