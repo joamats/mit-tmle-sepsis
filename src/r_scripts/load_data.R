@@ -49,13 +49,19 @@ load_data <- function(cohort){
     sepsis_data$OASIS_N <- sepsis_data$oasis
     sepsis_data$OASIS_B <- sepsis_data$oasis
 
+    # drop row if oasis_prob is nan
+    sepsis_data <- sepsis_data[!is.na(sepsis_data$oasis_prob), ]
+
+    # rename oasis_prob into prob_mort
+    sepsis_data <- sepsis_data %>% rename(prob_mort = oasis_prob)
+
 
   } else if (file_path == "data/eICU_data.csv") {
 
     # generate dummy var for eICU reliable hospitals -> match with list from Leo
     rel_hosp <- read.csv("hospitals/reliable_resp_care.csv", header = TRUE, stringsAsFactors = TRUE)
     sepsis_data <- sepsis_data %>%  mutate(rel_icu = ifelse(sepsis_data$hospitalid %in% rel_hosp$hospitalid , 1, 0))
-    # sepsis_data <- subset(sepsis_data, rel_icu == 1) # only keep reliable hospitals
+    sepsis_data <- subset(sepsis_data, rel_icu == 1) # only keep reliable hospitals
 
     sepsis_data <- sepsis_data %>% mutate(gender = ifelse(gender == "Female", 1, 0))
 
@@ -87,6 +93,14 @@ load_data <- function(cohort){
     sepsis_data$OASIS_N <- sepsis_data$score_OASIS_Nulls  # embracing the nulls
     sepsis_data$OASIS_B <- sepsis_data$score_OASIS_B      # best case scenario
 
+    # drop row if apache_pred_hosp_mort is nan or -1
+    sepsis_data <- sepsis_data[!is.na(sepsis_data$apache_pred_hosp_mort), ]
+    sepsis_data <- sepsis_data[sepsis_data$apache_pred_hosp_mort != -1, ]
+
+    # rename apache_pred_hosp_mort into prob_mort
+    sepsis_data <- sepsis_data %>% rename(prob_mort = apache_pred_hosp_mort)
+
+
   } else {
     print("Wrong path or file name.")
   }
@@ -95,7 +109,7 @@ load_data <- function(cohort){
   return(sepsis_data[, c("gender", "los", "ventilation_bin", "pressor", "rrt", "death_bin", "discharge_hosp", "ethnicity_white", "race",
                          "charlson_cont", "charlson_comorbidity_index", "anchor_age", "SOFA", "anchor_year_group",
                          "hypertension", "heart_failure", "ckd", "copd", "asthma", "adm_elective",
-                         "OASIS_W", "OASIS_N", "OASIS_B", "rel_icu")])
+                         "OASIS_W", "OASIS_N", "OASIS_B", "rel_icu", "prob_mort")])
 }
 
 get_merged_datasets <- function() {
