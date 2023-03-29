@@ -1,6 +1,6 @@
 select icu.*, adm.adm_type, adm.adm_elective, pat.anchor_age,pat.anchor_year_group,sf.SOFA,rrt.rrt, weight.weight_admit,fd_uo.urineoutput,
 charlson.charlson_comorbidity_index, (pressor.stay_id = icu.stay_id) as pressor,ad.discharge_location as discharge_location, pat.dod,
-InvasiveVent.InvasiveVent_hr,Oxygen.Oxygen_hr,HighFlow.HighFlow_hr,NonInvasiveVent.NonInvasiveVent_hr,Trach.Trach_hr, oa.oasis,
+InvasiveVent.InvasiveVent_hr,Oxygen.Oxygen_hr,HighFlow.HighFlow_hr,NonInvasiveVent.NonInvasiveVent_hr,Trach.Trach_hr, oa.oasis, oa.oasis_prob,
 ABS(TIMESTAMP_DIFF(pat.dod,icu.icu_outtime,DAY)) as dod_icuout_offset
 
 from `physionet-data.mimiciv_derived.icustay_detail` as icu 
@@ -77,7 +77,7 @@ FROM `physionet-data.mimiciv_hosp.admissions`) as adm
 on adm.hadm_id = icu.hadm_id
 
 -- Add OASIS Score
-LEFT JOIN (SELECT stay_id, oasis
+LEFT JOIN (SELECT stay_id, oasis, oasis_prob
 FROM `physionet-data.mimiciv_derived.oasis`) as oa
 on oa.stay_id = icu.stay_id
 
