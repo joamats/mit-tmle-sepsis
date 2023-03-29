@@ -55,7 +55,8 @@ load_data <- function(cohort){
     # generate dummy var for eICU reliable hospitals -> match with list from Leo
     rel_hosp <- read.csv("hospitals/reliable_resp_care.csv", header = TRUE, stringsAsFactors = TRUE)
     sepsis_data <- sepsis_data %>%  mutate(rel_icu = ifelse(sepsis_data$hospitalid %in% rel_hosp$hospitalid , 1, 0))
- 
+    # sepsis_data <- subset(sepsis_data, rel_icu == 1) # only keep reliable hospitals
+
     sepsis_data <- sepsis_data %>% mutate(gender = ifelse(gender == "Female", 1, 0))
 
     sepsis_data <- sepsis_data %>% mutate(ventilation_bin = ifelse(is.na(VENT_final), 0, 1))
@@ -85,8 +86,6 @@ load_data <- function(cohort){
     sepsis_data$OASIS_W <- sepsis_data$score_OASIS_W      # worst case scenario
     sepsis_data$OASIS_N <- sepsis_data$score_OASIS_Nulls  # embracing the nulls
     sepsis_data$OASIS_B <- sepsis_data$score_OASIS_B      # best case scenario
-
-
 
   } else {
     print("Wrong path or file name.")

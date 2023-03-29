@@ -120,6 +120,7 @@ tmle_stratified <- function(sepsis_data, treatment, race, df, sev_type) {
 
 
 data <- read.csv('data/eICU.csv')
+# data <- subset(data, rel_icu == 1)
 
 # Put either "SOFA" or "OASIS" to run the analysis on the desired score
 sev_type <- "SOFA"
