@@ -120,6 +120,7 @@ m_e_df <- within(m_e_df, ckd <- fct_collapse(ckd,"0"=c("0", "1", "2"), "1"=c("3"
 
 m_e_df$pressor <- factor(m_e_df$pressor)
 m_e_df$rrt <- factor(m_e_df$rrt)
+m_e_df$blood_yes <- factor(m_e_df$blood_yes)
 m_e_df$ventilation_bin <- factor(m_e_df$ventilation_bin)
 m_e_df$source <- factor(m_e_df$source, levels = c(0, 1), 
                         labels = c('eICU', 'MIMIC') )
@@ -160,6 +161,7 @@ label(m_e_df$charlson_new) <- "Charlson index categorical"
 label(m_e_df$pressor)         <- "Vasopressor"
 label(m_e_df$ventilation_bin) <- "Mechanical ventilation"
 label(m_e_df$rrt)             <- "Renal replacement therapy"
+label(m_e_df$blood_yes)       <- "Red blood cell transfusion"
 label(m_e_df$death_bin)       <- "In-hospital mortality"
 label(m_e_df$discharge_hosp)  <- "Discharge to hospice"
 label(m_e_df$source)          <- "Cohort"
@@ -183,7 +185,7 @@ render.strat <- function (label, n, ...) {
 }
 
 # Create table1 object for both cohorts
-tbl1 <- table1(~ death_bin + source + adm_elective + pressor + ventilation_bin + rrt +
+tbl1 <- table1(~ death_bin + source + adm_elective + pressor + ventilation_bin + rrt + blood_yes +
                  age_new + anchor_age + gender + SOFA_new + SOFA + OASIS_cat + OASIS_N + los + los_s + los_d +
                  charlson_new + charlson_cont + hypertension + heart_failure + copd + asthma + ckd
                | ethnicity_white, data=m_e_df, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
@@ -198,7 +200,7 @@ t1flex(tbl1) %>%
 
 
 # Create table1 object for MIMIC 
-tbl1 <- table1(~ race_cat + death_bin + discharge_hosp + adm_elective + pressor + ventilation_bin + rrt +
+tbl1 <- table1(~ race_cat + death_bin + discharge_hosp + adm_elective + pressor + ventilation_bin + rrt + blood_yes +
                  age_new + anchor_age + gender + SOFA_new + SOFA + OASIS_cat + OASIS_N + los + los_s + los_d +
                  charlson_new + charlson_cont + hypertension + heart_failure + copd + asthma + ckd
                | ethnicity_white, data= subset(m_e_df, source=='MIMIC'), topclass="Rtable1-grid Rtable1-shade Rtable1-times",
@@ -210,7 +212,7 @@ t1flex(tbl1) %>%
 
 
 # Create table1 object for eICU 
-tbl1 <- table1(~ race_cat + death_bin + adm_elective + pressor + ventilation_bin + rrt +
+tbl1 <- table1(~ race_cat + death_bin + adm_elective + pressor + ventilation_bin + rrt + blood_yes +
                  age_new + anchor_age + gender + SOFA_new + SOFA + OASIS_cat + OASIS_N + los + los_s + los_d +
                  charlson_new + charlson_cont + hypertension + heart_failure + copd + asthma + ckd
                | ethnicity_white, data= subset(m_e_df, source=='eICU'), topclass="Rtable1-grid Rtable1-shade Rtable1-times",
