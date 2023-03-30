@@ -15,7 +15,7 @@ data_between <- function(sepsis_data, sev_low, sev_high) {
 run_tmle <- function(data, treatment) {
 
     confounders <- c("anchor_age","gender","ethnicity_white","prob_mort","charlson_cont",
-                    "hypertension", "heart_failure", "ckd", "copd", "asthma", "source")
+                    "hypertension", "heart_failure", "ckd", "copd", "asthma")#, "source")
     
 
     if (treatment == "ventilation_bin") {
@@ -93,7 +93,7 @@ tmle_stratified <- function(sepsis_data, treatment, race, df, cohort) {
     return(df)
 }
 
-cohorts <- c("MIMIC_eICU") #"eICU", "MIMIC",
+cohorts <- c("eICU") # "MIMIC_eICU", "eICU"
 
 # iterate over cohorts
 

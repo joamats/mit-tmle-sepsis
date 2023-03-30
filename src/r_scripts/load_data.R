@@ -59,9 +59,9 @@ load_data <- function(cohort){
   } else if (file_path == "data/eICU_data.csv") {
 
     # generate dummy var for eICU reliable hospitals -> match with list from Leo
-    rel_hosp <- read.csv("hospitals/reliable_teach_hosp.csv", header = TRUE, stringsAsFactors = TRUE)
-    sepsis_data <- sepsis_data %>%  mutate(rel_icu = ifelse(sepsis_data$hospitalid %in% rel_hosp$hospitalid , 1, 0))
-    sepsis_data <- subset(sepsis_data, rel_icu == 1) # only keep reliable hospitals
+    # rel_hosp <- read.csv("hospitals/reliable_teach_hosp.csv", header = TRUE, stringsAsFactors = TRUE)
+    # sepsis_data <- sepsis_data %>%  mutate(rel_icu = ifelse(sepsis_data$hospitalid %in% rel_hosp$hospitalid , 1, 0))
+    # sepsis_data <- subset(sepsis_data, rel_icu == 1) # only keep reliable hospitals
 
     sepsis_data <- sepsis_data %>% mutate(gender = ifelse(gender == "Female", 1, 0))
 
@@ -109,7 +109,7 @@ load_data <- function(cohort){
   return(sepsis_data[, c("gender", "los", "ventilation_bin", "pressor", "rrt", "death_bin", "discharge_hosp", "ethnicity_white", "race",
                          "charlson_cont", "charlson_comorbidity_index", "anchor_age", "SOFA", "anchor_year_group",
                          "hypertension", "heart_failure", "ckd", "copd", "asthma", "adm_elective",
-                         "OASIS_W", "OASIS_N", "OASIS_B", "rel_icu", "prob_mort")])
+                         "OASIS_W", "OASIS_N", "OASIS_B", "prob_mort")])
 }
 
 get_merged_datasets <- function() {
