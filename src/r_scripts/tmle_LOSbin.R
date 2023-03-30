@@ -1,10 +1,10 @@
 source("src/r_scripts/load_data.R")
 
 library(tmle)
+library(datawizard)
 
 
 data_between <- function(sepsis_data, sev_low, sev_high) {
-
 
     res <- sepsis_data[sepsis_data$prob_mort <= sev_high & sepsis_data$prob_mort >= sev_low, ]
     
@@ -14,9 +14,9 @@ data_between <- function(sepsis_data, sev_low, sev_high) {
 # TMLE
 run_tmle <- function(data, treatment) {
 
+
     confounders <- c("anchor_age","gender","ethnicity_white","prob_mort","charlson_cont",
-                    "hypertension", "heart_failure", "ckd", "copd", "asthma")#, "source")
-    
+                     "hypertension", "heart_failure", "ckd", "copd", "asthma")
 
     if (treatment == "ventilation_bin") {
 
@@ -34,31 +34,30 @@ run_tmle <- function(data, treatment) {
         A <- data$pressor
     }
 
-    Y <- data$death_bin
+    # Transform continuous LOS to be between 0 and 1
+    data$los[data$los < 0] <- 0 # clean data to have minimum of 0 days
+    # create a var Y that is los if > 3 days
+    data <- data %>% mutate(los = ifelse(los > 3, 1, 0))
+    Y <- data$los
 
     result <- tmle(Y = Y,
                    A = A,
                    W = W,
-                   family = "binomial", 
+                   family = "gaussian", 
                    gbound = c(0.05, 0.95),
                    g.SL.library = c("SL.glm"),
                    Q.SL.library = c("SL.glm"),
                   )
 
-    print(summary(result))
-
     return(result)
 }
 
-
-# run TMLE by prob of mort. (main analysis)
 tmle_stratified <- function(sepsis_data, treatment, race, df, cohort) {
 
     sev_ranges <- list(list(0, .1), list(.1, .2), list(.2, .3), list(.3, 1))
 
     fn <- paste0("TMLE_", cohort)
 
-        
     for (sev in sev_ranges) {
         
         start <- sev[1]
@@ -88,12 +87,13 @@ tmle_stratified <- function(sepsis_data, treatment, race, df, cohort) {
                                nrow(data)
                               ) 
         # Saves file as we go
-        write.csv(df, paste0("results/prob_mort/", fn,".csv"))
+        write.csv(df, paste0("results/LOS/", fn,".csv"))
     }     
     return(df)
 }
 
-cohorts <- c("eICU") # "MIMIC_eICU", "eICU"
+
+cohorts <- c("MIMIC","MIMIC_eICU", "eICU")
 
 # iterate over cohorts
 
@@ -116,5 +116,3 @@ for (cohort in cohorts) {
         }
     }
 }
-
-
