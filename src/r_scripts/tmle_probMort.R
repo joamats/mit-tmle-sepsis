@@ -15,7 +15,7 @@ data_between <- function(sepsis_data, sev_low, sev_high) {
 run_tmle <- function(data, treatment) {
 
     confounders <- c("anchor_age","gender","ethnicity_white","prob_mort","charlson_cont",
-                    "hypertension", "heart_failure", "ckd", "copd", "asthma", "source")
+                    "hypertension", "heart_failure", "ckd", "copd", "asthma")
     
 
     if (treatment == "ventilation_bin") {
@@ -54,7 +54,7 @@ run_tmle <- function(data, treatment) {
 # run TMLE by prob of mort. (main analysis)
 tmle_stratified <- function(sepsis_data, treatment, race, df, cohort) {
 
-    sev_ranges <- list(list(0, .1), list(.1, .2), list(.2, 1))
+    sev_ranges <- list(list(0, .1), list(.1, .2), list(.2, .3), list(.3, 1))
 
     fn <- paste0("TMLE_", cohort)
 

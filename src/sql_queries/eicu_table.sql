@@ -359,6 +359,7 @@ LEFT JOIN(
 AS pivoted_med
 ON pivoted_med.patientunitstayid = yug.patientunitstayid
 
+/*
 -- exclude non-first stays
 LEFT JOIN(
   SELECT patientunitstayid, unitvisitnumber
@@ -371,10 +372,11 @@ WHERE icustay_detail.unitvisitnumber = 1
 AND yug.ethnicity != "Other/Unknown"
 AND yug.age != "16" AND yug.age != "17"
 )
+*/
 
 -- Remove non-first stays another way
 
-/*
+
 -- exclude non-first stays
 RIGHT JOIN(
   SELECT uniquepid,
@@ -392,7 +394,7 @@ ON icustay_detail.patientunitstayid = yug.patientunitstayid
 WHERE yug.ethnicity != "Other/Unknown"
 AND yug.age != "16" AND yug.age != "17"
 )
-*/
+
 
 SELECT *
 

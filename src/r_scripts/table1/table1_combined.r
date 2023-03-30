@@ -244,8 +244,21 @@ t1flex(tbl1) %>% save_as_docx(path="results/table1/Table_posA_OASIS.docx")
 # Table for sanity check
 ###############################
 
+# Make probabilty bins
+m_e_df$mort_bins <- m_e_df$prob_mort
+m_e_df$mort_bins[m_e_df$mort_bins >= 0 
+                & m_e_df$mort_bins <= 0.10] <- "0 - 10"
+m_e_df$mort_bins[m_e_df$mort_bins > 0.10
+                & m_e_df$mort_bins <= 0.20] <- "10 - 20"
+m_e_df$mort_bins[m_e_df$mort_bins > 0.20
+                & m_e_df$mort_bins <= 0.30] <- "20 - 30"
+m_e_df$mort_bins[m_e_df$mort_bins > 0.30 
+                & m_e_df$mort_bins <= 1] <- "> 30"
+
+m_e_df$mort_bins <- factor(m_e_df$mort_bins, levels = c('0 - 10', '10 - 20','20 - 30', '> 30' ))
+
 # Create table1 object for SOFA
-tbl1 <- table1(~ ventilation_bin + rrt + pressor | SOFA_new*death_bin,
+tbl1 <- table1(~ ventilation_bin + rrt + pressor | mort_bins*death_bin,
               data=m_e_df, 
               render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
               render.categorical=render.categorical, render.strat=render.strat)
@@ -254,7 +267,7 @@ tbl1 <- table1(~ ventilation_bin + rrt + pressor | SOFA_new*death_bin,
 t1flex(tbl1) %>% save_as_docx(path="results/table1/Table_sanity_check.docx")
 
 # Same for MIMIC only
-tbl1 <- table1(~ ventilation_bin + rrt + pressor | SOFA_new*death_bin,
+tbl1 <- table1(~ ventilation_bin + rrt + pressor | mort_bins*death_bin,
               data=subset(m_e_df, source=="MIMIC"), 
               overall=FALSE,
               render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
@@ -264,7 +277,7 @@ tbl1 <- table1(~ ventilation_bin + rrt + pressor | SOFA_new*death_bin,
 t1flex(tbl1) %>% save_as_docx(path="results/table1/Tbl_san_check_MIMIC.docx")
 
 # Same for eICU only
-tbl1 <- table1(~ ventilation_bin + rrt + pressor | SOFA_new*death_bin,
+tbl1 <- table1(~ ventilation_bin + rrt + pressor | mort_bins*death_bin,
               data=subset(m_e_df, source=="eICU"), 
               overall=FALSE,
               render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
