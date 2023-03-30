@@ -13,8 +13,9 @@ load_data <- function(cohort){
   death_bin <- sepsis_data[, c(1)]
   discharge_hosp <- sepsis_data[, c(1)]
   ethnicity_white <- sepsis_data[, c(1)]
+  blood_yes <- sepsis_data[, c(1)]
 
-  sepsis_data <- cbind(sepsis_data, ventilation_bin, death_bin, discharge_hosp, ethnicity_white)
+  sepsis_data <- cbind(sepsis_data, ventilation_bin, death_bin, discharge_hosp, ethnicity_white, blood_yes)
 
   if (file_path == "data/MIMIC_data.csv") {
 
@@ -26,6 +27,7 @@ load_data <- function(cohort){
     sepsis_data <- sepsis_data %>% mutate(ventilation_bin = ifelse(InvasiveVent_hr > 0 & !is.na(InvasiveVent_hr), 1, 0))
     sepsis_data <- sepsis_data %>% mutate(pressor = ifelse(pressor=="True", 1, 0))
     sepsis_data <- sepsis_data %>% mutate(rrt = ifelse(is.na(rrt), 0, 1))
+    sepsis_data <- sepsis_data %>% mutate(blood_yes = ifelse(is.na(transfusion_yes), 0, 1))
     sepsis_data <- sepsis_data %>% mutate(death_bin = ifelse(discharge_location == "DIED" | discharge_location == "HOSPICE" | dod != "", 1, 0))
     sepsis_data <- sepsis_data %>% mutate(discharge_hosp = ifelse(discharge_location == "HOSPICE", 1, 0))
     sepsis_data <- sepsis_data %>% mutate(ethnicity_white = ifelse(race == "WHITE" | race == "WHITE - BRAZILIAN" | race == "WHITE - EASTERN EUROPEAN" | race == "WHITE - OTHER EUROPEAN" | race == "WHITE - RUSSIAN" | race == "PORTUGUESE", 1, 0))
@@ -59,15 +61,16 @@ load_data <- function(cohort){
   } else if (file_path == "data/eICU_data.csv") {
 
     # generate dummy var for eICU reliable hospitals -> match with list from Leo
-    # rel_hosp <- read.csv("hospitals/reliable_teach_hosp.csv", header = TRUE, stringsAsFactors = TRUE)
-    # sepsis_data <- sepsis_data %>%  mutate(rel_icu = ifelse(sepsis_data$hospitalid %in% rel_hosp$hospitalid , 1, 0))
-    # sepsis_data <- subset(sepsis_data, rel_icu == 1) # only keep reliable hospitals
+    rel_hosp <- read.csv("hospitals/reliable_teach_hosp.csv", header = TRUE, stringsAsFactors = TRUE)
+    sepsis_data <- sepsis_data %>%  mutate(rel_icu = ifelse(sepsis_data$hospitalid %in% rel_hosp$hospitalid , 1, 0))
+    sepsis_data <- subset(sepsis_data, rel_icu == 1) # only keep reliable hospitals
 
     sepsis_data <- sepsis_data %>% mutate(gender = ifelse(gender == "Female", 1, 0))
 
     sepsis_data <- sepsis_data %>% mutate(ventilation_bin = ifelse(is.na(VENT_final), 0, 1))
     sepsis_data <- sepsis_data %>% mutate(pressor = ifelse(is.na(PRESSOR_final), 0, 1))
     sepsis_data <- sepsis_data %>% mutate(rrt = ifelse(is.na(RRT_final), 0, 1))
+    sepsis_data <- sepsis_data %>% mutate(blood_yes = ifelse(is.na(transfusion_yes), 0, 1))
     sepsis_data <- sepsis_data %>% mutate(death_bin = ifelse(unitdischargelocation == "Death" | unitdischargestatus == "Expired" | hospitaldischargestatus == "Expired", 1, 0))
     sepsis_data <- sepsis_data %>% mutate(discharge_hosp = ifelse(unitdischargelocation == "HOSPICE", 1, 0)) # dummy line to have homogeneous columns 
     sepsis_data <- sepsis_data %>% mutate(ethnicity_white = ifelse(race == "Caucasian", 1, 0))
@@ -109,7 +112,7 @@ load_data <- function(cohort){
   return(sepsis_data[, c("gender", "los", "ventilation_bin", "pressor", "rrt", "death_bin", "discharge_hosp", "ethnicity_white", "race",
                          "charlson_cont", "charlson_comorbidity_index", "anchor_age", "SOFA", "anchor_year_group",
                          "hypertension", "heart_failure", "ckd", "copd", "asthma", "adm_elective",
-                         "OASIS_W", "OASIS_N", "OASIS_B", "rel_icu", "prob_mort")])
+                         "OASIS_W", "OASIS_N", "OASIS_B", "rel_icu", "prob_mort", "blood_yes")])
 }
 
 get_merged_datasets <- function() {

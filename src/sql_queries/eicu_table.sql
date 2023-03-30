@@ -32,7 +32,8 @@ respiratoryrate_OASIS,
 temperature_OASIS,
 urineoutput_OASIS,
 adm_elective,
-electivesurgery_OASIS
+electivesurgery_OASIS,
+transfusion_yes
 
 FROM `db_name.my_eICU.yugang` as yug 
 
@@ -358,6 +359,45 @@ LEFT JOIN(
 )
 AS pivoted_med
 ON pivoted_med.patientunitstayid = yug.patientunitstayid
+
+
+LEFT JOIN (
+
+WITH transf AS (
+  SELECT
+      patientunitstayid
+    , intakeoutputoffset
+    , CASE
+        WHEN intakeoutputoffset >= 0     AND intakeoutputoffset < 1440   THEN 1
+        WHEN intakeoutputoffset >= 1440  AND intakeoutputoffset < 1440*2 THEN 2
+      ELSE NULL
+    END AS day
+    , cellvaluenumeric
+
+  FROM `physionet-data.eicu_crd.intakeoutput`
+
+  WHERE celllabel = "Volume (ml)-Transfuse - Leukoreduced Packed RBCs"
+     OR celllabel = "Volume-Transfuse red blood cells"
+     OR LOWER(celllabel) LIKE "%rbc%"
+),
+
+transfusion_overall AS (
+
+  SELECT
+
+    patientunitstayid
+  , 1 AS transfusion_yes
+
+  FROM transf
+
+  GROUP BY patientunitstayid
+)
+
+SELECT patientunitstayid, transfusion_yes
+  FROM transfusion_overall
+)
+AS pivoted_transfusion
+ON pivoted_transfusion.patientunitstayid = yug.patientunitstayid
 
 /*
 -- exclude non-first stays

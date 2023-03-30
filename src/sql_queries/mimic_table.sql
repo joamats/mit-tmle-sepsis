@@ -1,6 +1,7 @@
 select icu.*, adm.adm_type, adm.adm_elective, pat.anchor_age,pat.anchor_year_group,sf.SOFA,rrt.rrt, weight.weight_admit,fd_uo.urineoutput,
 charlson.charlson_comorbidity_index, (pressor.stay_id = icu.stay_id) as pressor,ad.discharge_location as discharge_location, pat.dod,
 InvasiveVent.InvasiveVent_hr,Oxygen.Oxygen_hr,HighFlow.HighFlow_hr,NonInvasiveVent.NonInvasiveVent_hr,Trach.Trach_hr, oa.oasis, oa.oasis_prob,
+transfusion_yes,
 ABS(TIMESTAMP_DIFF(pat.dod,icu.icu_outtime,DAY)) as dod_icuout_offset
 
 from `physionet-data.mimiciv_derived.icustay_detail` as icu 
@@ -80,6 +81,23 @@ on adm.hadm_id = icu.hadm_id
 LEFT JOIN (SELECT stay_id, oasis, oasis_prob
 FROM `physionet-data.mimiciv_derived.oasis`) as oa
 on oa.stay_id = icu.stay_id
+
+-- Add Transfusions
+LEFT JOIN (
+SELECT ce.stay_id --, amount --, valueuom --itemid
+, max(
+          CASE
+                    WHEN ce.itemid IN ( 226368, 227070, 220996, 221013,226370
+                                      ) THEN 1
+                    ELSE 0
+          END ) AS transfusion_yes
+FROM  `physionet-data.mimiciv_icu.inputevents` ce
+WHERE itemid IN (226368, 227070, 220996, 221013,226370) 
+and amount is NOT NULL and amount >0 
+GROUP BY stay_id
+)
+AS ce
+ON ce.stay_id = icu.stay_id
 
 WHERE (icu.first_icu_stay IS TRUE AND icu.first_hosp_stay IS TRUE)
 AND (discharge_location is not null OR abs(timestamp_diff(pat.dod,icu.icu_outtime,DAY)) < 4)
