@@ -5,17 +5,12 @@ import seaborn as sb
 import matplotlib
 matplotlib.use('TKAgg')
 
-plot_name = "eICU_TMLE_SOFA"
-title = "eICU only TMLE basic model, SOFA ranges\n"
+plot_name = "LOS_TMLE_SOFA"
+title = "Both cohorts TMLE, SOFA ranges\n"
 df = pd.read_csv(f"results/{plot_name}.csv")
 
 conversion_dict = dict(zip(df.sev_start.unique(), range(4)))
 df.sev_start = df.sev_start.apply(lambda x: conversion_dict[x])
-
-# Transform into percentages
-df.psi = df.psi * 100
-df.i_ci = df.i_ci * 100
-df.s_ci = df.s_ci * 100
 
 treatments = df.treatment.unique()
 races = df.race.unique()
@@ -53,9 +48,9 @@ for i, t in enumerate(treatments):
                      label="White patients")
 
     axes[i].axhline(y=0, xmin=0, xmax=1, c="black", linewidth=.7, linestyle='--')
-    axes[i].set_ylim([-27, 27])
+    axes[i].set_ylim([-5, 15])
     axes[i].set_title(t_dict[t])
-    axes[0].set(ylabel="ATE (%)\nTreated vs. Not Treated")
+    axes[0].set(ylabel="ATE (days)\nTreated vs. Not Treated")
     axes[2].legend(bbox_to_anchor=(1.05, 0.7), loc='upper left')
     axes[i].set_xticklabels(["0-3", "4-6", "7-10", ">10"])
     axes[i].set_xticks(range(4))

@@ -20,3 +20,4 @@ gdata
 dbarts
 dbarts2
 glmnet
+datawizard

@@ -70,8 +70,6 @@ def cat_pressor(pressor):
         return 1
     elif pressor['pressor_2'] > 0:
         return 1
-    elif pressor['pressor_2'] > 0:
-        return 1
     elif pressor['pressor_3'] > 0:
         return 1
     elif pressor['pressor_4'] > 0:

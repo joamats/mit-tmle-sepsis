@@ -1,6 +1,7 @@
 source("src/r_scripts/load_data.R")
 
 library(tmle)
+library(datawizard)
 
 
 data_between <- function(sepsis_data, sev_low, sev_high, sev_type) {
@@ -9,7 +10,7 @@ data_between <- function(sepsis_data, sev_low, sev_high, sev_type) {
 
         res <- sepsis_data[sepsis_data$SOFA <= sev_high & sepsis_data$SOFA >= sev_low,
         c("anchor_age","gender","ethnicity_white","SOFA","charlson_cont",
-          "ventilation_bin", "death_bin", "rrt", "pressor",
+          "ventilation_bin", "death_bin", "los", "rrt", "pressor",
           "hypertension", "heart_failure", "ckd", "copd", "asthma")]
 
 
@@ -17,7 +18,7 @@ data_between <- function(sepsis_data, sev_low, sev_high, sev_type) {
 
         res <- sepsis_data[sepsis_data$OASIS_B <= sev_high & sepsis_data$OASIS_B >= sev_low,
         c("anchor_age","gender","ethnicity_white","OASIS_B","charlson_cont",
-          "ventilation_bin", "death_bin", "rrt", "pressor",
+          "ventilation_bin", "death_bin", "los", "rrt", "pressor",
           "hypertension", "heart_failure", "ckd", "copd", "asthma")]
     }
     
@@ -56,18 +57,21 @@ run_tmle <- function(data, treatment, sev_type) {
         A <- data$pressor
     }
 
-    Y <- data$death_bin
+    # Transform continuous LOS to be between 0 and 1
+    data$los[data$los < 0] <- 0 # clean data to have minimum of 0 days
+    Y.bounded <- normalize(data$los, include_bounds = TRUE, verbose = TRUE)
 
-    result <- tmle(Y = Y,
+    result <- tmle(Y = Y.bounded,
                    A = A,
                    W = W,
-                   family = "binomial", 
+                   family = "gaussian", 
                    gbound = c(0.05, 0.95),
                    g.SL.library = c("SL.glm"),
                    Q.SL.library = c("SL.glm"),
                   )
 
-    print(summary(result))
+    #print(summary(result))
+    # commented out as not sensible before back-normalisation
 
     return(result)
 }
@@ -104,6 +108,15 @@ tmle_stratified <- function(sepsis_data, treatment, race, df, sev_type) {
         data <- data_between(sepsis_data, start, end, sev_type)
         result <- run_tmle(data, treatment, sev_type)
 
+        # Transform back the ATE estimate
+        min.Y <- min(data$los)
+        max.Y <- max(data$los)
+        result$estimates$ATE$psi <- (max.Y-min.Y)*result$estimates$ATE$psi
+
+        # Transform back the CI estimate
+        result$estimates$ATE$CI[1] <- (max.Y-min.Y)*result$estimates$ATE$CI[1]
+        result$estimates$ATE$CI[2] <- (max.Y-min.Y)*result$estimates$ATE$CI[2]
+
         df[nrow(df) + 1,] <- c(treatment,
                                race,
                                start,
@@ -115,14 +128,14 @@ tmle_stratified <- function(sepsis_data, treatment, race, df, sev_type) {
                                nrow(data)
                               ) 
         # Saves file as we go
-        write.csv(df, paste0("results/eICU_", fn,".csv"))
+        write.csv(df, paste0("results/LOS_", fn,".csv"))
     }     
     return(df)
 }
 
 
-data <- read.csv('data/MIMIC_eICU.csv')
-data <- subset(data, rel_icu== 1)
+data <- read.csv('data/MIMIC_eICU.csv', header = TRUE, stringsAsFactors = TRUE)
+#data <- subset(data, source== 1)
 
 # Put either "SOFA" or "OASIS" to run the analysis on the desired score
 sev_type <- "SOFA"
