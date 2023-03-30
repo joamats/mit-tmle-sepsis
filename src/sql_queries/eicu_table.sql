@@ -275,13 +275,13 @@ ON treatment.patientunitstayid = yug.patientunitstayid
 -- pivoted infusions table to get vasopressors
 LEFT JOIN(
   SELECT patientunitstayid, CASE
-    WHEN COUNT(dopamine) >= 1 THEN 1
-    WHEN COUNT(dobutamine) >= 1 THEN 1
+    -- WHEN COUNT(dopamine) >= 1 THEN 1
+    -- WHEN COUNT(dobutamine) >= 1 THEN 1
     WHEN COUNT(norepinephrine) >= 1 THEN 1
     WHEN COUNT(phenylephrine) >= 1 THEN 1
     WHEN COUNT(epinephrine) >= 1 THEN 1
     WHEN COUNT(vasopressin) >= 1 THEN 1
-    WHEN COUNT(milrinone) >= 1 THEN 1
+    -- WHEN COUNT(milrinone) >= 1 THEN 1
     ELSE NULL
     END AS pressor_1  
 
@@ -296,14 +296,14 @@ LEFT JOIN(
   SELECT patientunitstayid, COUNT(drugname) as pressor_2
   FROM `physionet-data.eicu_crd.infusiondrug`
   WHERE(
-    LOWER(drugname) LIKE '%dopamine%' OR
-    LOWER(drugname) LIKE '%dobutamine%' OR
+    -- LOWER(drugname) LIKE '%dopamine%' OR
+    -- LOWER(drugname) LIKE '%dobutamine%' OR
     LOWER(drugname) LIKE '%norepinephrine%' OR
     LOWER(drugname) LIKE '%phenylephrine%' OR
     LOWER(drugname) LIKE '%epinephrine%' OR
     LOWER(drugname) LIKE '%vasopressin%' OR
-    LOWER(drugname) LIKE '%milrinone%' OR
-    LOWER(drugname) LIKE '%dobutrex%' OR
+    -- LOWER(drugname) LIKE '%milrinone%' OR
+    -- LOWER(drugname) LIKE '%dobutrex%' OR
     LOWER(drugname) LIKE '%neo synephrine%' OR
     LOWER(drugname) LIKE '%neo-synephrine%' OR
     LOWER(drugname) LIKE '%neosynephrine%' OR
@@ -319,14 +319,14 @@ LEFT JOIN(
   SELECT patientunitstayid, COUNT(drugname) as pressor_3
   FROM `physionet-data.eicu_crd.medication`
   WHERE(
-    LOWER(drugname) LIKE '%dopamine%' OR
-    LOWER(drugname) LIKE '%dobutamine%' OR
+    -- LOWER(drugname) LIKE '%dopamine%' OR
+    -- LOWER(drugname) LIKE '%dobutamine%' OR
     LOWER(drugname) LIKE '%norepinephrine%' OR
     LOWER(drugname) LIKE '%phenylephrine%' OR
     LOWER(drugname) LIKE '%epinephrine%' OR
     LOWER(drugname) LIKE '%vasopressin%' OR
-    LOWER(drugname) LIKE '%milrinone%' OR
-    LOWER(drugname) LIKE '%dobutrex%' OR
+    -- LOWER(drugname) LIKE '%milrinone%' OR
+    -- LOWER(drugname) LIKE '%dobutrex%' OR
     LOWER(drugname) LIKE '%neo synephrine%' OR
     LOWER(drugname) LIKE '%neo-synephrine%' OR
     LOWER(drugname) LIKE '%neosynephrine%' OR
@@ -340,13 +340,13 @@ ON medication.patientunitstayid = yug.patientunitstayid
 -- pivoted med
 LEFT JOIN(
   SELECT patientunitstayid, CASE
-    WHEN SUM(dopamine) >= 1 THEN 1
-    WHEN SUM(dobutamine) >= 1 THEN 1
+    -- WHEN SUM(dopamine) >= 1 THEN 1
+    -- WHEN SUM(dobutamine) >= 1 THEN 1
     WHEN SUM(norepinephrine) >= 1 THEN 1
     WHEN SUM(phenylephrine) >= 1 THEN 1
     WHEN SUM(epinephrine) >= 1 THEN 1
     WHEN SUM(vasopressin) >= 1 THEN 1
-    WHEN SUM(milrinone) >= 1 THEN 1
+    -- WHEN SUM(milrinone) >= 1 THEN 1
     ELSE NULL
     END AS pressor_4
 

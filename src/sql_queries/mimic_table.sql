@@ -30,10 +30,10 @@ on icu.stay_id = rrt.stay_id
 
 left join (select distinct stay_id from  `physionet-data.mimiciv_derived.epinephrine`
 union distinct 
-select distinct stay_id from  `physionet-data.mimiciv_derived.dobutamine`
-union distinct 
-select distinct stay_id from  `physionet-data.mimiciv_derived.dopamine`
-union distinct 
+-- select distinct stay_id from  `physionet-data.mimiciv_derived.dobutamine`
+-- union distinct 
+-- select distinct stay_id from  `physionet-data.mimiciv_derived.dopamine`
+-- union distinct 
 select distinct stay_id from  `physionet-data.mimiciv_derived.norepinephrine`
 union distinct 
 select distinct stay_id from  `physionet-data.mimiciv_derived.phenylephrine`

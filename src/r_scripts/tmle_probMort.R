@@ -93,7 +93,7 @@ tmle_stratified <- function(sepsis_data, treatment, race, df, cohort) {
     return(df)
 }
 
-cohorts <- c( "MIMIC_eICU") #"eICU", "MIMIC",
+cohorts <- c("MIMIC_eICU") #"eICU", "MIMIC",
 
 # iterate over cohorts
 
