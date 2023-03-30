@@ -20,7 +20,9 @@ yug.hospitaldischargeyear as anchor_year_group,
 -- newly added 
 vent_1, vent_2, vent_3, vent_4,
 rrt_1,
-pressor_1, pressor_2, pressor_3, pressor_4, 
+pressor_1, 
+pressor_2, pressor_3, 
+pressor_4, 
 apachepatientresultO.apachescore, apachepatientresultO.acutephysiologyscore, apachepatientresultO.apache_pred_hosp_mort,
 hospitaladmitoffset_OASIS,
 gcs_OASIS,
@@ -291,6 +293,7 @@ LEFT JOIN(
 AS pivoted_infusion
 ON pivoted_infusion.patientunitstayid = yug.patientunitstayid
 
+
 -- infusions table to get vasopressors
 LEFT JOIN(
   SELECT patientunitstayid, COUNT(drugname) as pressor_2
@@ -369,6 +372,27 @@ AND yug.ethnicity != "Other/Unknown"
 AND yug.age != "16" AND yug.age != "17"
 )
 
+-- Remove non-first stays another way
+
+/*
+-- exclude non-first stays
+RIGHT JOIN(
+  SELECT uniquepid,
+  COUNT(uniquepid),
+  MIN(patientunitstayid) AS patientunitstayid
+  FROM `physionet-data.eicu_crd_derived.icustay_detail`
+
+  GROUP BY uniquepid
+
+  HAVING COUNT(uniquepid) = 1
+) 
+AS icustay_detail
+ON icustay_detail.patientunitstayid = yug.patientunitstayid
+
+WHERE yug.ethnicity != "Other/Unknown"
+AND yug.age != "16" AND yug.age != "17"
+)
+*/
 
 SELECT *
 
