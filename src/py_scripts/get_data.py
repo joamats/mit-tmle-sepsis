@@ -263,7 +263,6 @@ if __name__ == '__main__':
         df_sepsis = pd.read_csv("data/eICU_data.csv")
         # Combine vent, rrt, vasopressor columns into one of each only
         df_sepsis = combine_treatment_eICU(df_sepsis)
-
         key = "patientunitstayid"
 
         df.to_csv("data/ICD_codes/eICU/processed_icd_codes.csv")
