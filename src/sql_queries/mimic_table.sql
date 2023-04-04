@@ -1,6 +1,6 @@
 select icu.*, adm.adm_type, adm.adm_elective, pat.anchor_age,pat.anchor_year_group,sf.SOFA,rrt.rrt, weight.weight_admit,fd_uo.urineoutput,
-charlson.charlson_comorbidity_index, (pressor.stay_id = icu.stay_id) as pressor,ad.discharge_location as discharge_location, pat.dod,
-InvasiveVent.InvasiveVent_hr,Oxygen.Oxygen_hr,HighFlow.HighFlow_hr,NonInvasiveVent.NonInvasiveVent_hr,Trach.Trach_hr, oa.oasis, oa.oasis_prob,
+charlson.charlson_comorbidity_index, (pressor.stay_id = icu.stay_id) as pressor,ad.discharge_location as discharge_location, ad.insurance, pat.dod,
+InvasiveVent.InvasiveVent_hr,Oxygen.Oxygen_hr,HighFlow.HighFlow_hr, NonInvasiveVent.NonInvasiveVent_hr,Trach.Trach_hr, oa.oasis, oa.oasis_prob,
 transfusion_yes,
 001 AS hospitalid, -- dummy variable for hospitalid in eICU
 ">= 500" AS numbedscategory, -- dummy variable for numbedscategory in eICU
@@ -18,6 +18,7 @@ and s3.sepsis3 is true
 
 left join `physionet-data.mimiciv_hosp.patients` as pat
 on icu.subject_id = pat.subject_id
+
 left join `physionet-data.mimiciv_hosp.admissions` as ad
 on icu.hadm_id = ad.hadm_id
 
@@ -124,7 +125,6 @@ MIN(
 FROM `physionet-data.mimiciv_hosp.labevents` AS lab
 where itemid IN (50909, 50811, 51222)
 GROUP BY hadm_id
-
 )
 AS lab
 ON lab.hadm_id = icu.hadm_id
@@ -135,7 +135,6 @@ SELECT stay_id,
 glucose_max, sodium_min, potassium_max,
 fibrinogen_min, inr_max
 FROM `physionet-data.mimiciv_derived.first_day_lab` AS dl
-
 )
 AS dl
 ON dl.stay_id = icu.stay_id
@@ -145,7 +144,6 @@ SELECT stay_id,
 ph_min, lactate_max 
 
 FROM `physionet-data.mimiciv_derived.first_day_bg` AS bg
-
 )
 AS bg
 ON bg.stay_id = icu.stay_id
@@ -155,7 +153,6 @@ SELECT stay_id,
 po2_min, pco2_max
 
 FROM `physionet-data.mimiciv_derived.first_day_bg_art` AS bgart
-
 )
 AS bgart
 ON bgart.stay_id = icu.stay_id
