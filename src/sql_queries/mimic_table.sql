@@ -2,6 +2,13 @@ select icu.*, adm.adm_type, adm.adm_elective, pat.anchor_age,pat.anchor_year_gro
 charlson.charlson_comorbidity_index, (pressor.stay_id = icu.stay_id) as pressor,ad.discharge_location as discharge_location, pat.dod,
 InvasiveVent.InvasiveVent_hr,Oxygen.Oxygen_hr,HighFlow.HighFlow_hr,NonInvasiveVent.NonInvasiveVent_hr,Trach.Trach_hr, oa.oasis, oa.oasis_prob,
 transfusion_yes,
+001 AS hospitalid, -- dummy variable for hospitalid in eICU
+">= 500" AS numbedscategory, -- dummy variable for numbedscategory in eICU
+"true" AS teachingstatus, -- is boolean in eICU
+"Northeast" AS region, -- dummy variable for US census region in eICU
+-- lab values 
+po2_min, pco2_max, ph_min, lactate_max, glucose_max, sodium_min, potassium_max, cortisol_min, hemoglobin_min, fibrinogen_min, inr_max, 
+
 ABS(TIMESTAMP_DIFF(pat.dod,icu.icu_outtime,DAY)) as dod_icuout_offset
 
 from `physionet-data.mimiciv_derived.icustay_detail` as icu 
@@ -86,18 +93,72 @@ on oa.stay_id = icu.stay_id
 LEFT JOIN (
 SELECT ce.stay_id --, amount --, valueuom --itemid
 , max(
-          CASE
-                    WHEN ce.itemid IN ( 226368, 227070, 220996, 221013,226370
-                                      ) THEN 1
-                    ELSE 0
-          END ) AS transfusion_yes
+    CASE
+    WHEN ce.itemid IN ( 226368, 227070, 220996, 221013,226370) THEN 1
+    ELSE 0
+    END) AS transfusion_yes
 FROM  `physionet-data.mimiciv_icu.inputevents` ce
-WHERE itemid IN (226368, 227070, 220996, 221013,226370) 
+WHERE itemid IN (226368, 227070, 220996, 221013, 226370) 
 and amount is NOT NULL and amount >0 
 GROUP BY stay_id
 )
 AS ce
 ON ce.stay_id = icu.stay_id
+
+-- Add Lab from original table
+-- minimal whole stay cortisol and hemoglobin
+LEFT JOIN (
+SELECT hadm_id,
+MIN(
+    CASE
+    WHEN lab.itemid IN (50909) THEN valuenum
+    ELSE NULL
+    END) AS cortisol_min,
+
+MIN(
+    CASE
+    WHEN lab.itemid IN (50811, 51222) THEN valuenum
+    ELSE NULL
+    END) AS hemoglobin_min
+
+FROM `physionet-data.mimiciv_hosp.labevents` AS lab
+where itemid IN (50909, 50811, 51222)
+GROUP BY hadm_id
+
+)
+AS lab
+ON lab.hadm_id = icu.hadm_id
+
+-- Add Lab values from derived tables
+LEFT JOIN (
+SELECT stay_id,
+glucose_max, sodium_min, potassium_max,
+fibrinogen_min, inr_max
+FROM `physionet-data.mimiciv_derived.first_day_lab` AS dl
+
+)
+AS dl
+ON dl.stay_id = icu.stay_id
+
+LEFT JOIN (
+SELECT stay_id,
+ph_min, lactate_max 
+
+FROM `physionet-data.mimiciv_derived.first_day_bg` AS bg
+
+)
+AS bg
+ON bg.stay_id = icu.stay_id
+
+LEFT JOIN (
+SELECT stay_id,
+po2_min, pco2_max
+
+FROM `physionet-data.mimiciv_derived.first_day_bg_art` AS bgart
+
+)
+AS bgart
+ON bgart.stay_id = icu.stay_id
 
 WHERE (icu.first_icu_stay IS TRUE AND icu.first_hosp_stay IS TRUE)
 AND (discharge_location is not null OR abs(timestamp_diff(pat.dod,icu.icu_outtime,DAY)) < 4)
