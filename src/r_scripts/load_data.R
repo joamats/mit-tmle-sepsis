@@ -68,6 +68,11 @@ load_data <- function(cohort){
     sepsis_data <- sepsis_data %>% mutate(biliary = ifelse(!is.na(biliary), 1, 0))
     sepsis_data <- sepsis_data %>% mutate(skin = ifelse(!is.na(skin), 1, 0))
 
+    # clean fluids_volume: if fluids_volume_norm_by_los_icu is over 4000, set it to 4000
+    # and then adjust fluids_volume accordingly, given the los_icu
+    sepsis_data$fluids_volume_norm_by_los_icu[sepsis_data$fluids_volume_norm_by_los_icu > 4000] <- 4000
+    sepsis_data$fluids_volume <- sepsis_data$fluids_volume_norm_by_los_icu * sepsis_data$los_icu
+
     # labs
     # PO2 is within its physiological range
     sepsis_data$po2_min[sepsis_data$po2_min < 0] <- 0
@@ -101,10 +106,10 @@ load_data <- function(cohort){
                            is.na(sepsis_data$sodium_min)] <- 140
 
     # Potassium
-    sepsis_data$potassium_min[sepsis_data$potassium_min < 0] <- 0
-    sepsis_data$potassium_min[sepsis_data$potassium_min > 10] <- 0
-    sepsis_data$potassium_min[sepsis_data$potassium_min == 0 |
-                              is.na(sepsis_data$potassium_min)] <- 3.5
+    sepsis_data$potassium_max[sepsis_data$potassium_max < 0] <- 0
+    sepsis_data$potassium_max[sepsis_data$potassium_max > 10] <- 0
+    sepsis_data$potassium_max[sepsis_data$potassium_max == 0 |
+                              is.na(sepsis_data$potassium_max)] <- 3.5
 
     # Cortisol
     sepsis_data$cortisol_min[sepsis_data$cortisol_min < 0] <- 0
@@ -184,25 +189,38 @@ load_data <- function(cohort){
   }
 
   # Return just keeping columns of interest
-  return(sepsis_data[, c("gender", "los", "ventilation_bin", "pressor", "rrt", "death_bin", "discharge_hosp", "ethnicity_white", "race",
-                         "charlson_cont", "charlson_comorbidity_index", "anchor_age", "SOFA", "anchor_year_group",
-                         "hypertension", "heart_failure", "ckd", "copd", "asthma", "adm_elective",
-                         "OASIS_W", "OASIS_N", "OASIS_B", "rel_icu", "prob_mort", "blood_yes")])
+  return(sepsis_data[, c("admission_age", "gender", "ethnicity_white",
+                         "weight_admit", "anchor_year_group", 
+                        #  "insurance",
+                         "adm_elective", "major_surgery", "is_full_code_admission",
+                         "is_full_code_discharge", "prob_mort",
+                         "SOFA", "respiration", "coagulation", "liver", "cardiovascular",
+                         "cns", "renal", "charlson_cont", "MV_time_perc_of_stay", "FiO2_mean_24h",
+                         "RRT_init_offset_minutes", "VP_time_perc_of_stay", "fluids_volume", 
+                         "resp_rate_mean", "mbp_mean", "heart_rate_mean", "temperature_mean",
+                         "spo2_mean", "po2_min", "pco2_max", "ph_min", "lactate_max", "glucose_max",
+                         "sodium_min", "potassium_max", "cortisol_min", "hemoglobin_min",
+                         "fibrinogen_min", "inr_max", "hypertension_present", "heart_failure_present",
+                         "copd_present", "asthma_present", "cad_present", "ckd_stages", "diabetes_types",
+                         "connective_disease", "pneumonia", "uti", "biliary", "skin", "mortality_in",
+                         "blood_yes", "los", "mortality_90", "clabsi", "cauti", "ssi", "vap",
+                         "ventilation_bin", "rrt", "pressor")
+])
 }
 
 get_merged_datasets <- function() {
 
   mimic_data <- load_data("MIMIC")
-  eicu_data <- load_data("eICU")
+  #eicu_data <- load_data("eICU")
   # merge both datasets 
-  data <- combine(mimic_data, eicu_data)
+  #data <- combine(mimic_data, eicu_data)
 
   # add column to keep the cohort source and control for it
-  data <- data %>% mutate(source = ifelse(source == "mimic_data", 1, 0))
+  #data <- data %>% mutate(source = ifelse(source == "mimic_data", 1, 0))
 
   write.csv(mimic_data, "data/MIMIC.csv")
-  write.csv(eicu_data, "data/eICU.csv")
-  write.csv(data, "data/MIMIC_eICU.csv")
+  #write.csv(eicu_data, "data/eICU.csv")
+  #write.csv(data, "data/MIMIC_eICU.csv")
 
   return (data)
 

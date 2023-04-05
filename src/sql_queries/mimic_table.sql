@@ -16,7 +16,10 @@ WITH
   GROUP BY subject_id, stay_id
 ),
   fluids_table AS (
-    SELECT ce.stay_id, SUM(amount) AS fluids_volume, SUM(amount)/MAX(icu.los_icu) AS fluids_volume_norm_by_los_icu
+    SELECT ce.stay_id
+    , SUM(amount) AS fluids_volume
+    , SUM(amount)/MAX(icu.los_icu) AS fluids_volume_norm_by_los_icu
+    , MAX(icu.los_icu) AS los_icu
     FROM  `physionet-data.mimiciv_icu.inputevents` ce
     LEFT JOIN `db_name.mimiciv_derived.icustay_detail` icu
     ON icu.stay_id = ce.stay_id
@@ -27,7 +30,7 @@ WITH
     GROUP BY stay_id
 )
 
-SELECT icu.*, adm.adm_type, adm.adm_elective, pat.anchor_age,pat.anchor_year_group,sf.SOFA,
+SELECT icu.*, fluids_table.los_icu, adm.adm_type, adm.adm_elective, pat.anchor_age,pat.anchor_year_group,sf.SOFA,
 sf.respiration, sf.coagulation, sf.liver, sf.cardiovascular, sf.cns, sf.renal,
 rrt.rrt, weight.weight_admit,fd_uo.urineoutput,
 charlson.charlson_comorbidity_index, (pressor.stay_id = icu.stay_id) as pressor,ad.discharge_location as discharge_location, pat.dod,
