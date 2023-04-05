@@ -7,8 +7,7 @@ adm_elective
 major_surgery
 is_full_code_admission
 is_full_code_discharge
-pneumonia_adm
-oasis_prob
+prob_mort
 SOFA
 respiration
 coagulation
@@ -17,10 +16,6 @@ cardiovascular
 cns
 renal
 charlson_cont
-MV_time_perc_of_stay
-FiO2_mean_24h
-RRT_init_offset_minutes
-VP_time_perc_of_stay
 fluids_volume
 resp_rate_mean
 mbp_mean

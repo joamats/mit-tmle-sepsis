@@ -1,0 +1,2 @@
+"","treatment","cohort","race","prob_mort_start","prob_mort_end","psi","i_ci","s_ci","pvalue","n"
+"1","ventilation_bin","MIMIC","all","0","0.1","0.0491609708363262","0.0301829634170293","0.068138978255623","3.82999014405144e-07","8670"
