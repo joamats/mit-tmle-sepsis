@@ -14,6 +14,17 @@ WITH
   WHERE TIMESTAMP_DIFF(fio2_table.charttime, icu.admittime, MINUTE) <= 1440 
   AND TIMESTAMP_DIFF(fio2_table.charttime, icu.admittime, MINUTE) >= 0
   GROUP BY subject_id, stay_id
+),
+  fluids_table AS (
+    SELECT ce.stay_id, SUM(amount) AS fluids_volume, SUM(amount)/MAX(icu.los_icu) AS fluids_volume_norm_by_los_icu
+    FROM  `physionet-data.mimiciv_icu.inputevents` ce
+    LEFT JOIN `db_name.mimiciv_derived.icustay_detail` icu
+    ON icu.stay_id = ce.stay_id
+    WHERE itemid IN (220952,225158,220954,220955,220958,220960,220961,220962,221212,221213,220861,220863)
+    AND amount is NOT NULL
+    AND amount > 0 
+    AND icu.los_icu > 0
+    GROUP BY stay_id
 )
 
 SELECT icu.*, adm.adm_type, adm.adm_elective, pat.anchor_age,pat.anchor_year_group,sf.SOFA,
@@ -30,6 +41,7 @@ CASE
   ELSE NULL
 END AS RRT_init_offset_minutes,
 oa.oasis, oa.oasis_prob,
+fluids_volume, fluids_volume_norm_by_los_icu,
 transfusion_yes, major_surgery, resp_rate_mean, mbp_mean, heart_rate_mean, temperature_mean, spo2_mean, first_code, last_code,
 001 AS hospitalid, -- dummy variable for hospitalid in eICU
 ">= 500" AS numbedscategory, -- dummy variable for numbedscategory in eICU
@@ -288,6 +300,9 @@ ON ms.stay_id = icu.stay_id
 LEFT JOIN `db_name.my_MIMIC.pivoted_comorbidities` AS com
 ON com.hadm_id = icu.hadm_id
 
+-- Add fluids' volume
+LEFT JOIN fluids_table
+ON fluids_table.stay_id = icu.stay_id
 
 WHERE (icu.first_icu_stay IS TRUE AND icu.first_hosp_stay IS TRUE)
 AND (discharge_location is not null OR abs(timestamp_diff(pat.dod,icu.icu_outtime,DAY)) < 4)

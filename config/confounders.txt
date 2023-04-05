@@ -24,12 +24,12 @@ FiO2_mean_24h
 RRT_init_offset_minutes
 VP_time_perc_of_stay
 fluid_volume
-enteral_medications
 resp_rate_mean
 mbp_mean
 heart_rate_mean
 temperature_mean
 spo2_mean
+
 po2_min
 pco2_max
 ph_min
@@ -41,6 +41,7 @@ cortisol_min
 hemoglobin_min
 fibrinogen_min
 inr_max
+
 hypertension_present
 heart_failure_present
 copd_present

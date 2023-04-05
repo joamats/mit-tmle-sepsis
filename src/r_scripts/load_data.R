@@ -42,12 +42,6 @@ load_data <- function(cohort){
     sepsis_data$los <- as.numeric(difftime(sepsis_data$dischtime, sepsis_data$admittime, units = 'days')) # Length of stay MIMIC
     sepsis_data$los[sepsis_data$los < 0] <- 0 # clean data to have minimum of 0 days
 
-    sepsis_data <- sepsis_data %>% mutate(hypertension = ifelse(!is.na(hypertension), 1, 0))
-    sepsis_data <- sepsis_data %>% mutate(heart_failure = ifelse(!is.na(heart_failure), 1, 0))
-    sepsis_data <- sepsis_data %>% mutate(ckd = ifelse(!is.na(ckd), ckd, 0))
-    sepsis_data <- sepsis_data %>% mutate(copd = ifelse(!is.na(copd), 1, 0))
-    sepsis_data <- sepsis_data %>% mutate(asthma = ifelse(!is.na(asthma), 1, 0))
-
     sepsis_data$OASIS_W <- sepsis_data$oasis
     sepsis_data$OASIS_N <- sepsis_data$oasis
     sepsis_data$OASIS_B <- sepsis_data$oasis
@@ -57,6 +51,86 @@ load_data <- function(cohort){
 
     # rename oasis_prob into prob_mort
     sepsis_data <- sepsis_data %>% rename(prob_mort = oasis_prob)
+
+    # create dummy vars for comorbidities
+    sepsis_data <- sepsis_data %>% mutate(hypertension_present = ifelse(!is.na(hypertension_present), 1, 0))
+    sepsis_data <- sepsis_data %>% mutate(heart_failure_present = ifelse(!is.na(heart_failure_present), 1, 0))
+    sepsis_data <- sepsis_data %>% mutate(ckd_stages = ifelse(!is.na(ckd_stages), ckd_stages, 0))
+    sepsis_data <- sepsis_data %>% mutate(copd_present = ifelse(!is.na(copd_present), 1, 0))
+    sepsis_data <- sepsis_data %>% mutate(asthma_present = ifelse(!is.na(asthma_present), 1, 0))
+    sepsis_data <- sepsis_data %>% mutate(diabetes_types = ifelse(!is.na(diabetes_types), 1, 0))
+    sepsis_data <- sepsis_data %>% mutate(connective_disease = ifelse(!is.na(connective_disease), 1, 0))
+    sepsis_data <- sepsis_data %>% mutate(cad_present = ifelse(!is.na(cad_present), 1, 0))
+
+    # create dummy vars for conditions POA / source of infection
+    sepsis_data <- sepsis_data %>% mutate(pneumonia = ifelse(!is.na(pneumonia), 1, 0))
+    sepsis_data <- sepsis_data %>% mutate(uti = ifelse(!is.na(uti), 1, 0))
+    sepsis_data <- sepsis_data %>% mutate(biliary = ifelse(!is.na(biliary), 1, 0))
+    sepsis_data <- sepsis_data %>% mutate(skin = ifelse(!is.na(skin), 1, 0))
+
+    # labs
+    # PO2 is within its physiological range
+    sepsis_data$po2_min[sepsis_data$po2_min < 0] <- 0
+    sepsis_data$po2_min[sepsis_data$po2_min > 1000] <- 0
+    sepsis_data$po2_min[sepsis_data$po2_min == 0 |
+                        is.na(sepsis_data$po2_min)] <- 90
+
+    # PCO2 is within its physiological range
+    sepsis_data$pco2_max[sepsis_data$pco2_max < 0] <- 0
+    sepsis_data$pco2_max[sepsis_data$pco2_max > 1000] <- 0
+    sepsis_data$pco2_max[sepsis_data$pco2_max == 0 |
+                         is.na(sepsis_data$pco2_max)] <- 40
+
+    # Lactate is within its physiological range
+    sepsis_data$lactate_max[sepsis_data$lactate_max < 0] <- 0
+    sepsis_data$lactate_max[sepsis_data$lactate_max > 15] <- 0
+    sepsis_data$lactate_max[sepsis_data$lactate_max == 0 |
+                            is.na(sepsis_data$lactate_max)] <- 1.05
+
+    # Glucose is within its physiological range
+    sepsis_data$glucose_max[sepsis_data$glucose_max < 0] <- 0
+    sepsis_data$glucose_max[sepsis_data$glucose_max > 300] <- 0
+    sepsis_data$glucose_max[sepsis_data$glucose_max == 0 |
+                            is.na(sepsis_data$glucose_max)] <- 95
+
+    # Sodium
+    sepsis_data$sodium_min[is.na(sepsis_data$sodium_min)] <- 0
+    sepsis_data$sodium_min[sepsis_data$sodium_min < 0] <- 0
+    sepsis_data$sodium_min[sepsis_data$sodium_min > 10] <- 0
+    sepsis_data$sodium_min[sepsis_data$sodium_min == 0 |
+                           is.na(sepsis_data$sodium_min)] <- 140
+
+    # Potassium
+    sepsis_data$potassium_min[sepsis_data$potassium_min < 0] <- 0
+    sepsis_data$potassium_min[sepsis_data$potassium_min > 10] <- 0
+    sepsis_data$potassium_min[sepsis_data$potassium_min == 0 |
+                              is.na(sepsis_data$potassium_min)] <- 3.5
+
+    # Cortisol
+    sepsis_data$cortisol_min[sepsis_data$cortisol_min < 0] <- 0
+    sepsis_data$cortisol_min[sepsis_data$cortisol_min > 30] <- 0
+    sepsis_data$cortisol_min[sepsis_data$cortisol_min == 0 |
+                             is.na(sepsis_data$cortisol_min)] <- 10
+
+    # Hemoglobin
+    sepsis_data$hemoglobin_min[sepsis_data$hemoglobin_min < 0] <- 0
+    sepsis_data$hemoglobin_min[sepsis_data$hemoglobin_min > 30] <- 0
+    sepsis_data$hemoglobin_min[(sepsis_data$hemoglobin_min == 0 |
+                                is.na(sepsis_data$hemoglobin_min)) & 
+                                sepsis_data$gender == "M"] <- 13.5
+    sepsis_data$hemoglobin_min[(sepsis_data$hemoglobin_min == 0 |
+                                is.na(sepsis_data$hemoglobin_min)) & 
+                                sepsis_data$gender == "F"] <- 12
+    # Fibrinogen
+    sepsis_data$fibrinogen_min[sepsis_data$fibrinogen_min < 0] <- 0
+    sepsis_data$fibrinogen_min[sepsis_data$fibrinogen_min > 1000] <- 0
+    sepsis_data$fibrinogen_min[sepsis_data$fibrinogen_min == 0 |
+                               is.na(sepsis_data$fibrinogen_min)] <- 200
+    # INR
+    sepsis_data$inr_max[sepsis_data$inr_max < 0] <- 0
+    sepsis_data$inr_max[sepsis_data$inr_max > 10] <- 0
+    sepsis_data$inr_max[sepsis_data$inr_max == 0 |
+                        is.na(sepsis_data$inr_max)] <- 1.1
 
 
   } else if (file_path == "data/eICU_data.csv") {
