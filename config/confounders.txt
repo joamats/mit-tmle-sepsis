@@ -2,7 +2,6 @@ confounder
 admission_age
 gender
 ethnicity_white
-weight_admit
 anchor_year_group
 adm_elective
 major_surgery
