@@ -1,0 +1,9 @@
+outcome
+mortality_in
+blood_yes
+los
+mortality_90
+clabsi
+cauti
+ssi
+vap

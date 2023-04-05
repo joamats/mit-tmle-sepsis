@@ -37,7 +37,8 @@ transfusion_yes, major_surgery, resp_rate_mean, mbp_mean, heart_rate_mean, tempe
 "Northeast" AS region, -- dummy variable for US census region in eICU
 -- lab values 
 po2_min, pco2_max, ph_min, lactate_max, glucose_max, sodium_min, potassium_max, cortisol_min, hemoglobin_min, fibrinogen_min, inr_max, 
-
+hypertension_present, heart_failure_present, copd_present, asthma_present, cad_present, ckd_stages, diabetes_types, connective_disease,
+pneumonia, uti, biliary, skin, clabsi, cauti, ssi, vap,
 ABS(TIMESTAMP_DIFF(pat.dod,icu.icu_outtime,DAY)) as dod_icuout_offset
 
   , CASE
@@ -282,6 +283,10 @@ LEFT JOIN (
 ) 
 AS ms
 ON ms.stay_id = icu.stay_id
+
+-- Add comorbidities, conditions present on admission, and complications
+LEFT JOIN `db_name.my_MIMIC.pivoted_comorbidities` AS com
+ON com.hadm_id = icu.hadm_id
 
 
 WHERE (icu.first_icu_stay IS TRUE AND icu.first_hosp_stay IS TRUE)
