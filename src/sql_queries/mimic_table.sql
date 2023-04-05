@@ -1,7 +1,8 @@
 select icu.*, adm.adm_type, adm.adm_elective, pat.anchor_age,pat.anchor_year_group,sf.SOFA,rrt.rrt, weight.weight_admit,fd_uo.urineoutput,
 charlson.charlson_comorbidity_index, (pressor.stay_id = icu.stay_id) as pressor,ad.discharge_location as discharge_location, ad.insurance, pat.dod,
 InvasiveVent.InvasiveVent_hr,Oxygen.Oxygen_hr,HighFlow.HighFlow_hr, NonInvasiveVent.NonInvasiveVent_hr,Trach.Trach_hr, oa.oasis, oa.oasis_prob,
-transfusion_yes,
+transfusion_yes, major_surgery,
+
 WITH 
   fio2_table AS (
 
@@ -264,6 +265,28 @@ LEFT JOIN (
   FROM `db_name.my_MIMIC.pivoted_codes`
 ) AS codes
 ON codes.stay_id = icu.stay_id
+
+-- Add major surgery based on Alistair's OASIS implementation
+LEFT JOIN (
+ 
+ WITH surgflag as (
+ SELECT ie.stay_id
+        , MAX(CASE
+            WHEN LOWER(curr_service) LIKE '%surg%' THEN 1
+            WHEN curr_service = 'ORTHO' THEN 1
+            ELSE NULL END) AS major_surgery
+    FROM mimiciv_icu.icustays ie
+    LEFT JOIN mimiciv_hosp.services se
+        ON ie.hadm_id = se.hadm_id
+        AND se.transfertime < DATETIME_ADD(ie.intime, INTERVAL '2' DAY)
+    GROUP BY ie.stay_id
+ )  
+  SELECT *
+  FROM surgflag
+  WHERE major_surgery = 1
+) 
+AS ms
+ON ms.stay_id = icu.stay_id
 
 
 WHERE (icu.first_icu_stay IS TRUE AND icu.first_hosp_stay IS TRUE)
