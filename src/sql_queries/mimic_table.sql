@@ -1,8 +1,3 @@
-select icu.*, adm.adm_type, adm.adm_elective, pat.anchor_age,pat.anchor_year_group,sf.SOFA,rrt.rrt, weight.weight_admit,fd_uo.urineoutput,
-charlson.charlson_comorbidity_index, (pressor.stay_id = icu.stay_id) as pressor,ad.discharge_location as discharge_location, ad.insurance, pat.dod,
-InvasiveVent.InvasiveVent_hr,Oxygen.Oxygen_hr,HighFlow.HighFlow_hr, NonInvasiveVent.NonInvasiveVent_hr,Trach.Trach_hr, oa.oasis, oa.oasis_prob,
-transfusion_yes, major_surgery,
-
 WITH 
   fio2_table AS (
 
@@ -35,7 +30,7 @@ CASE
   ELSE NULL
 END AS RRT_init_offset_minutes,
 oa.oasis, oa.oasis_prob,
-transfusion_yes, resp_rate_mean, mbp_mean, heart_rate_mean, temperature_mean, spo2_mean, first_code, last_code,
+transfusion_yes, major_surgery, resp_rate_mean, mbp_mean, heart_rate_mean, temperature_mean, spo2_mean, first_code, last_code,
 001 AS hospitalid, -- dummy variable for hospitalid in eICU
 ">= 500" AS numbedscategory, -- dummy variable for numbedscategory in eICU
 "true" AS teachingstatus, -- is boolean in eICU

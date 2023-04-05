@@ -1,15 +1,16 @@
 confounder
-anchor_age
+admission_age
 gender
 ethnicity_white
 weight_admit
 anchor_year_group
 insurance
 adm_elective
+major_surgery
 is_full_code_admission
 is_full_code_discharge
 pneumonia_adm
-prob_mort
+oasis_prob
 SOFA
 respiration
 coagulation
@@ -17,7 +18,7 @@ liver
 cardiovascular
 cns
 renal
-charlson
+charlson_cont
 hypertension
 heart_failure
 ckd

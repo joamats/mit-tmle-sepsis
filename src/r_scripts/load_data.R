@@ -24,10 +24,11 @@ load_data <- function(cohort){
     
     sepsis_data <- sepsis_data %>% mutate(gender = ifelse(gender == "F", 1, 0))
     
-    sepsis_data <- sepsis_data %>% mutate(ventilation_bin = ifelse(InvasiveVent_hr > 0 & !is.na(InvasiveVent_hr), 1, 0))
+    sepsis_data <- sepsis_data %>% mutate(ventilation_bin = ifelse((InvasiveVent_hr > 0 & !is.na(InvasiveVent_hr)) |
+                                                                   (Trach_hr > 0 & !is.na(Trach_hr)), 1, 0))
     sepsis_data <- sepsis_data %>% mutate(pressor = ifelse(pressor=="True", 1, 0))
     sepsis_data <- sepsis_data %>% mutate(rrt = ifelse(is.na(rrt), 0, 1))
-    # sepsis_data <- sepsis_data %>% mutate(blood_yes = ifelse(is.na(transfusion_yes), 0, 1))
+    sepsis_data <- sepsis_data %>% mutate(blood_yes = ifelse(is.na(transfusion_yes), 0, 1))
     sepsis_data <- sepsis_data %>% mutate(death_bin = ifelse(discharge_location == "DIED" | discharge_location == "HOSPICE" | dod != "", 1, 0))
     sepsis_data <- sepsis_data %>% mutate(discharge_hosp = ifelse(discharge_location == "HOSPICE", 1, 0))
     sepsis_data <- sepsis_data %>% mutate(ethnicity_white = ifelse(race == "WHITE" | race == "WHITE - BRAZILIAN" | race == "WHITE - EASTERN EUROPEAN" | race == "WHITE - OTHER EUROPEAN" | race == "WHITE - RUSSIAN" | race == "PORTUGUESE", 1, 0))
