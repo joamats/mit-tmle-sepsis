@@ -77,43 +77,46 @@ load_data <- function(cohort){
 
     # PCO2 is within its physiological range
     sepsis_data$pco2_max[sepsis_data$pco2_max < 0] <- 0
-    sepsis_data$pco2_max[sepsis_data$pco2_max > 1000] <- 0
+    sepsis_data$pco2_max[sepsis_data$pco2_max > 200] <- 0 
     sepsis_data$pco2_max[sepsis_data$pco2_max == 0 |
                          is.na(sepsis_data$pco2_max)] <- 40
 
     # Lactate is within its physiological range
     sepsis_data$lactate_max[sepsis_data$lactate_max < 0] <- 0
-    sepsis_data$lactate_max[sepsis_data$lactate_max > 15] <- 0
+    sepsis_data$lactate_max[sepsis_data$lactate_max > 30] <- 0
     sepsis_data$lactate_max[sepsis_data$lactate_max == 0 |
                             is.na(sepsis_data$lactate_max)] <- 1.05
 
     # Glucose is within its physiological range
     sepsis_data$glucose_max[sepsis_data$glucose_max < 0] <- 0
-    sepsis_data$glucose_max[sepsis_data$glucose_max > 300] <- 0
+    sepsis_data$glucose_max[sepsis_data$glucose_max > 2000] <- 0
     sepsis_data$glucose_max[sepsis_data$glucose_max == 0 |
                             is.na(sepsis_data$glucose_max)] <- 95
 
     # Sodium
     sepsis_data$sodium_min[is.na(sepsis_data$sodium_min)] <- 0
     sepsis_data$sodium_min[sepsis_data$sodium_min < 0] <- 0
-    sepsis_data$sodium_min[sepsis_data$sodium_min > 10] <- 0
+    sepsis_data$sodium_min[sepsis_data$sodium_min > 160] <- 0
     sepsis_data$sodium_min[sepsis_data$sodium_min == 0 |
                            is.na(sepsis_data$sodium_min)] <- 140
 
     # Potassium
-    sepsis_data$potassium_min[sepsis_data$potassium_min < 0] <- 0
-    sepsis_data$potassium_min[sepsis_data$potassium_min > 10] <- 0
-    sepsis_data$potassium_min[sepsis_data$potassium_min == 0 |
-                              is.na(sepsis_data$potassium_min)] <- 3.5
+    sepsis_data$potassium_max[sepsis_data$potassium_max < 0] <- 0
+    sepsis_data$potassium_max[sepsis_data$potassium_max > 9.9] <- 0
+    sepsis_data$potassium_max[sepsis_data$potassium_max == 0 |
+                              is.na(sepsis_data$potassium_max)] <- 3.5
 
     # Cortisol
     sepsis_data$cortisol_min[sepsis_data$cortisol_min < 0] <- 0
-    sepsis_data$cortisol_min[sepsis_data$cortisol_min > 30] <- 0
+    sepsis_data$cortisol_min[sepsis_data$cortisol_min > 70] <- 0
     sepsis_data$cortisol_min[sepsis_data$cortisol_min == 0 |
-                             is.na(sepsis_data$cortisol_min)] <- 10
+                             is.na(sepsis_data$cortisol_min)] <- 20
 
     # Hemoglobin
-    sepsis_data$hemoglobin_min[sepsis_data$hemoglobin_min < 0] <- 0
+    sepsis_data$hemoglobin_min[sepsis_data$hemoglobin_min < 3
+                              & sepsis_data$gender == "M"] <- 13.5
+    sepsis_data$hemoglobin_min[sepsis_data$hemoglobin_min < 3
+                              & sepsis_data$gender == "F"] <- 12 
     sepsis_data$hemoglobin_min[sepsis_data$hemoglobin_min > 30] <- 0
     sepsis_data$hemoglobin_min[(sepsis_data$hemoglobin_min == 0 |
                                 is.na(sepsis_data$hemoglobin_min)) & 
@@ -123,7 +126,7 @@ load_data <- function(cohort){
                                 sepsis_data$gender == "F"] <- 12
     # Fibrinogen
     sepsis_data$fibrinogen_min[sepsis_data$fibrinogen_min < 0] <- 0
-    sepsis_data$fibrinogen_min[sepsis_data$fibrinogen_min > 1000] <- 0
+    sepsis_data$fibrinogen_min[sepsis_data$fibrinogen_min > 1000] <- 400
     sepsis_data$fibrinogen_min[sepsis_data$fibrinogen_min == 0 |
                                is.na(sepsis_data$fibrinogen_min)] <- 200
     # INR
