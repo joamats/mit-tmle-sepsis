@@ -30,7 +30,7 @@ WITH
     GROUP BY stay_id
 )
 
-SELECT icu.*, fluids_table.los_icu, adm.adm_type, adm.adm_elective, pat.anchor_age,pat.anchor_year_group,sf.SOFA,
+SELECT icu.*, fluids_table.los_icu, adm.adm_type, adm.adm_elective, adm.insurance, pat.anchor_age,pat.anchor_year_group,sf.SOFA,
 sf.respiration, sf.coagulation, sf.liver, sf.cardiovascular, sf.cns, sf.renal,
 rrt.rrt, weight.weight_admit,fd_uo.urineoutput,
 charlson.charlson_comorbidity_index, (pressor.stay_id = icu.stay_id) as pressor,ad.discharge_location as discharge_location, pat.dod,
