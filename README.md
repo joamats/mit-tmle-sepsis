@@ -4,8 +4,7 @@ Many interventions in healthcare are still not based on hard evidence and care m
 
 The goal of this project is to investigate disparities between races in critically ill sepsis patients in regard to in-hospital mortality, renal replacement therapy (RRT), vasopressor use (VP), or mechanical ventilation (MV), in cohorts curated from MIMIC IV (2008-2019) and eICU (2014-2015) datasets.
 
-
-## How to run this project 
+## How to run this project
 
 ### 1. Clone this repository
 
@@ -16,6 +15,7 @@ git clone https://github.com/joamats/mit-tmle.git
 ```
 
 ### 2. Install required Packages
+
 #### R scripts
 
 Run the following command:
@@ -27,31 +27,27 @@ source('src\r_scripts\setup\install_packages.R')
 #### Python scripts
 
 Run the following command:
+
 ```sh
 pip install -r src/py_scripts/setup/requirements.txt
 ```
 
 ### 3. Fetch the data
+
 Both MIMIC and eICU data can be found in [PhysioNet](https://physionet.org/), a repository of freely-available medical research data, managed by the MIT Laboratory for Computational Physiology. Due to its sensitive nature, credentialing is required to access both datasets.
 
 Documentation for MIMIC-IV's can be found [here](https://mimic.mit.edu/) and for eICU [here](https://eicu-crd.mit.edu/).
 
 #### Integration with Google Cloud Platform (GCP)
 
-In this section, we explain how to set up GCP and your environment in order to run SQL queries through GCP right from your local Python setting. Follow these steps: 
+In this section, we explain how to set up GCP and your environment in order to run SQL queries through GCP right from your local Python setting. Follow these steps:
 
 1) Create a Google account if you don't have one and go to [Google Cloud Platform](https://console.cloud.google.com/bigquery)
-
 2) Enable the [BigQuery API](https://console.cloud.google.com/apis/api/bigquery.googleapis.com)
-
 3) Create a [Service Account](https://console.cloud.google.com/iam-admin/serviceaccounts), where you can download your JSON keys
-
 4) Place your JSON keys in the parent folder (for example) of your project
-
 5) Create a .env file with the command `cp env.example env `
-
 6) Update your .env file with your ***JSON keys*** path and the ***id*** of your project in BigQuery
-
 
 #### MIMIC-IV
 
@@ -59,16 +55,16 @@ After getting credentialing at PhysioNet, you must sign the data use agreement a
 
 Having all the necessary tables for the cohort generation query in your project, run the following command to fetch the data as a dataframe that will be saved as CSV in your local project. Make sure you have all required files and folders.
 
-
 ```sh
-python3 src/py_scripts/get_data.py --dataset "MIMIC"
+python3 src/py_scripts/get_data.py --sql "src/sql_queries/mimic_table.sql" --destination "data/MIMIC_data.csv"
 ```
 
 ```sh
-python3 src/py_scripts/get_data.py --dataset "eICU"
+python3 src/py_scripts/get_data.py --sql "src/sql_queries/eicu_table.sql" --destination "data/eICU_data.csv"
 ```
 
 And combine both:
+
 ```sh
 source("src/r_scripts/utils/load_data.R")
 ```
@@ -76,7 +72,9 @@ source("src/r_scripts/utils/load_data.R")
 ICD-9 to ICD-10 translation based on this [GitHub Repo](https://github.com/AtlasCUMC/ICD10-ICD9-codes-conversion).
 
 ### 4. Run the different analyses
+
 #### 4.1 Logistic Regression
+
 Fit a logistic regression with the treatment as outcome to assess odd ratios' disparities amongst different ethnicities. Results can be replicated by:
 
 1) Generating CSV files ready for the Stata script, by runnning the command:
@@ -88,14 +86,14 @@ source("src/r_scripts/log_reg/create_csv.R")
 2) Running all the commands of the file **src/stata_scripts/logistic_regression.do** in a licensed version of [Stata](https://www.stata.com/).
 
 #### 4.2 TMLE
+
 Targetted Maximum Likelihood Estimation was used to delineate the average treatment effect for one of the interventions. Data was stratified by race and SOFA category. Running the following command allows to replicate the obtained results.
 
 ```sh
 source("src/r_scripts/tmle.R")
 ```
+
 ## How to contribute
+
 We are actively working on this project.
 Feel free to raise questions opening an issue, to fork this project and submit pull requests!
-
-
-
