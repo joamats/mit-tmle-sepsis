@@ -43,7 +43,7 @@ races <- c("all", "white", "non-white")
 prob_mort_ranges <- read.csv("config/prob_mort_ranges.csv")
 treatments <- read.delim("config/treatments.txt")
 confounders <- read.delim("config/confounders.txt")
-outcome <- "blood_yes"
+outcome <- "mortality_in"
 
 # Dataframe to hold results
 results_df <- data.frame(matrix(ncol=10, nrow=0))
@@ -101,7 +101,7 @@ for (c in cohorts) {
                                        c, r, sev_min, sev_max, results_df)
 
                 # Save Results
-                write.csv(results_df, paste0("results/NEW/blood_", c,".csv"))
+                write.csv(results_df, paste0("results/NEW/TMLE_", c,".csv"))
 
             }
         }           
