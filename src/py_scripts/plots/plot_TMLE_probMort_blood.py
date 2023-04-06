@@ -5,12 +5,12 @@ import seaborn as sb
 import matplotlib
 matplotlib.use('TKAgg')
 
-plot_name = "prob_mort/blood_TMLE_eICU"
+plot_name = "NEW/blood_MIMIC"
 title = "TMLE on blood transfusion, for each invasive treatment\n"
 df = pd.read_csv(f"results/{plot_name}.csv")
 
-conversion_dict = dict(zip(df.sev_start.unique(), range(4)))
-df.sev_start = df.sev_start.apply(lambda x: conversion_dict[x])
+conversion_dict = dict(zip(df.prob_mort_start.unique(), range(4)))
+df.prob_mort_start = df.prob_mort_start.apply(lambda x: conversion_dict[x])
 
 # Transform into percentages
 df.psi = df.psi * 100
@@ -38,14 +38,14 @@ for i, t in enumerate(treatments):
     axes[i].set(xlabel=None)
     axes[i].set(ylabel=None)
     
-    axes[i].errorbar(x=df_temp1.sev_start,
+    axes[i].errorbar(x=df_temp1.prob_mort_start,
                      y=df_temp1.psi,
                      yerr=((df_temp1.psi- df_temp1.i_ci), (df_temp1.s_ci-df_temp1.psi)),
                      fmt='-o', c='dimgray', ecolor='dimgray',
                      elinewidth=.4, linewidth=1.5, capsize=4, markeredgewidth=.4,
                      label="Non-White")
 
-    axes[i].errorbar(x=df_temp2.sev_start,
+    axes[i].errorbar(x=df_temp2.prob_mort_start,
                      y=df_temp2.psi,
                      yerr=((df_temp2.psi- df_temp2.i_ci), (df_temp2.s_ci-df_temp2.psi)),
                      fmt='-o', c='firebrick', ecolor='firebrick', elinewidth=.4,
@@ -62,4 +62,4 @@ for i, t in enumerate(treatments):
 
 fig.supxlabel('\nHospital Mortality Probability')
 
-fig.savefig(f"results/paper/{plot_name}.png", dpi=1000)
+fig.savefig(f"results/{plot_name}.png", dpi=1000)

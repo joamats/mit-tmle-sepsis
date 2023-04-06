@@ -78,10 +78,10 @@ for (c in cohorts) {
 
             print(paste0("Race: ", r))
 
-            if (race == "non-white") {
+            if (r == "non-white") {
                 subset_data <- subset(data, ethnicity_white == 0)
                 
-            } else if (race == "white") {
+            } else if (r == "white") {
                 subset_data <- subset(data, ethnicity_white == 1)
                 
             } # else, nothing because race = "all" needs no further filtering
@@ -98,7 +98,7 @@ for (c in cohorts) {
 
                 # Run TMLE
                 results_df <- run_tmle(subsubset_data, treatment, model_confounders, outcome,
-                                       c, race, sev_min, sev_max, results_df)
+                                       c, r, sev_min, sev_max, results_df)
 
                 # Save Results
                 write.csv(results_df, paste0("results/NEW/TMLE_", c,".csv"))

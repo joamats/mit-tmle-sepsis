@@ -62,11 +62,53 @@ load_data <- function(cohort){
     sepsis_data <- sepsis_data %>% mutate(connective_disease = ifelse(!is.na(connective_disease), 1, 0))
     sepsis_data <- sepsis_data %>% mutate(cad_present = ifelse(!is.na(cad_present), 1, 0))
 
+    # transform CKD stages into binary variable, 1 if CKD stage 3 and greater, 0 otherwise
+    sepsis_data <- sepsis_data %>% mutate(ckd_stages = ifelse(ckd_stages >= 3, 1, 0))
+
     # create dummy vars for conditions POA / source of infection
     sepsis_data <- sepsis_data %>% mutate(pneumonia = ifelse(!is.na(pneumonia), 1, 0))
     sepsis_data <- sepsis_data %>% mutate(uti = ifelse(!is.na(uti), 1, 0))
     sepsis_data <- sepsis_data %>% mutate(biliary = ifelse(!is.na(biliary), 1, 0))
     sepsis_data <- sepsis_data %>% mutate(skin = ifelse(!is.na(skin), 1, 0))
+
+    # clean fluids_volume: if fluids_volume_norm_by_los_icu is over 4000, set it to 4000
+    # and then adjust fluids_volume accordingly, given the los_icu
+    sepsis_data$fluids_volume_norm_by_los_icu[sepsis_data$fluids_volume_norm_by_los_icu > 4000] <- 4000
+    sepsis_data$fluids_volume <- sepsis_data$fluids_volume_norm_by_los_icu * sepsis_data$los_icu
+    # add 0 to fluids_volume if it is NA
+    sepsis_data$fluids_volume[is.na(sepsis_data$fluids_volume)] <- 0
+
+    # MV_time_perc_of_stay: make 0 if na
+    sepsis_data$MV_time_perc_of_stay[is.na(sepsis_data$MV_time_perc_of_stay)] <- 0
+    # VP_time_perc_of_stay: make 0 if na
+    sepsis_data$VP_time_perc_of_stay[is.na(sepsis_data$VP_time_perc_of_stay)] <- 0
+    # RRT_init_offset: make 0 if na
+    sepsis_data$RRT_init_offset_minutes[is.na(sepsis_data$RRT_init_offset_minutes)] <- 0
+
+    # If FiO2 is not available and Oxygen_hr, HighFlow_hr, and NonInvasiveVent_hr are all na, then FiO2 = 21%
+    # i.e, no oxygen therapy at all -> room air
+    sepsis_data$FiO2_mean_24h[is.na(sepsis_data$FiO2_mean_24h) & is.na(sepsis_data$oxygen_hr) &
+                     is.na(sepsis_data$highflow_hr) & is.na(sepsis_data$noninvasivevent_hr) &
+                     is.na(sepsis_data$InvasiveVent_hr) & is.na(sepsis_data$Trach_hr)] <- 21
+
+    # else if FiO2_mean_24h is na, set it to -1 bc we don't know how to impute it
+    sepsis_data$FiO2_mean_24h[is.na(sepsis_data$FiO2_mean_24h)] <- -1
+
+    # if sofa is na impute best case scenario, 0
+    sepsis_data$respiration[is.na(sepsis_data$respiration)] <- 0
+    sepsis_data$coagulation[is.na(sepsis_data$coagulation)] <- 0
+    sepsis_data$cardiovascular[is.na(sepsis_data$cardiovascular)] <- 0
+    sepsis_data$renal[is.na(sepsis_data$renal)] <- 0
+    sepsis_data$cns[is.na(sepsis_data$cns)] <- 0
+    sepsis_data$liver[is.na(sepsis_data$liver)] <- 0
+    sepsis_data$SOFA[is.na(sepsis_data$SOFA)] <- 0
+
+    # dummy for major surgery
+    sepsis_data <- sepsis_data %>% mutate(major_surgery = ifelse(!is.na(major_surgery), 1, 0))
+
+    # encode anchor_year_group by 2008-2010, 2011-2013, 2014-2016, 2017-2019 into 1, 2, 3, 4
+    sepsis_data$anchor_year_group <- as.numeric(sepsis_data$anchor_year_group)
+    
 
     # labs
     # PO2 is within its physiological range
@@ -80,6 +122,12 @@ load_data <- function(cohort){
     sepsis_data$pco2_max[sepsis_data$pco2_max > 200] <- 0 
     sepsis_data$pco2_max[sepsis_data$pco2_max == 0 |
                          is.na(sepsis_data$pco2_max)] <- 40
+
+    # pH is within its physiological range
+    sepsis_data$ph_min[sepsis_data$ph_min < 5] <- 0
+    sepsis_data$ph_min[sepsis_data$ph_min > 10] <- 0
+    sepsis_data$ph_min[sepsis_data$ph_min == 0 |
+                        is.na(sepsis_data$ph_min)] <- 7.35
 
     # Lactate is within its physiological range
     sepsis_data$lactate_max[sepsis_data$lactate_max < 0] <- 0
@@ -120,10 +168,10 @@ load_data <- function(cohort){
     sepsis_data$hemoglobin_min[sepsis_data$hemoglobin_min > 30] <- 0
     sepsis_data$hemoglobin_min[(sepsis_data$hemoglobin_min == 0 |
                                 is.na(sepsis_data$hemoglobin_min)) & 
-                                sepsis_data$gender == "M"] <- 13.5
+                                sepsis_data$gender == 0] <- 13.5
     sepsis_data$hemoglobin_min[(sepsis_data$hemoglobin_min == 0 |
                                 is.na(sepsis_data$hemoglobin_min)) & 
-                                sepsis_data$gender == "F"] <- 12
+                                sepsis_data$gender == 1] <- 12
     # Fibrinogen
     sepsis_data$fibrinogen_min[sepsis_data$fibrinogen_min < 0] <- 0
     sepsis_data$fibrinogen_min[sepsis_data$fibrinogen_min > 1000] <- 400
@@ -134,6 +182,40 @@ load_data <- function(cohort){
     sepsis_data$inr_max[sepsis_data$inr_max > 10] <- 0
     sepsis_data$inr_max[sepsis_data$inr_max == 0 |
                         is.na(sepsis_data$inr_max)] <- 1.1
+
+    # Respiratory rate
+    sepsis_data$resp_rate_mean[sepsis_data$resp_rate_mean < 0] <- 0
+    sepsis_data$resp_rate_mean[sepsis_data$resp_rate_mean > 50] <- 0
+    sepsis_data$resp_rate_mean[sepsis_data$resp_rate_mean == 0 |
+                             is.na(sepsis_data$resp_rate_mean)] <- 15
+    # Heart rate
+    sepsis_data$heart_rate_mean[sepsis_data$heart_rate_mean < 0] <- 0
+    sepsis_data$heart_rate_mean[sepsis_data$heart_rate_mean > 250] <- 0
+    sepsis_data$heart_rate_mean[sepsis_data$heart_rate_mean == 0 |
+                              is.na(sepsis_data$heart_rate_mean)] <- 90
+
+    # MBP
+    sepsis_data$mbp_mean[sepsis_data$mbp_mean < 0] <- 0
+    sepsis_data$mbp_mean[sepsis_data$mbp_mean > 200] <- 0
+    sepsis_data$mbp_mean[sepsis_data$mbp_mean == 0 |
+                         is.na(sepsis_data$mbp_mean)] <- 85
+    # Temperature
+    sepsis_data$temperature_mean[sepsis_data$temperature_mean < 32] <- 0
+    sepsis_data$temperature_mean[sepsis_data$temperature_mean > 45] <- 0
+    sepsis_data$temperature_mean[sepsis_data$temperature_mean == 0 |
+                                is.na(sepsis_data$temperature_mean)] <- 36.5
+
+    # SpO2
+    sepsis_data$spo2_mean[sepsis_data$spo2_mean < 0] <- 0
+    sepsis_data$spo2_mean[sepsis_data$spo2_mean > 100] <- 0
+    sepsis_data$spo2_mean[sepsis_data$spo2_mean == 0 |
+                         is.na(sepsis_data$spo2_mean)] <- 95
+
+    # dummy for complications
+    sepsis_data <- sepsis_data %>% mutate(clabsi = ifelse(is.na(clabsi), 0, 1))
+    sepsis_data <- sepsis_data %>% mutate(cauti = ifelse(is.na(cauti), 0, 1))
+    sepsis_data <- sepsis_data %>% mutate(ssi = ifelse(is.na(ssi), 0, 1))
+    sepsis_data <- sepsis_data %>% mutate(vap = ifelse(is.na(vap), 0, 1))
 
 
   } else if (file_path == "data/eICU_data.csv") {
@@ -187,25 +269,38 @@ load_data <- function(cohort){
   }
 
   # Return just keeping columns of interest
-  return(sepsis_data[, c("gender", "los", "ventilation_bin", "pressor", "rrt", "death_bin", "discharge_hosp", "ethnicity_white", "race",
-                         "charlson_cont", "charlson_comorbidity_index", "anchor_age", "SOFA", "anchor_year_group",
-                         "hypertension", "heart_failure", "ckd", "copd", "asthma", "adm_elective",
-                         "OASIS_W", "OASIS_N", "OASIS_B", "rel_icu", "prob_mort", "blood_yes")])
+  return(sepsis_data[, c("admission_age", "gender", "ethnicity_white",
+                        #  "weight_admit", "insurance", "eng_prof",
+                         "anchor_year_group", 
+                         "adm_elective", "major_surgery", "is_full_code_admission",
+                         "is_full_code_discharge", "prob_mort",
+                         "SOFA", "respiration", "coagulation", "liver", "cardiovascular",
+                         "cns", "renal", "charlson_cont", "MV_time_perc_of_stay", "FiO2_mean_24h",
+                         "RRT_init_offset_minutes", "VP_time_perc_of_stay", "fluids_volume", 
+                         "resp_rate_mean", "mbp_mean", "heart_rate_mean", "temperature_mean",
+                         "spo2_mean", "po2_min", "pco2_max", "ph_min", "lactate_max", "glucose_max",
+                         "sodium_min", "potassium_max", "cortisol_min", "hemoglobin_min",
+                         "fibrinogen_min", "inr_max", "hypertension_present", "heart_failure_present",
+                         "copd_present", "asthma_present", "cad_present", "ckd_stages", "diabetes_types",
+                         "connective_disease", "pneumonia", "uti", "biliary", "skin", "mortality_in",
+                         "blood_yes", "los", "mortality_90", "clabsi", "cauti", "ssi", "vap",
+                         "ventilation_bin", "rrt", "pressor")
+])
 }
 
 get_merged_datasets <- function() {
 
   mimic_data <- load_data("MIMIC")
-  eicu_data <- load_data("eICU")
+  #eicu_data <- load_data("eICU")
   # merge both datasets 
-  data <- combine(mimic_data, eicu_data)
+  #data <- combine(mimic_data, eicu_data)
 
   # add column to keep the cohort source and control for it
-  data <- data %>% mutate(source = ifelse(source == "mimic_data", 1, 0))
+  #data <- data %>% mutate(source = ifelse(source == "mimic_data", 1, 0))
 
   write.csv(mimic_data, "data/MIMIC.csv")
-  write.csv(eicu_data, "data/eICU.csv")
-  write.csv(data, "data/MIMIC_eICU.csv")
+  #write.csv(eicu_data, "data/eICU.csv")
+  #write.csv(data, "data/MIMIC_eICU.csv")
 
   return (data)
 
