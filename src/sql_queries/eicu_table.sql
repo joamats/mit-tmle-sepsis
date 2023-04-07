@@ -35,6 +35,7 @@ electivesurgery_OASIS,
 major_surgery,
 surgical_icu,
 transfusion_yes,
+insulin_yes,
 glucose_max,
 inr_max,
 lactate_max,
@@ -46,7 +47,12 @@ pco2_max,
 po2_min,
 ph_min,
 hemoglobin_min,
-cortisol_min
+cortisol_min,
+heart_rate_mean,
+resp_rate_mean,
+spo2_mean,
+temperature_mean,
+mbp_mean
 
 , CASE
   WHEN codes.first_code IS NULL
@@ -468,44 +474,37 @@ LEFT JOIN(
 AS lab
 ON lab.patientunitstayid = yug.patientunitstayid
 
--- Blood transfusion
+-- grouped vital signs
 LEFT JOIN (
 
-WITH transf AS (
-  SELECT
-      patientunitstayid
-    , intakeoutputoffset
-    , CASE
-        WHEN intakeoutputoffset >= 0     AND intakeoutputoffset < 1440   THEN 1
-        WHEN intakeoutputoffset >= 1440  AND intakeoutputoffset < 1440*2 THEN 2
-      ELSE NULL
-    END AS day
-    , cellvaluenumeric
+SELECT patientunitstayid,
 
-  FROM `physionet-data.eicu_crd.intakeoutput`
+AVG(heartrate) AS heart_rate_mean,
+AVG(respiratoryrate) AS resp_rate_mean,
+AVG(spo2) AS spo2_mean,
+AVG(temperature) AS temperature_mean,
 
-  WHERE celllabel = "Volume (ml)-Transfuse - Leukoreduced Packed RBCs"
-     OR celllabel = "Volume-Transfuse red blood cells"
-     OR LOWER(celllabel) LIKE "%rbc%"
-),
+CASE WHEN MIN(ibp_mean) IS NOT NULL THEN AVG(ibp_mean)
+WHEN MIN(ibp_mean) IS NULL THEN AVG(nibp_mean) 
+END AS mbp_mean
 
-transfusion_overall AS (
+FROM `physionet-data.eicu_crd_derived.pivoted_vital` 
 
-  SELECT
+WHERE chartoffset < 1440
+AND heartrate IS NOT NULL
+OR respiratoryrate IS NOT NULL
+OR spo2 IS NOT NULL
+OR temperature IS NOT NULL
 
-    patientunitstayid
-  , 1 AS transfusion_yes
-
-  FROM transf
-
-  GROUP BY patientunitstayid
+GROUP BY patientunitstayid
 )
+AS vitals
+ON vitals.patientunitstayid = yug.patientunitstayid
 
-SELECT patientunitstayid, transfusion_yes
-  FROM transfusion_overall
-)
-AS pivoted_transfusion
-ON pivoted_transfusion.patientunitstayid = yug.patientunitstayid
+-- Negative control outcomes - blood transfusion and insulin
+LEFT JOIN  `db_name.my_eICU.pivoted_control_outcomes`
+AS controls
+ON controls.patientunitstayid = yug.patientunitstayid
 
 -- add table for code status
 LEFT JOIN(
