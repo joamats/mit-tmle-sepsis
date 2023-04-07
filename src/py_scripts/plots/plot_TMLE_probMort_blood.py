@@ -5,7 +5,7 @@ import seaborn as sb
 import matplotlib
 matplotlib.use('TKAgg')
 
-plot_name = "NEW/blood_MIMIC"
+plot_name = "NEW/blood_yes_MIMIC"
 title = "TMLE on blood transfusion, for each invasive treatment\n"
 df = pd.read_csv(f"results/{plot_name}.csv")
 
