@@ -284,7 +284,7 @@ load_data <- function(cohort){
                          "cns", "renal", "charlson_cont",
                          "MV_time_perc_of_stay", "FiO2_mean_24h","VP_time_perc_of_stay",
                          "MV_init_offset_perc","RRT_init_offset_perc","VP_init_offset_perc",
-                         "fluids_volume_norm_by_los_icu", 
+                         "fluids_volume", 
                          "resp_rate_mean", "mbp_mean", "heart_rate_mean", "temperature_mean",
                          "spo2_mean", "po2_min", "pco2_max", "ph_min", "lactate_max", "glucose_max",
                          "sodium_min", "potassium_max", "cortisol_min", "hemoglobin_min",
