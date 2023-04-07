@@ -14,7 +14,6 @@ WHEN yug.age = "> 89" THEN 91
 ELSE CAST(yug.age AS INT64) 
 END AS anchor_age,
 
-yug.sofa_admit as SOFA, 
 yug.hospitaldischargeyear as anchor_year_group,
 
 -- newly added 
@@ -35,7 +34,19 @@ adm_elective,
 electivesurgery_OASIS,
 major_surgery,
 surgical_icu,
-transfusion_yes
+transfusion_yes,
+glucose_max,
+inr_max,
+lactate_max,
+potassium_max,
+sodium_min,
+fibrinogen_min,
+fio2_avg,
+pco2_max,
+po2_min,
+ph_min,
+hemoglobin_min,
+cortisol_min
 
 , CASE
   WHEN codes.first_code IS NULL
@@ -401,6 +412,61 @@ LEFT JOIN(
 )
 AS hospital
 ON hospital.hospitalid = yug.hospitalid
+
+-- pivoted lab for usual blood tests
+LEFT JOIN(
+  SELECT patientunitstayid,
+  
+  MAX(CASE WHEN 
+  chartoffset < 1440 THEN glucose
+  END) AS glucose_max,
+
+  MAX(CASE WHEN 
+  chartoffset < 1440 THEN INR
+  END) AS inr_max,
+
+  MAX(CASE WHEN 
+  chartoffset < 1440 THEN lactate
+  END) AS lactate_max,
+
+  MAX(CASE WHEN 
+  chartoffset < 1440 THEN potassium
+  END) AS potassium_max,
+
+  CASE WHEN 
+  MAX(chartoffset < 1440) THEN MIN(sodium)
+  END AS sodium_min,
+
+  CASE WHEN 
+  MAX(chartoffset) < 1440 THEN MIN(fibrinogen)
+  END AS fibrinogen_min,
+
+  CASE WHEN 
+  MAX(chartoffset) < 1440 THEN AVG(fio2)
+  END AS fio2_avg,
+
+  CASE WHEN 
+  MAX(chartoffset) < 1440 THEN MAX(pco2)
+  END AS pco2_max,
+
+  CASE WHEN 
+  MAX(chartoffset) < 1440 THEN MIN(pao2)
+  END AS po2_min,
+
+  CASE WHEN 
+  MAX(chartoffset) < 1440 THEN MIN(pH)
+  END AS ph_min,
+
+  MIN(hemoglobin) AS hemoglobin_min,
+  MIN(cortisol) AS cortisol_min,
+
+  FROM `db_name.my_eICU.pivoted_lab`
+
+  GROUP BY patientunitstayid
+  ORDER BY patientunitstayid
+)
+AS lab
+ON lab.patientunitstayid = yug.patientunitstayid
 
 -- Blood transfusion
 LEFT JOIN (
