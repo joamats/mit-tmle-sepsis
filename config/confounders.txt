@@ -2,6 +2,7 @@ confounder
 admission_age
 gender
 ethnicity_white
+insurance
 anchor_year_group
 adm_elective
 major_surgery
@@ -45,3 +46,9 @@ pneumonia
 uti
 biliary
 skin
+FiO2_mean_24h
+MV_time_perc_of_stay
+VP_time_perc_of_stay
+MV_init_offset_perc
+RRT_init_offset_perc
+VP_init_offset_perc

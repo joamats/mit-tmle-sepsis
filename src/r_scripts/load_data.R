@@ -82,8 +82,12 @@ load_data <- function(cohort){
     sepsis_data$MV_time_perc_of_stay[is.na(sepsis_data$MV_time_perc_of_stay)] <- 0
     # VP_time_perc_of_stay: make 0 if na
     sepsis_data$VP_time_perc_of_stay[is.na(sepsis_data$VP_time_perc_of_stay)] <- 0
-    # RRT_init_offset: make 0 if na
-    sepsis_data$RRT_init_offset_minutes[is.na(sepsis_data$RRT_init_offset_minutes)] <- 0
+    # MV_init_offset_perc: make 0 if na
+    sepsis_data$MV_init_offset_perc[is.na(sepsis_data$MV_init_offset_perc)] <- 0
+    # RRT_time_perc_of_stay: make 0 if na
+    sepsis_data$RRT_init_offset_perc[is.na(sepsis_data$RRT_init_offset_perc)] <- 0
+    # VP_init_offset_perc: make 0 if na
+    sepsis_data$VP_init_offset_perc[is.na(sepsis_data$VP_init_offset_perc)] <- 0
 
     # If FiO2 is not available and Oxygen_hr, HighFlow_hr, and NonInvasiveVent_hr are all na, then FiO2 = 21%
     # i.e, no oxygen therapy at all -> room air
@@ -108,7 +112,9 @@ load_data <- function(cohort){
 
     # encode anchor_year_group by 2008-2010, 2011-2013, 2014-2016, 2017-2019 into 1, 2, 3, 4
     sepsis_data$anchor_year_group <- as.numeric(sepsis_data$anchor_year_group)
-    
+
+    # encode insurance as numeric
+    sepsis_data$insurance <- as.numeric(sepsis_data$insurance)    
 
     # labs
     # PO2 is within its physiological range
@@ -269,14 +275,16 @@ load_data <- function(cohort){
   }
 
   # Return just keeping columns of interest
-  return(sepsis_data[, c("admission_age", "gender", "ethnicity_white","death_bin",
-                        #  "weight_admit", "insurance", "eng_prof",
+  return(sepsis_data[, c("admission_age", "gender", "ethnicity_white", "insurance",
+                        #  "weight_admit",  "eng_prof",
                          "anchor_year_group", 
                          "adm_elective", "major_surgery", "is_full_code_admission",
                          "is_full_code_discharge", "prob_mort",
                          "SOFA", "respiration", "coagulation", "liver", "cardiovascular",
-                         "cns", "renal", "charlson_cont", "MV_time_perc_of_stay", "FiO2_mean_24h",
-                         "RRT_init_offset_minutes", "VP_time_perc_of_stay", "fluids_volume", 
+                         "cns", "renal", "charlson_cont",
+                         "MV_time_perc_of_stay", "FiO2_mean_24h","VP_time_perc_of_stay",
+                         "MV_init_offset_perc","RRT_init_offset_perc","VP_init_offset_perc",
+                         "fluids_volume_norm_by_los_icu", 
                          "resp_rate_mean", "mbp_mean", "heart_rate_mean", "temperature_mean",
                          "spo2_mean", "po2_min", "pco2_max", "ph_min", "lactate_max", "glucose_max",
                          "sodium_min", "potassium_max", "cortisol_min", "hemoglobin_min",
