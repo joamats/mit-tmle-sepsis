@@ -39,11 +39,12 @@ run_tmle <- function(data, treatment, confounders, outcome,
 
 # Main
 cohorts <- c("MIMIC")
-races <- c("all", "white", "non-white")
+races <- c("white", "non-white") #"all", 
 prob_mort_ranges <- read.csv("config/prob_mort_ranges.csv")
 treatments <- read.delim("config/treatments.txt")
 confounders <- read.delim("config/confounders.txt")
-outcome <- "mortality_in"
+outcome <- "blood_yes"
+# outcome <- "mortality_in"
 
 # Dataframe to hold results
 results_df <- data.frame(matrix(ncol=10, nrow=0))
@@ -94,14 +95,14 @@ for (c in cohorts) {
                 print(paste0("Stratification by prob_mort: ", sev_min, " - ", sev_max))
 
                 # Stratify by prob_mort
-                subsubset_data <- subset(data, prob_mort >= sev_min & prob_mort < sev_max)
+                subsubset_data <- subset(subset_data, prob_mort >= sev_min & prob_mort < sev_max)
 
                 # Run TMLE
                 results_df <- run_tmle(subsubset_data, treatment, model_confounders, outcome,
                                        c, r, sev_min, sev_max, results_df)
 
                 # Save Results
-                write.csv(results_df, paste0("results/NEW/TMLE_", c,".csv"))
+                write.csv(results_df, paste0("results/NEW/blood_", c,".csv"))
 
             }
         }           

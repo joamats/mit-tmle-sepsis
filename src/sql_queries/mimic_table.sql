@@ -30,19 +30,36 @@ WITH
     GROUP BY stay_id
 )
 
-SELECT icu.*, fluids_table.los_icu, adm.adm_type, adm.adm_elective, pat.anchor_age,pat.anchor_year_group,sf.SOFA,
+SELECT icu.*, fluids_table.los_icu, adm.adm_type, ad.insurance, adm.adm_elective, pat.anchor_age,pat.anchor_year_group,sf.SOFA,
 sf.respiration, sf.coagulation, sf.liver, sf.cardiovascular, sf.cns, sf.renal,
 rrt.rrt, weight.weight_admit,fd_uo.urineoutput,
 charlson.charlson_comorbidity_index, (pressor.stay_id = icu.stay_id) as pressor,ad.discharge_location as discharge_location, pat.dod,
 InvasiveVent.InvasiveVent_hr,Oxygen.Oxygen_hr,HighFlow.HighFlow_hr,NonInvasiveVent.NonInvasiveVent_hr,Trach.Trach_hr, FiO2_mean_24h,
 MV_time_hr/24/icu.los_icu AS MV_time_perc_of_stay, vp_time_hr/24/icu.los_icu AS VP_time_perc_of_stay,
 CASE
-  WHEN TIMESTAMP_DIFF(rrt_time.charttime, icu.admittime, MINUTE) >= 0
-  THEN TIMESTAMP_DIFF(rrt_time.charttime, icu.admittime, MINUTE)
-  WHEN TIMESTAMP_DIFF(rrt_time.charttime, icu.admittime, MINUTE) < 0
+  WHEN TIMESTAMP_DIFF(mv_mtime.starttime, icu.icu_intime, HOUR) >= 0
+  THEN TIMESTAMP_DIFF(mv_mtime.starttime, icu.icu_intime, HOUR)/24/icu.los_icu
+  WHEN TIMESTAMP_DIFF(mv_mtime.starttime, icu.icu_intime, HOUR) < 0
   THEN 0
   ELSE NULL
-END AS RRT_init_offset_minutes,
+END AS MV_init_offset_perc,
+
+CASE
+  WHEN TIMESTAMP_DIFF(rrt_time.charttime, icu.icu_intime, HOUR) >= 0
+  THEN TIMESTAMP_DIFF(rrt_time.charttime, icu.icu_intime, HOUR)/24/icu.los_icu
+  WHEN TIMESTAMP_DIFF(rrt_time.charttime, icu.icu_intime, HOUR) < 0
+  THEN 0
+  ELSE NULL
+END AS RRT_init_offset_perc,
+
+CASE
+  WHEN TIMESTAMP_DIFF(vp_mtime.starttime, icu.icu_intime, HOUR) >= 0
+  THEN TIMESTAMP_DIFF(vp_mtime.starttime, icu.icu_intime, HOUR)/24/icu.los_icu
+  WHEN TIMESTAMP_DIFF(vp_mtime.starttime, icu.icu_intime, HOUR) < 0
+  THEN 0
+  ELSE NULL
+END AS VP_init_offset_perc,
+
 oa.oasis, oa.oasis_prob,
 fluids_volume, fluids_volume_norm_by_los_icu,
 transfusion_yes, major_surgery, resp_rate_mean, mbp_mean, heart_rate_mean, temperature_mean, spo2_mean, first_code, last_code,
@@ -113,12 +130,20 @@ on icu.stay_id = fd_uo.stay_id
 left join (select distinct stay_id, dialysis_present as rrt  from `physionet-data.mimiciv_derived.rrt` where dialysis_present = 1) as rrt
 on icu.stay_id = rrt.stay_id 
 
-left join (select stay_id, max(dialysis_present) as rrt, min(charttime) as charttime
-from `physionet-data.mimiciv_derived.rrt`
-where dialysis_present = 1
-group by stay_id)
-as rrt_time
-on icu.stay_id = rrt_time.stay_id 
+-- RRT initiation offset
+left join (
+  SELECT dia.stay_id,
+  MAX(dialysis_present) AS rrt,
+  MIN(charttime) AS charttime
+  FROM `physionet-data.mimiciv_derived.rrt` dia
+  LEFT JOIN `physionet-data.mimiciv_derived.icustay_detail` icu
+  ON icu.stay_id = dia.stay_id
+  AND TIMESTAMP_DIFF(icu.icu_outtime, charttime, HOUR) > 0 -- to make sure it's within the ICU stay
+  AND TIMESTAMP_DIFF(charttime, icu.icu_intime, HOUR) > 0
+  WHERE dialysis_present = 1
+  GROUP BY stay_id
+) AS rrt_time
+ON icu.stay_id = rrt_time.stay_id 
 
 -- vasopressors
 left join (select distinct stay_id from  `physionet-data.mimiciv_derived.epinephrine`
@@ -130,14 +155,33 @@ union distinct
 select distinct stay_id from  `physionet-data.mimiciv_derived.vasopressin`) as pressor
 on icu.stay_id = pressor.stay_id 
 
+-- for VP percentage of stay
 LEFT JOIN(
   SELECT
-    stay_id
+    nor.stay_id
     , SUM(TIMESTAMP_DIFF(endtime, starttime, HOUR)) AS vp_time_hr
-  FROM `physionet-data.mimiciv_derived.norepinephrine_equivalent_dose`
+  FROM `physionet-data.mimiciv_derived.norepinephrine_equivalent_dose` nor
+  LEFT JOIN `physionet-data.mimiciv_derived.icustay_detail` icu
+  ON icu.stay_id = nor.stay_id
+  AND TIMESTAMP_DIFF(icu.icu_outtime, endtime, HOUR) > 0
+  AND TIMESTAMP_DIFF(starttime, icu.icu_intime, HOUR) > 0
   GROUP BY stay_id
 ) AS vp_time
 ON vp_time.stay_id = icu.stay_id
+
+-- VPs offset initiation
+LEFT JOIN(
+  SELECT
+    nor.stay_id
+    , MIN(starttime) AS starttime
+  FROM `physionet-data.mimiciv_derived.norepinephrine_equivalent_dose` nor
+  LEFT JOIN `physionet-data.mimiciv_derived.icustay_detail` icu
+  ON icu.stay_id = nor.stay_id
+  AND TIMESTAMP_DIFF(icu.icu_outtime, endtime, HOUR) > 0
+  AND TIMESTAMP_DIFF(starttime, icu.icu_intime, HOUR) > 0
+  GROUP BY stay_id
+) AS vp_mtime
+ON vp_mtime.stay_id = icu.stay_id
 
 left join (SELECT stay_id, sum(TIMESTAMP_DIFF(endtime,starttime,HOUR)) as InvasiveVent_hr
 FROM `physionet-data.mimiciv_derived.ventilation` where ventilation_status = "InvasiveVent" group by stay_id) as InvasiveVent
@@ -159,9 +203,33 @@ left join (SELECT stay_id, sum(TIMESTAMP_DIFF(endtime,starttime,HOUR)) as Trach_
 FROM `physionet-data.mimiciv_derived.ventilation` where ventilation_status = "Trach" group by stay_id) as Trach
 on Trach.stay_id = icu.stay_id
 
-left join (SELECT stay_id, sum(TIMESTAMP_DIFF(endtime,starttime,HOUR)) as MV_time_hr
-FROM `physionet-data.mimiciv_derived.ventilation` where (ventilation_status = "Trach" or ventilation_status = "InvasiveVent") group by stay_id) as mv_time
-on mv_time.stay_id = icu.stay_id
+-- for MV perc of stay
+left join (
+  SELECT vent.stay_id,
+  SUM(TIMESTAMP_DIFF(endtime,starttime,HOUR)) as MV_time_hr
+  FROM `physionet-data.mimiciv_derived.ventilation` vent
+  LEFT JOIN `physionet-data.mimiciv_derived.icustay_detail` icu
+  ON icu.stay_id = vent.stay_id
+  AND TIMESTAMP_DIFF(icu.icu_outtime, endtime, HOUR) > 0
+  AND TIMESTAMP_DIFF(starttime, icu.icu_intime, HOUR) > 0
+  WHERE (ventilation_status = "Trach" OR ventilation_status = "InvasiveVent")
+  GROUP BY stay_id
+) AS mv_time
+ON mv_time.stay_id = icu.stay_id
+
+-- for MV initation offset 
+LEFT JOIN (
+  SELECT vent.stay_id, MIN(starttime) as starttime
+  FROM `physionet-data.mimiciv_derived.ventilation` vent
+  LEFT JOIN `physionet-data.mimiciv_derived.icustay_detail` icu
+  ON icu.stay_id = vent.stay_id
+  AND TIMESTAMP_DIFF(icu.icu_outtime, endtime, HOUR) > 0
+  AND TIMESTAMP_DIFF(starttime, icu.icu_intime, HOUR) > 0
+  WHERE (ventilation_status = "Trach" OR ventilation_status = "InvasiveVent")
+  GROUP BY stay_id
+)
+AS mv_mtime
+ON mv_mtime.stay_id = icu.stay_id
 
 -- FiO2 table
 LEFT JOIN fio2_table

@@ -266,7 +266,7 @@ load_data <- function(cohort){
   }
 
   # Return just keeping columns of interest
-  return(sepsis_data[, c("admission_age", "gender", "ethnicity_white",
+  return(sepsis_data[, c("admission_age", "gender", "ethnicity_white","death_bin",
                         #  "weight_admit", "insurance", "eng_prof",
                          "anchor_year_group", 
                          "adm_elective", "major_surgery", "is_full_code_admission",
