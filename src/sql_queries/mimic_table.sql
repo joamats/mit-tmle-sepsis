@@ -30,7 +30,7 @@ WITH
     GROUP BY stay_id
 )
 
-SELECT icu.*, fluids_table.los_icu, adm.adm_type, ad.insurance, adm.adm_elective, pat.anchor_age,pat.anchor_year_group,sf.SOFA,
+SELECT icu.*, fluids_table.los_icu, adm.adm_type, adm.adm_elective, ad.insurance, pat.anchor_age,pat.anchor_year_group,sf.SOFA,
 sf.respiration, sf.coagulation, sf.liver, sf.cardiovascular, sf.cns, sf.renal,
 rrt.rrt, weight.weight_admit,fd_uo.urineoutput,
 charlson.charlson_comorbidity_index, (pressor.stay_id = icu.stay_id) as pressor,ad.discharge_location as discharge_location, pat.dod,
@@ -354,7 +354,14 @@ LEFT JOIN (
             WHEN LOWER(curr_service) LIKE '%surg%' THEN 1
             WHEN curr_service = 'ORTHO' THEN 1
             ELSE NULL END) AS major_surgery
+        
+        , MAX(CASE
+            WHEN first_careunit LIKE  "%SICU%" AND
+            first_careunit NOT LIKE "%MICU/SICU%"  THEN 1
+            ELSE NULL END) AS surgical_icu
+
     FROM mimiciv_icu.icustays ie
+
     LEFT JOIN mimiciv_hosp.services se
         ON ie.hadm_id = se.hadm_id
         AND se.transfertime < DATETIME_ADD(ie.intime, INTERVAL '2' DAY)
@@ -362,7 +369,7 @@ LEFT JOIN (
  )  
   SELECT *
   FROM surgflag
-  WHERE major_surgery = 1
+  WHERE major_surgery = 1 OR surgical_icu = 1
 ) 
 AS ms
 ON ms.stay_id = icu.stay_id

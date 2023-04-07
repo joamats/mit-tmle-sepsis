@@ -33,23 +33,50 @@ temperature_OASIS,
 urineoutput_OASIS,
 adm_elective,
 electivesurgery_OASIS,
+major_surgery,
+surgical_icu,
 transfusion_yes
+
+, CASE
+  WHEN codes.first_code IS NULL
+  OR codes.first_code = "No blood draws" 
+  OR codes.first_code = "No blood products"
+  OR codes.first_code = "Full therapy"
+  THEN 1
+  ELSE 0
+  END AS is_full_code_admission
+  
+, CASE
+  WHEN codes.last_code IS NULL
+  OR codes.last_code = "No blood draws" 
+  OR codes.last_code = "No blood products"
+  OR codes.last_code = "Full therapy"
+  THEN 1
+  ELSE 0
+  END AS is_full_code_discharge
 
 FROM `db_name.my_eICU.yugang` as yug 
 
 -- Pre-ICU stay LOS -> Mapping according to OASIS -> convert from hours to minutes
 LEFT JOIN(
-  SELECT patientunitstayid, CASE
-    WHEN COUNT(hospitaladmitoffset) < (0.17*60) THEN 5
-    WHEN (COUNT(hospitaladmitoffset) >= (0.17*60) OR COUNT(hospitaladmitoffset) <= (4.94*60) ) THEN 3
-    WHEN (COUNT(hospitaladmitoffset) >= (4.94*60) OR COUNT(hospitaladmitoffset) <= (24*60) ) THEN 0
-    WHEN (COUNT(hospitaladmitoffset) >= (24.01*60) OR COUNT(hospitaladmitoffset) <= (311.80*60) ) THEN 2
-    WHEN COUNT(hospitaladmitoffset) > (311.80*60) THEN 1
-    ELSE NULL
-    END AS hospitaladmitoffset_OASIS
+  SELECT patientunitstayid
+  
+  ,CASE
+      WHEN hospitaladmitoffset > (-0.17*60) THEN 5
+      WHEN hospitaladmitoffset BETWEEN (-4.94*60) AND (-0.17*60) THEN 3
+      WHEN hospitaladmitoffset BETWEEN (-24*60) AND (-4.94*60) THEN 0
+      WHEN hospitaladmitoffset BETWEEN (-311.80*60) AND (-24.0*60) THEN 2
+      WHEN hospitaladmitoffset < (-311.80*60) THEN 1
+      ELSE NULL
+      END AS hospitaladmitoffset_OASIS
+
+  , CASE
+    WHEN unittype LIKE "%SICU%" 
+    OR unittype LIKE "%CTICU%" THEN 1
+    ELSE 0
+    END AS surgical_icu
 
   FROM `physionet-data.eicu_crd.patient`
-  GROUP BY patientunitstayid
 )
 AS hospitaladmitoffsetO
 ON hospitaladmitoffsetO.patientunitstayid = yug.patientunitstayid
@@ -176,6 +203,13 @@ LEFT JOIN(
     ELSE 0
     -- Analysed admission table -> In most cases -> if elective surgery is NULL -> there was no surgery or emergency surgery
     END AS electivesurgery_OASIS
+  
+  , CASE
+    WHEN new_elective_surgery = 1 THEN 1
+    WHEN new_elective_surgery = 0 THEN 0
+    WHEN adm_elective = 1 THEN 1
+    ELSE 0
+    END AS major_surgery
 
   FROM `db_name.my_eICU.pivoted_elective`
 )
@@ -360,7 +394,15 @@ LEFT JOIN(
 AS pivoted_med
 ON pivoted_med.patientunitstayid = yug.patientunitstayid
 
+-- hospital table for hospital variables
+LEFT JOIN(
+  SELECT * 
+  FROM `physionet-data.eicu_crd.hospital`
+)
+AS hospital
+ON hospital.hospitalid = yug.hospitalid
 
+-- Blood transfusion
 LEFT JOIN (
 
 WITH transf AS (
@@ -398,6 +440,14 @@ SELECT patientunitstayid, transfusion_yes
 )
 AS pivoted_transfusion
 ON pivoted_transfusion.patientunitstayid = yug.patientunitstayid
+
+-- add table for code status
+LEFT JOIN(
+  SELECT *
+  FROM `db_name.my_eICU.pivoted_codes`
+)
+AS codes
+ON codes.patientunitstayid = yug.patientunitstayid 
 
 /*
 -- exclude non-first stays
