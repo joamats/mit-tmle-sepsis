@@ -62,7 +62,7 @@ END AS VP_init_offset_perc,
 
 oa.oasis, oa.oasis_prob,
 fluids_volume, fluids_volume_norm_by_los_icu,
-transfusion_yes, major_surgery, resp_rate_mean, mbp_mean, heart_rate_mean, temperature_mean, spo2_mean, first_code, last_code,
+transfusion_yes, insulin_yes, major_surgery, resp_rate_mean, mbp_mean, heart_rate_mean, temperature_mean, spo2_mean, first_code, last_code,
 001 AS hospitalid, -- dummy variable for hospitalid in eICU
 ">= 500" AS numbedscategory, -- dummy variable for numbedscategory in eICU
 "true" AS teachingstatus, -- is boolean in eICU
@@ -270,6 +270,22 @@ GROUP BY stay_id
 )
 AS ce
 ON ce.stay_id = icu.stay_id
+
+-- Add insulin transfusion
+LEFT JOIN (
+SELECT cee.stay_id --, amount --, valueuom --itemid
+, max(
+    CASE
+    WHEN cee.itemid IN (223257, 223258, 223259, 223260, 223261, 223262, 229299, 229619) THEN 1
+    ELSE 0
+    END) AS insulin_yes
+FROM  `physionet-data.mimiciv_icu.inputevents` cee
+WHERE itemid IN (223257, 223258, 223259, 223260, 223261, 223262, 229299, 229619)
+and amount is NOT NULL and amount > 0 
+GROUP BY stay_id
+)
+AS cee
+ON cee.stay_id = icu.stay_id
 
 -- Add Lab from original table
 -- minimal whole stay cortisol and hemoglobin
