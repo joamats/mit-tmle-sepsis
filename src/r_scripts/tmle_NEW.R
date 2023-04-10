@@ -39,11 +39,10 @@ run_tmle <- function(data, treatment, confounders, outcome,
 
 # Main
 cohorts <- c("MIMIC")
-races <- c("white", "non-white") #"all", 
+races <- c("white", "non-white") 
 outcomes <- c("blood_yes", "mortality_in")
 prob_mort_ranges <- read.csv("config/prob_mort_ranges.csv")
 treatments <- read.delim("config/treatments.txt")
-confounders <- read.delim("config/confounders.txt")
 
 
 for (c in cohorts) {
@@ -51,6 +50,8 @@ for (c in cohorts) {
 
     # Read Data for this database and cohort
     data <- read.csv(paste0("data/", c, ".csv"))
+
+    confounders <- read.delim(paste0("config/confounders_", c,".txt"))
 
     for (outcome in outcomes) {
         print(paste0("Outcome: ", outcome))
@@ -104,7 +105,7 @@ for (c in cohorts) {
                                         c, r, sev_min, sev_max, results_df)
 
                     # Save Results
-                    write.csv(results_df, paste0("results/NEW/", outcome,"_", c,".csv"))
+                    write.csv(results_df, paste0("results/NEW/", c, "/", outcome, ".csv"))
 
                 }
             }           

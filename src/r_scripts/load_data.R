@@ -69,16 +69,19 @@ load_data <- function(cohort){
 
   # Hemoglobin
   sepsis_data$hemoglobin_min[sepsis_data$hemoglobin_min < 3
-                            & sepsis_data$gender == "M"] <- 13.5
+                            & (sepsis_data$gender == "M" | sepsis_data$gender == "Male" | sepsis_data$gender == 0)] <- 13.5
   sepsis_data$hemoglobin_min[sepsis_data$hemoglobin_min < 3
-                            & sepsis_data$gender == "F"] <- 12 
+                            & (sepsis_data$gender == "F" | sepsis_data$gender == "Female" | sepsis_data$gender == 1)] <- 12 
+
   sepsis_data$hemoglobin_min[sepsis_data$hemoglobin_min > 30] <- 0
+
   sepsis_data$hemoglobin_min[(sepsis_data$hemoglobin_min == 0 |
-                              is.na(sepsis_data$hemoglobin_min)) & 
-                              sepsis_data$gender == 0] <- 13.5
+                              is.na(sepsis_data$hemoglobin_min))
+                              & (sepsis_data$gender == "M" | sepsis_data$gender == "Male" | sepsis_data$gender == 0)] <- 13.5
+
   sepsis_data$hemoglobin_min[(sepsis_data$hemoglobin_min == 0 |
-                              is.na(sepsis_data$hemoglobin_min)) & 
-                              sepsis_data$gender == 1] <- 12
+                              is.na(sepsis_data$hemoglobin_min))
+                              & (sepsis_data$gender == "F" | sepsis_data$gender == "Female" | sepsis_data$gender == 1)] <- 12
   # Fibrinogen
   sepsis_data$fibrinogen_min[sepsis_data$fibrinogen_min < 0] <- 0
   sepsis_data$fibrinogen_min[sepsis_data$fibrinogen_min > 1000] <- 400
@@ -154,6 +157,7 @@ load_data <- function(cohort){
 
   # dummy for major surgery, if = 1, then 1, else 0
   sepsis_data <- sepsis_data %>% mutate(major_surgery = ifelse(major_surgery == 1, 1, 0))
+  sepsis_data <- sepsis_data %>% mutate(major_surgery = ifelse(is.na(major_surgery), 0, 1))
 
   # encode anchor_year_group by: MIMIC, 2008-2010, 2011-2013, 2014-2016, 2017-2019 into 1, 2, 3, 4
   # eICU: 2014 = 0, 2015 = 1
