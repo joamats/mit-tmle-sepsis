@@ -447,25 +447,25 @@ SELECT temp_table.patientunitstayid
       WHEN clabsi_1 IS NOT NULL THEN 1
       WHEN icd_codes LIKE "%T80211%" THEN 1
       ELSE NULL
-  END AS hospital_clabsi
+  END AS clabsi
 
  , CASE 
       WHEN cauti_1 IS NOT NULL THEN 1
       WHEN icd_codes LIKE "%T83511%" THEN 1
       ELSE NULL
-  END AS hospital_cauti
+  END AS cauti
 
  , CASE 
       WHEN ssi_1 IS NOT NULL THEN 1
       WHEN icd_codes LIKE "%T814%" THEN 1
       ELSE NULL
-  END AS hospital_ssi
+  END AS ssi
 
  , CASE 
       WHEN vap_1 IS NOT NULL THEN 1
       WHEN icd_codes LIKE "%J95851%" THEN 1
       ELSE NULL
-  END AS hospital_vap 
+  END AS vap 
 
 
   FROM temp_table
