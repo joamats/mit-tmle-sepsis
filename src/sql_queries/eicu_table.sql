@@ -63,7 +63,23 @@ heart_rate_mean,
 resp_rate_mean,
 spo2_mean,
 temperature_mean,
-mbp_mean
+mbp_mean,
+pneumonia,
+uti,
+biliary,
+skin,
+clabsi,
+cauti,
+ssi,
+vap,
+hypertension_present,
+heart_failure_present,
+copd_present,
+asthma_present,
+cad_present,
+ckd_stages,
+diabetes_types,
+connective_disease
 
 , CASE
   WHEN codes.first_code IS NULL
@@ -364,6 +380,11 @@ LEFT JOIN(
 )
 AS codes
 ON codes.patientunitstayid = yug.patientunitstayid 
+
+-- add pivoted table for comorbidities
+LEFT JOIN `db_name.my_eICU.pivoted_comorbidities`
+AS comorbidities
+ON comorbidities.patientunitstayid = yug.patientunitstayid
 
 /*
 -- exclude non-first stays

@@ -118,6 +118,50 @@ load_data <- function(cohort){
   sepsis_data$spo2_mean[sepsis_data$spo2_mean == 0 |
                         is.na(sepsis_data$spo2_mean)] <- 95
 
+  # dummy for complications
+  sepsis_data <- sepsis_data %>% mutate(clabsi = ifelse(is.na(clabsi), 0, 1))
+  sepsis_data <- sepsis_data %>% mutate(cauti = ifelse(is.na(cauti), 0, 1))
+  sepsis_data <- sepsis_data %>% mutate(ssi = ifelse(is.na(ssi), 0, 1))
+  sepsis_data <- sepsis_data %>% mutate(vap = ifelse(is.na(vap), 0, 1))
+
+  # create dummy vars for comorbidities
+  sepsis_data <- sepsis_data %>% mutate(hypertension_present = ifelse(!is.na(hypertension_present), 1, 0))
+  sepsis_data <- sepsis_data %>% mutate(heart_failure_present = ifelse(!is.na(heart_failure_present), 1, 0))
+  sepsis_data <- sepsis_data %>% mutate(ckd_stages = ifelse(!is.na(ckd_stages), ckd_stages, 0))
+  sepsis_data <- sepsis_data %>% mutate(copd_present = ifelse(!is.na(copd_present), 1, 0))
+  sepsis_data <- sepsis_data %>% mutate(asthma_present = ifelse(!is.na(asthma_present), 1, 0))
+  sepsis_data <- sepsis_data %>% mutate(diabetes_types = ifelse(!is.na(diabetes_types), 1, 0))
+  sepsis_data <- sepsis_data %>% mutate(connective_disease = ifelse(!is.na(connective_disease), 1, 0))
+  sepsis_data <- sepsis_data %>% mutate(cad_present = ifelse(!is.na(cad_present), 1, 0))
+
+  # transform CKD stages into binary variable, 1 if CKD stage 3 and greater, 0 otherwise
+  sepsis_data <- sepsis_data %>% mutate(ckd_stages = ifelse(ckd_stages >= 3, 1, 0))
+
+  # create dummy vars for conditions POA / source of infection
+  sepsis_data <- sepsis_data %>% mutate(pneumonia = ifelse(!is.na(pneumonia), 1, 0))
+  sepsis_data <- sepsis_data %>% mutate(uti = ifelse(!is.na(uti), 1, 0))
+  sepsis_data <- sepsis_data %>% mutate(biliary = ifelse(!is.na(biliary), 1, 0))
+  sepsis_data <- sepsis_data %>% mutate(skin = ifelse(!is.na(skin), 1, 0))
+
+  # if sofa is na impute best case scenario, 0
+  sepsis_data$respiration[is.na(sepsis_data$respiration)] <- 0
+  sepsis_data$coagulation[is.na(sepsis_data$coagulation)] <- 0
+  sepsis_data$cardiovascular[is.na(sepsis_data$cardiovascular)] <- 0
+  sepsis_data$renal[is.na(sepsis_data$renal)] <- 0
+  sepsis_data$cns[is.na(sepsis_data$cns)] <- 0
+  sepsis_data$liver[is.na(sepsis_data$liver)] <- 0
+  sepsis_data$SOFA[is.na(sepsis_data$SOFA)] <- 0
+
+  # dummy for major surgery
+  sepsis_data <- sepsis_data %>% mutate(major_surgery = ifelse(!is.na(major_surgery), 1, 0))
+
+  # encode anchor_year_group by: MIMIC, 2008-2010, 2011-2013, 2014-2016, 2017-2019 into 1, 2, 3, 4
+  # eICU: 2014 = 0, 2015 = 1
+  sepsis_data$anchor_year_group <- as.numeric(sepsis_data$anchor_year_group)
+
+  sepsis_data <- sepsis_data %>% mutate(blood_yes = ifelse(is.na(transfusion_yes), 0, 1))
+
+
 
   if (file_path == "data/MIMIC_data.csv") {
 
@@ -133,7 +177,6 @@ load_data <- function(cohort){
                                                                    (Trach_hr > 0 & !is.na(Trach_hr)), 1, 0))
     sepsis_data <- sepsis_data %>% mutate(pressor = ifelse(pressor=="True", 1, 0))
     sepsis_data <- sepsis_data %>% mutate(rrt = ifelse(is.na(rrt), 0, 1))
-    sepsis_data <- sepsis_data %>% mutate(blood_yes = ifelse(is.na(transfusion_yes), 0, 1))
 
     sepsis_data <- sepsis_data %>% mutate(discharge_hosp = ifelse(discharge_location == "HOSPICE", 1, 0))
     sepsis_data <- sepsis_data %>% mutate(ethnicity_white = ifelse(race == "WHITE" | race == "WHITE - BRAZILIAN" | race == "WHITE - EASTERN EUROPEAN" | race == "WHITE - OTHER EUROPEAN" | race == "WHITE - RUSSIAN" | race == "PORTUGUESE", 1, 0))
@@ -157,25 +200,6 @@ load_data <- function(cohort){
 
     # rename oasis_prob into prob_mort
     sepsis_data <- sepsis_data %>% rename(prob_mort = oasis_prob)
-
-    # create dummy vars for comorbidities
-    sepsis_data <- sepsis_data %>% mutate(hypertension_present = ifelse(!is.na(hypertension_present), 1, 0))
-    sepsis_data <- sepsis_data %>% mutate(heart_failure_present = ifelse(!is.na(heart_failure_present), 1, 0))
-    sepsis_data <- sepsis_data %>% mutate(ckd_stages = ifelse(!is.na(ckd_stages), ckd_stages, 0))
-    sepsis_data <- sepsis_data %>% mutate(copd_present = ifelse(!is.na(copd_present), 1, 0))
-    sepsis_data <- sepsis_data %>% mutate(asthma_present = ifelse(!is.na(asthma_present), 1, 0))
-    sepsis_data <- sepsis_data %>% mutate(diabetes_types = ifelse(!is.na(diabetes_types), 1, 0))
-    sepsis_data <- sepsis_data %>% mutate(connective_disease = ifelse(!is.na(connective_disease), 1, 0))
-    sepsis_data <- sepsis_data %>% mutate(cad_present = ifelse(!is.na(cad_present), 1, 0))
-
-    # transform CKD stages into binary variable, 1 if CKD stage 3 and greater, 0 otherwise
-    sepsis_data <- sepsis_data %>% mutate(ckd_stages = ifelse(ckd_stages >= 3, 1, 0))
-
-    # create dummy vars for conditions POA / source of infection
-    sepsis_data <- sepsis_data %>% mutate(pneumonia = ifelse(!is.na(pneumonia), 1, 0))
-    sepsis_data <- sepsis_data %>% mutate(uti = ifelse(!is.na(uti), 1, 0))
-    sepsis_data <- sepsis_data %>% mutate(biliary = ifelse(!is.na(biliary), 1, 0))
-    sepsis_data <- sepsis_data %>% mutate(skin = ifelse(!is.na(skin), 1, 0))
 
     # clean fluids_volume: if fluids_volume_norm_by_los_icu is over 4000, set it to 4000
     # and then adjust fluids_volume accordingly, given the los_icu
@@ -204,31 +228,29 @@ load_data <- function(cohort){
     # else if FiO2_mean_24h is na, set it to -1 bc we don't know how to impute it
     sepsis_data$FiO2_mean_24h[is.na(sepsis_data$FiO2_mean_24h)] <- -1
 
-    # if sofa is na impute best case scenario, 0
-    sepsis_data$respiration[is.na(sepsis_data$respiration)] <- 0
-    sepsis_data$coagulation[is.na(sepsis_data$coagulation)] <- 0
-    sepsis_data$cardiovascular[is.na(sepsis_data$cardiovascular)] <- 0
-    sepsis_data$renal[is.na(sepsis_data$renal)] <- 0
-    sepsis_data$cns[is.na(sepsis_data$cns)] <- 0
-    sepsis_data$liver[is.na(sepsis_data$liver)] <- 0
-    sepsis_data$SOFA[is.na(sepsis_data$SOFA)] <- 0
-
-    # dummy for major surgery
-    sepsis_data <- sepsis_data %>% mutate(major_surgery = ifelse(!is.na(major_surgery), 1, 0))
-
-    # encode anchor_year_group by 2008-2010, 2011-2013, 2014-2016, 2017-2019 into 1, 2, 3, 4
-    sepsis_data$anchor_year_group <- as.numeric(sepsis_data$anchor_year_group)
-
     # encode insurance as numeric
     sepsis_data$insurance <- as.numeric(sepsis_data$insurance)    
 
-
-
-    # dummy for complications
-    sepsis_data <- sepsis_data %>% mutate(clabsi = ifelse(is.na(clabsi), 0, 1))
-    sepsis_data <- sepsis_data %>% mutate(cauti = ifelse(is.na(cauti), 0, 1))
-    sepsis_data <- sepsis_data %>% mutate(ssi = ifelse(is.na(ssi), 0, 1))
-    sepsis_data <- sepsis_data %>% mutate(vap = ifelse(is.na(vap), 0, 1))
+    # Return just keeping columns of interest
+    return(sepsis_data[, c("admission_age", "gender", "ethnicity_white", "insurance",
+                          #  "weight_admit",  "eng_prof",
+                          "anchor_year_group", 
+                          "adm_elective", "major_surgery", "is_full_code_admission",
+                          "is_full_code_discharge", "prob_mort",
+                          "SOFA", "respiration", "coagulation", "liver", "cardiovascular",
+                          "cns", "renal", "charlson_cont",
+                          "MV_time_perc_of_stay", "FiO2_mean_24h","VP_time_perc_of_stay",
+                          "MV_init_offset_perc","RRT_init_offset_perc","VP_init_offset_perc",
+                          "fluids_volume", 
+                          "resp_rate_mean", "mbp_mean", "heart_rate_mean", "temperature_mean",
+                          "spo2_mean", "po2_min", "pco2_max", "ph_min", "lactate_max", "glucose_max",
+                          "sodium_min", "potassium_max", "cortisol_min", "hemoglobin_min",
+                          "fibrinogen_min", "inr_max", "hypertension_present", "heart_failure_present",
+                          "copd_present", "asthma_present", "cad_present", "ckd_stages", "diabetes_types",
+                          "connective_disease", "pneumonia", "uti", "biliary", "skin", "mortality_in",
+                          "blood_yes", "los", "mortality_90", "clabsi", "cauti", "ssi", "vap",
+                          "mech_vent", "rrt", "pressor")
+  ])
 
 
   } else if (file_path == "data/eICU_data.csv") {
@@ -240,7 +262,6 @@ load_data <- function(cohort){
 
     sepsis_data <- sepsis_data %>% mutate(gender = ifelse(gender == "Female", 1, 0))
 
-    sepsis_data <- sepsis_data %>% mutate(blood_yes = ifelse(is.na(transfusion_yes), 0, 1))
     sepsis_data <- sepsis_data %>% mutate(death_bin = ifelse(unitdischargelocation == "Death" | unitdischargestatus == "Expired" | hospitaldischargestatus == "Expired", 1, 0))
     # Rename death_bin to mortality_in
     sepsis_data <- sepsis_data %>% rename(mortality_in = death_bin)
@@ -259,12 +280,6 @@ load_data <- function(cohort){
     
     sepsis_data$los <- (sepsis_data$hospitaldischargeoffset/1440) # Generate eICU Lenght of stay
 
-    sepsis_data <- sepsis_data %>% mutate(hypertension = ifelse(!is.na(hypertension), 1, 0))
-    sepsis_data <- sepsis_data %>% mutate(heart_failure = ifelse(!is.na(heart_failure), 1, 0))
-    sepsis_data <- sepsis_data %>% mutate(ckd = ifelse(!is.na(ckd), ckd, 0))
-    sepsis_data <- sepsis_data %>% mutate(copd = ifelse(!is.na(copd), 1, 0))
-    sepsis_data <- sepsis_data %>% mutate(asthma = ifelse(!is.na(asthma), 1, 0))
-
     sepsis_data$OASIS_W <- sepsis_data$score_OASIS_W      # worst case scenario
     sepsis_data$OASIS_N <- sepsis_data$score_OASIS_Nulls  # embracing the nulls
     sepsis_data$OASIS_B <- sepsis_data$score_OASIS_B      # best case scenario
@@ -276,38 +291,36 @@ load_data <- function(cohort){
     # rename apache_pred_hosp_mort into prob_mort
     sepsis_data <- sepsis_data %>% rename(prob_mort = apache_pred_hosp_mort)
 
+    # Return just keeping columns of interest
+    return(sepsis_data[, c("admission_age", "gender", "ethnicity_white", 
+                          #  "weight_admit",  "eng_prof",
+                          "anchor_year_group", 
+                          "adm_elective", "major_surgery", "is_full_code_admission",
+                          "is_full_code_discharge", "prob_mort",
+                          "SOFA", "respiration", "coagulation", "liver", "cardiovascular",
+                          "cns", "renal", "charlson_cont",
+                          "resp_rate_mean", "mbp_mean", "heart_rate_mean", "temperature_mean",
+                          "spo2_mean", "po2_min", "pco2_max", "ph_min", "lactate_max", "glucose_max",
+                          "sodium_min", "potassium_max", "cortisol_min", "hemoglobin_min",
+                          "fibrinogen_min", "inr_max", "hypertension_present", "heart_failure_present",
+                          "copd_present", "asthma_present", "cad_present", "ckd_stages", "diabetes_types",
+                          "connective_disease", "pneumonia", "uti", "biliary", "skin", "mortality_in",
+                          "blood_yes", "los", "clabsi", "cauti", "ssi", "vap",
+                          "mech_vent", "rrt", "pressor")
+  ])
+
 
   } else {
     print("Wrong path or file name.")
   }
 
-
-  # Return just keeping columns of interest
-  return(sepsis_data[, c("admission_age", "gender", "ethnicity_white", "insurance",
-                        #  "weight_admit",  "eng_prof",
-                         "anchor_year_group", 
-                         "adm_elective", "major_surgery", "is_full_code_admission",
-                         "is_full_code_discharge", "prob_mort",
-                         "SOFA", "respiration", "coagulation", "liver", "cardiovascular",
-                         "cns", "renal", "charlson_cont",
-                         "MV_time_perc_of_stay", "FiO2_mean_24h","VP_time_perc_of_stay",
-                         "MV_init_offset_perc","RRT_init_offset_perc","VP_init_offset_perc",
-                         "fluids_volume", 
-                         "resp_rate_mean", "mbp_mean", "heart_rate_mean", "temperature_mean",
-                         "spo2_mean", "po2_min", "pco2_max", "ph_min", "lactate_max", "glucose_max",
-                         "sodium_min", "potassium_max", "cortisol_min", "hemoglobin_min",
-                         "fibrinogen_min", "inr_max", "hypertension_present", "heart_failure_present",
-                         "copd_present", "asthma_present", "cad_present", "ckd_stages", "diabetes_types",
-                         "connective_disease", "pneumonia", "uti", "biliary", "skin", "mortality_in",
-                         "blood_yes", "los", "mortality_90", "clabsi", "cauti", "ssi", "vap",
-                         "mech_vent", "rrt", "pressor")
-])
+  
 }
 
 get_merged_datasets <- function() {
 
   mimic_data <- load_data("MIMIC")
-  #eicu_data <- load_data("eICU")
+  eicu_data <- load_data("eICU")
   # merge both datasets 
   #data <- combine(mimic_data, eicu_data)
 
@@ -315,7 +328,7 @@ get_merged_datasets <- function() {
   #data <- data %>% mutate(source = ifelse(source == "mimic_data", 1, 0))
 
   write.csv(mimic_data, "data/MIMIC.csv")
-  #write.csv(eicu_data, "data/eICU.csv")
+  write.csv(eicu_data, "data/eICU.csv")
   #write.csv(data, "data/MIMIC_eICU.csv")
 
   return (data)
