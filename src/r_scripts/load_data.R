@@ -152,15 +152,14 @@ load_data <- function(cohort){
   sepsis_data$liver[is.na(sepsis_data$liver)] <- 0
   sepsis_data$SOFA[is.na(sepsis_data$SOFA)] <- 0
 
-  # dummy for major surgery
-  sepsis_data <- sepsis_data %>% mutate(major_surgery = ifelse(!is.na(major_surgery), 1, 0))
+  # dummy for major surgery, if = 1, then 1, else 0
+  sepsis_data <- sepsis_data %>% mutate(major_surgery = ifelse(major_surgery == 1, 1, 0))
 
   # encode anchor_year_group by: MIMIC, 2008-2010, 2011-2013, 2014-2016, 2017-2019 into 1, 2, 3, 4
   # eICU: 2014 = 0, 2015 = 1
   sepsis_data$anchor_year_group <- as.numeric(sepsis_data$anchor_year_group)
 
   sepsis_data <- sepsis_data %>% mutate(blood_yes = ifelse(is.na(transfusion_yes), 0, 1))
-
 
 
   if (file_path == "data/MIMIC_data.csv") {
@@ -276,6 +275,9 @@ load_data <- function(cohort){
           charlson_comorbidity_index >= 11 & charlson_comorbidity_index <= 15, "11 - 15", "16 and above"))))
 
     sepsis_data <- sepsis_data %>% mutate(anchor_age = ifelse(anchor_age == "> 89", 91, strtoi(anchor_age)))
+    # rename into admission_age
+    sepsis_data <- sepsis_data %>% rename(admission_age = anchor_age)
+
     sepsis_data <- sepsis_data %>% mutate(anchor_year_group = as.character(anchor_year_group))
     
     sepsis_data$los <- (sepsis_data$hospitaldischargeoffset/1440) # Generate eICU Lenght of stay
