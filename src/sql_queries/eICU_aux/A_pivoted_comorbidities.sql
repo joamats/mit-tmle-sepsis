@@ -295,7 +295,7 @@ SELECT temp_table.patientunitstayid
     OR icd_codes LIKE "%I16%"
     OR icd_codes LIKE "%I70%"
     THEN 1
-    ELSE 0
+    ELSE NULL
     END AS hypertension_present
 
   , CASE 
@@ -308,7 +308,7 @@ SELECT temp_table.patientunitstayid
     OR icd_codes LIKE "%I43%"
     OR icd_codes LIKE "%I517%"
     THEN 1
-    ELSE 0
+    ELSE NULL
     END AS heart_failure_present
 
   , CASE 
@@ -316,7 +316,7 @@ SELECT temp_table.patientunitstayid
     OR asthma_2 IS NOT NULL
     OR icd_codes LIKE "%J841%"
     THEN 1
-    ELSE 0
+    ELSE NULL
     END AS asthma_present
 
   , CASE 
@@ -330,7 +330,7 @@ SELECT temp_table.patientunitstayid
     OR icd_codes LIKE "%J46%"
     OR icd_codes LIKE "%J47%"
     THEN 1
-    ELSE 0
+    ELSE NULL
     END AS copd_present
 
   , CASE 
@@ -343,7 +343,7 @@ SELECT temp_table.patientunitstayid
     OR icd_codes LIKE "%I24%"
     OR icd_codes LIKE "%I25%"
     THEN 1
-    ELSE 0
+    ELSE NULL
     END AS cad_present
 
   , CASE 
@@ -367,7 +367,7 @@ SELECT temp_table.patientunitstayid
       OR icd_codes LIKE "%N185%"
       OR icd_codes LIKE "%N186%"
     THEN 5
-    ELSE 0
+    ELSE NULL
     END AS ckd_stages
 
   , CASE 
@@ -381,7 +381,7 @@ SELECT temp_table.patientunitstayid
       OR diabetes_3 IS NOT NULL
       OR icd_codes LIKE "%E11%"
     THEN 2
-    ELSE 0
+    ELSE NULL
     END AS diabetes_types
 
 -- connective tissue disease as defined in Elixhauser comorbidity score
@@ -408,7 +408,7 @@ SELECT temp_table.patientunitstayid
       WHEN icd_codes LIKE "%M461%" THEN 1
       WHEN icd_codes LIKE "%M468%" THEN 1
       WHEN icd_codes LIKE "%M469%" THEN 1
-    ELSE 0
+    ELSE NULL
   END AS connective_disease
 -- connective tissue disease as defined in Elixhauser comorbidity score  
 
@@ -418,14 +418,14 @@ SELECT temp_table.patientunitstayid
       WHEN icd_codes LIKE "%J1%" THEN 1
       WHEN icd_codes LIKE "%J85%" THEN 1
       WHEN icd_codes LIKE "%J86%" THEN 1
-      ELSE 0
+      ELSE NULL
   END AS pneumonia  
 
   ,CASE 
       WHEN uti_1 IS NOT NULL THEN 1
       WHEN icd_codes LIKE "%N300%" THEN 1
       WHEN icd_codes LIKE "%N390%" THEN 1       
-      ELSE 0
+      ELSE NULL
   END AS uti
 
   ,CASE 
@@ -433,38 +433,38 @@ SELECT temp_table.patientunitstayid
       WHEN icd_codes LIKE "%K81%" THEN 1
       WHEN icd_codes LIKE "%K830%" THEN 1
       WHEN icd_codes LIKE "%K851%" THEN 1  
-      ELSE 0
+      ELSE NULL
   END AS biliary
 
   ,CASE      
       WHEN skin_1 IS NOT NULL THEN 1
       WHEN icd_codes LIKE "%L0%" THEN 1       
-      ELSE 0
+      ELSE NULL
   END AS skin
 
 -- hospital acquired infections 
    , CASE 
       WHEN clabsi_1 IS NOT NULL THEN 1
       WHEN icd_codes LIKE "%T80211%" THEN 1
-      ELSE 0
+      ELSE NULL
   END AS hospital_clabsi
 
  , CASE 
       WHEN cauti_1 IS NOT NULL THEN 1
       WHEN icd_codes LIKE "%T83511%" THEN 1
-      ELSE 0
+      ELSE NULL
   END AS hospital_cauti
 
  , CASE 
       WHEN ssi_1 IS NOT NULL THEN 1
       WHEN icd_codes LIKE "%T814%" THEN 1
-      ELSE 0
+      ELSE NULL
   END AS hospital_ssi
 
  , CASE 
       WHEN vap_1 IS NOT NULL THEN 1
       WHEN icd_codes LIKE "%J95851%" THEN 1
-      ELSE 0
+      ELSE NULL
   END AS hospital_vap 
 
 

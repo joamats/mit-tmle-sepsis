@@ -9,13 +9,115 @@ load_data <- function(cohort){
   # Load Data  
   sepsis_data <- read.csv(file_path, header = TRUE, stringsAsFactors = TRUE)
 
-  ventilation_bin <- sepsis_data[, c(1)] 
   death_bin <- sepsis_data[, c(1)]
   discharge_hosp <- sepsis_data[, c(1)]
   ethnicity_white <- sepsis_data[, c(1)]
   blood_yes <- sepsis_data[, c(1)]
 
-  sepsis_data <- cbind(sepsis_data, ventilation_bin, death_bin, discharge_hosp, ethnicity_white, blood_yes)
+  sepsis_data <- cbind(sepsis_data, death_bin, discharge_hosp, ethnicity_white, blood_yes)
+
+  # Common data cleaning steps
+  # labs
+  # PO2 is within its physiological range
+  sepsis_data$po2_min[sepsis_data$po2_min < 0] <- 0
+  sepsis_data$po2_min[sepsis_data$po2_min > 1000] <- 0
+  sepsis_data$po2_min[sepsis_data$po2_min == 0 |
+                      is.na(sepsis_data$po2_min)] <- 90
+
+  # PCO2 is within its physiological range
+  sepsis_data$pco2_max[sepsis_data$pco2_max < 0] <- 0
+  sepsis_data$pco2_max[sepsis_data$pco2_max > 200] <- 0 
+  sepsis_data$pco2_max[sepsis_data$pco2_max == 0 |
+                        is.na(sepsis_data$pco2_max)] <- 40
+
+  # pH is within its physiological range
+  sepsis_data$ph_min[sepsis_data$ph_min < 5] <- 0
+  sepsis_data$ph_min[sepsis_data$ph_min > 10] <- 0
+  sepsis_data$ph_min[sepsis_data$ph_min == 0 |
+                      is.na(sepsis_data$ph_min)] <- 7.35
+
+  # Lactate is within its physiological range
+  sepsis_data$lactate_max[sepsis_data$lactate_max < 0] <- 0
+  sepsis_data$lactate_max[sepsis_data$lactate_max > 30] <- 0
+  sepsis_data$lactate_max[sepsis_data$lactate_max == 0 |
+                          is.na(sepsis_data$lactate_max)] <- 1.05
+
+  # Glucose is within its physiological range
+  sepsis_data$glucose_max[sepsis_data$glucose_max < 0] <- 0
+  sepsis_data$glucose_max[sepsis_data$glucose_max > 2000] <- 0
+  sepsis_data$glucose_max[sepsis_data$glucose_max == 0 |
+                          is.na(sepsis_data$glucose_max)] <- 95
+
+  # Sodium
+  sepsis_data$sodium_min[is.na(sepsis_data$sodium_min)] <- 0
+  sepsis_data$sodium_min[sepsis_data$sodium_min < 0] <- 0
+  sepsis_data$sodium_min[sepsis_data$sodium_min > 160] <- 0
+  sepsis_data$sodium_min[sepsis_data$sodium_min == 0 |
+                          is.na(sepsis_data$sodium_min)] <- 140
+
+  # Potassium
+  sepsis_data$potassium_max[sepsis_data$potassium_max < 0] <- 0
+  sepsis_data$potassium_max[sepsis_data$potassium_max > 9.9] <- 0
+  sepsis_data$potassium_max[sepsis_data$potassium_max == 0 |
+                            is.na(sepsis_data$potassium_max)] <- 3.5
+
+  # Cortisol
+  sepsis_data$cortisol_min[sepsis_data$cortisol_min < 0] <- 0
+  sepsis_data$cortisol_min[sepsis_data$cortisol_min > 70] <- 0
+  sepsis_data$cortisol_min[sepsis_data$cortisol_min == 0 |
+                            is.na(sepsis_data$cortisol_min)] <- 20
+
+  # Hemoglobin
+  sepsis_data$hemoglobin_min[sepsis_data$hemoglobin_min < 3
+                            & sepsis_data$gender == "M"] <- 13.5
+  sepsis_data$hemoglobin_min[sepsis_data$hemoglobin_min < 3
+                            & sepsis_data$gender == "F"] <- 12 
+  sepsis_data$hemoglobin_min[sepsis_data$hemoglobin_min > 30] <- 0
+  sepsis_data$hemoglobin_min[(sepsis_data$hemoglobin_min == 0 |
+                              is.na(sepsis_data$hemoglobin_min)) & 
+                              sepsis_data$gender == 0] <- 13.5
+  sepsis_data$hemoglobin_min[(sepsis_data$hemoglobin_min == 0 |
+                              is.na(sepsis_data$hemoglobin_min)) & 
+                              sepsis_data$gender == 1] <- 12
+  # Fibrinogen
+  sepsis_data$fibrinogen_min[sepsis_data$fibrinogen_min < 0] <- 0
+  sepsis_data$fibrinogen_min[sepsis_data$fibrinogen_min > 1000] <- 400
+  sepsis_data$fibrinogen_min[sepsis_data$fibrinogen_min == 0 |
+                              is.na(sepsis_data$fibrinogen_min)] <- 200
+  # INR
+  sepsis_data$inr_max[sepsis_data$inr_max < 0] <- 0
+  sepsis_data$inr_max[sepsis_data$inr_max > 10] <- 0
+  sepsis_data$inr_max[sepsis_data$inr_max == 0 |
+                      is.na(sepsis_data$inr_max)] <- 1.1
+
+  # Respiratory rate
+  sepsis_data$resp_rate_mean[sepsis_data$resp_rate_mean < 0] <- 0
+  sepsis_data$resp_rate_mean[sepsis_data$resp_rate_mean > 50] <- 0
+  sepsis_data$resp_rate_mean[sepsis_data$resp_rate_mean == 0 |
+                            is.na(sepsis_data$resp_rate_mean)] <- 15
+  # Heart rate
+  sepsis_data$heart_rate_mean[sepsis_data$heart_rate_mean < 0] <- 0
+  sepsis_data$heart_rate_mean[sepsis_data$heart_rate_mean > 250] <- 0
+  sepsis_data$heart_rate_mean[sepsis_data$heart_rate_mean == 0 |
+                            is.na(sepsis_data$heart_rate_mean)] <- 90
+
+  # MBP
+  sepsis_data$mbp_mean[sepsis_data$mbp_mean < 0] <- 0
+  sepsis_data$mbp_mean[sepsis_data$mbp_mean > 200] <- 0
+  sepsis_data$mbp_mean[sepsis_data$mbp_mean == 0 |
+                        is.na(sepsis_data$mbp_mean)] <- 85
+  # Temperature
+  sepsis_data$temperature_mean[sepsis_data$temperature_mean < 32] <- 0
+  sepsis_data$temperature_mean[sepsis_data$temperature_mean > 45] <- 0
+  sepsis_data$temperature_mean[sepsis_data$temperature_mean == 0 |
+                              is.na(sepsis_data$temperature_mean)] <- 36.5
+
+  # SpO2
+  sepsis_data$spo2_mean[sepsis_data$spo2_mean < 0] <- 0
+  sepsis_data$spo2_mean[sepsis_data$spo2_mean > 100] <- 0
+  sepsis_data$spo2_mean[sepsis_data$spo2_mean == 0 |
+                        is.na(sepsis_data$spo2_mean)] <- 95
+
 
   if (file_path == "data/MIMIC_data.csv") {
 
@@ -24,14 +126,18 @@ load_data <- function(cohort){
     
     sepsis_data <- sepsis_data %>% mutate(gender = ifelse(gender == "F", 1, 0))
     
-    sepsis_data <- sepsis_data %>% mutate(ventilation_bin = ifelse((InvasiveVent_hr > 0 & !is.na(InvasiveVent_hr)) |
+    mech_vent <- sepsis_data[, c(1)] 
+    sepsis_data <- cbind(sepsis_data, mech_vent)
+
+    sepsis_data <- sepsis_data %>% mutate(mech_vent = ifelse((InvasiveVent_hr > 0 & !is.na(InvasiveVent_hr)) |
                                                                    (Trach_hr > 0 & !is.na(Trach_hr)), 1, 0))
     sepsis_data <- sepsis_data %>% mutate(pressor = ifelse(pressor=="True", 1, 0))
     sepsis_data <- sepsis_data %>% mutate(rrt = ifelse(is.na(rrt), 0, 1))
     sepsis_data <- sepsis_data %>% mutate(blood_yes = ifelse(is.na(transfusion_yes), 0, 1))
-    sepsis_data <- sepsis_data %>% mutate(death_bin = ifelse(discharge_location == "DIED" | discharge_location == "HOSPICE" | dod != "", 1, 0))
+
     sepsis_data <- sepsis_data %>% mutate(discharge_hosp = ifelse(discharge_location == "HOSPICE", 1, 0))
     sepsis_data <- sepsis_data %>% mutate(ethnicity_white = ifelse(race == "WHITE" | race == "WHITE - BRAZILIAN" | race == "WHITE - EASTERN EUROPEAN" | race == "WHITE - OTHER EUROPEAN" | race == "WHITE - RUSSIAN" | race == "PORTUGUESE", 1, 0))
+
     sepsis_data$charlson_cont <- sepsis_data$charlson_comorbidity_index # create unified and continous Charlson column
     
     sepsis_data <- sepsis_data %>% mutate(charlson_comorbidity_index = ifelse(
@@ -116,106 +222,7 @@ load_data <- function(cohort){
     # encode insurance as numeric
     sepsis_data$insurance <- as.numeric(sepsis_data$insurance)    
 
-    # labs
-    # PO2 is within its physiological range
-    sepsis_data$po2_min[sepsis_data$po2_min < 0] <- 0
-    sepsis_data$po2_min[sepsis_data$po2_min > 1000] <- 0
-    sepsis_data$po2_min[sepsis_data$po2_min == 0 |
-                        is.na(sepsis_data$po2_min)] <- 90
 
-    # PCO2 is within its physiological range
-    sepsis_data$pco2_max[sepsis_data$pco2_max < 0] <- 0
-    sepsis_data$pco2_max[sepsis_data$pco2_max > 200] <- 0 
-    sepsis_data$pco2_max[sepsis_data$pco2_max == 0 |
-                         is.na(sepsis_data$pco2_max)] <- 40
-
-    # pH is within its physiological range
-    sepsis_data$ph_min[sepsis_data$ph_min < 5] <- 0
-    sepsis_data$ph_min[sepsis_data$ph_min > 10] <- 0
-    sepsis_data$ph_min[sepsis_data$ph_min == 0 |
-                        is.na(sepsis_data$ph_min)] <- 7.35
-
-    # Lactate is within its physiological range
-    sepsis_data$lactate_max[sepsis_data$lactate_max < 0] <- 0
-    sepsis_data$lactate_max[sepsis_data$lactate_max > 30] <- 0
-    sepsis_data$lactate_max[sepsis_data$lactate_max == 0 |
-                            is.na(sepsis_data$lactate_max)] <- 1.05
-
-    # Glucose is within its physiological range
-    sepsis_data$glucose_max[sepsis_data$glucose_max < 0] <- 0
-    sepsis_data$glucose_max[sepsis_data$glucose_max > 2000] <- 0
-    sepsis_data$glucose_max[sepsis_data$glucose_max == 0 |
-                            is.na(sepsis_data$glucose_max)] <- 95
-
-    # Sodium
-    sepsis_data$sodium_min[is.na(sepsis_data$sodium_min)] <- 0
-    sepsis_data$sodium_min[sepsis_data$sodium_min < 0] <- 0
-    sepsis_data$sodium_min[sepsis_data$sodium_min > 160] <- 0
-    sepsis_data$sodium_min[sepsis_data$sodium_min == 0 |
-                           is.na(sepsis_data$sodium_min)] <- 140
-
-    # Potassium
-    sepsis_data$potassium_max[sepsis_data$potassium_max < 0] <- 0
-    sepsis_data$potassium_max[sepsis_data$potassium_max > 9.9] <- 0
-    sepsis_data$potassium_max[sepsis_data$potassium_max == 0 |
-                              is.na(sepsis_data$potassium_max)] <- 3.5
-
-    # Cortisol
-    sepsis_data$cortisol_min[sepsis_data$cortisol_min < 0] <- 0
-    sepsis_data$cortisol_min[sepsis_data$cortisol_min > 70] <- 0
-    sepsis_data$cortisol_min[sepsis_data$cortisol_min == 0 |
-                             is.na(sepsis_data$cortisol_min)] <- 20
-
-    # Hemoglobin
-    sepsis_data$hemoglobin_min[sepsis_data$hemoglobin_min < 3
-                              & sepsis_data$gender == "M"] <- 13.5
-    sepsis_data$hemoglobin_min[sepsis_data$hemoglobin_min < 3
-                              & sepsis_data$gender == "F"] <- 12 
-    sepsis_data$hemoglobin_min[sepsis_data$hemoglobin_min > 30] <- 0
-    sepsis_data$hemoglobin_min[(sepsis_data$hemoglobin_min == 0 |
-                                is.na(sepsis_data$hemoglobin_min)) & 
-                                sepsis_data$gender == 0] <- 13.5
-    sepsis_data$hemoglobin_min[(sepsis_data$hemoglobin_min == 0 |
-                                is.na(sepsis_data$hemoglobin_min)) & 
-                                sepsis_data$gender == 1] <- 12
-    # Fibrinogen
-    sepsis_data$fibrinogen_min[sepsis_data$fibrinogen_min < 0] <- 0
-    sepsis_data$fibrinogen_min[sepsis_data$fibrinogen_min > 1000] <- 400
-    sepsis_data$fibrinogen_min[sepsis_data$fibrinogen_min == 0 |
-                               is.na(sepsis_data$fibrinogen_min)] <- 200
-    # INR
-    sepsis_data$inr_max[sepsis_data$inr_max < 0] <- 0
-    sepsis_data$inr_max[sepsis_data$inr_max > 10] <- 0
-    sepsis_data$inr_max[sepsis_data$inr_max == 0 |
-                        is.na(sepsis_data$inr_max)] <- 1.1
-
-    # Respiratory rate
-    sepsis_data$resp_rate_mean[sepsis_data$resp_rate_mean < 0] <- 0
-    sepsis_data$resp_rate_mean[sepsis_data$resp_rate_mean > 50] <- 0
-    sepsis_data$resp_rate_mean[sepsis_data$resp_rate_mean == 0 |
-                             is.na(sepsis_data$resp_rate_mean)] <- 15
-    # Heart rate
-    sepsis_data$heart_rate_mean[sepsis_data$heart_rate_mean < 0] <- 0
-    sepsis_data$heart_rate_mean[sepsis_data$heart_rate_mean > 250] <- 0
-    sepsis_data$heart_rate_mean[sepsis_data$heart_rate_mean == 0 |
-                              is.na(sepsis_data$heart_rate_mean)] <- 90
-
-    # MBP
-    sepsis_data$mbp_mean[sepsis_data$mbp_mean < 0] <- 0
-    sepsis_data$mbp_mean[sepsis_data$mbp_mean > 200] <- 0
-    sepsis_data$mbp_mean[sepsis_data$mbp_mean == 0 |
-                         is.na(sepsis_data$mbp_mean)] <- 85
-    # Temperature
-    sepsis_data$temperature_mean[sepsis_data$temperature_mean < 32] <- 0
-    sepsis_data$temperature_mean[sepsis_data$temperature_mean > 45] <- 0
-    sepsis_data$temperature_mean[sepsis_data$temperature_mean == 0 |
-                                is.na(sepsis_data$temperature_mean)] <- 36.5
-
-    # SpO2
-    sepsis_data$spo2_mean[sepsis_data$spo2_mean < 0] <- 0
-    sepsis_data$spo2_mean[sepsis_data$spo2_mean > 100] <- 0
-    sepsis_data$spo2_mean[sepsis_data$spo2_mean == 0 |
-                         is.na(sepsis_data$spo2_mean)] <- 95
 
     # dummy for complications
     sepsis_data <- sepsis_data %>% mutate(clabsi = ifelse(is.na(clabsi), 0, 1))
@@ -227,17 +234,17 @@ load_data <- function(cohort){
   } else if (file_path == "data/eICU_data.csv") {
 
     # generate dummy var for eICU reliable hospitals -> match with list from Leo
-    rel_hosp <- read.csv("hospitals/reliable_teach_hosp.csv", header = TRUE, stringsAsFactors = TRUE)
-    sepsis_data <- sepsis_data %>%  mutate(rel_icu = ifelse(sepsis_data$hospitalid %in% rel_hosp$hospitalid , 1, 0))
+    # rel_hosp <- read.csv("hospitals/reliable_teach_hosp.csv", header = TRUE, stringsAsFactors = TRUE)
+    # sepsis_data <- sepsis_data %>%  mutate(rel_icu = ifelse(sepsis_data$hospitalid %in% rel_hosp$hospitalid , 1, 0))
     # sepsis_data <- subset(sepsis_data, rel_icu == 1) # only keep reliable hospitals
 
     sepsis_data <- sepsis_data %>% mutate(gender = ifelse(gender == "Female", 1, 0))
 
-    sepsis_data <- sepsis_data %>% mutate(ventilation_bin = ifelse(is.na(VENT_final), 0, 1))
-    sepsis_data <- sepsis_data %>% mutate(pressor = ifelse(is.na(PRESSOR_final), 0, 1))
-    sepsis_data <- sepsis_data %>% mutate(rrt = ifelse(is.na(RRT_final), 0, 1))
-    # sepsis_data <- sepsis_data %>% mutate(blood_yes = ifelse(is.na(transfusion_yes), 0, 1))
+    sepsis_data <- sepsis_data %>% mutate(blood_yes = ifelse(is.na(transfusion_yes), 0, 1))
     sepsis_data <- sepsis_data %>% mutate(death_bin = ifelse(unitdischargelocation == "Death" | unitdischargestatus == "Expired" | hospitaldischargestatus == "Expired", 1, 0))
+    # Rename death_bin to mortality_in
+    sepsis_data <- sepsis_data %>% rename(mortality_in = death_bin)
+
     sepsis_data <- sepsis_data %>% mutate(discharge_hosp = ifelse(unitdischargelocation == "HOSPICE", 1, 0)) # dummy line to have homogeneous columns 
     sepsis_data <- sepsis_data %>% mutate(ethnicity_white = ifelse(race == "Caucasian", 1, 0))
 
@@ -274,6 +281,7 @@ load_data <- function(cohort){
     print("Wrong path or file name.")
   }
 
+
   # Return just keeping columns of interest
   return(sepsis_data[, c("admission_age", "gender", "ethnicity_white", "insurance",
                         #  "weight_admit",  "eng_prof",
@@ -292,7 +300,7 @@ load_data <- function(cohort){
                          "copd_present", "asthma_present", "cad_present", "ckd_stages", "diabetes_types",
                          "connective_disease", "pneumonia", "uti", "biliary", "skin", "mortality_in",
                          "blood_yes", "los", "mortality_90", "clabsi", "cauti", "ssi", "vap",
-                         "ventilation_bin", "rrt", "pressor")
+                         "mech_vent", "rrt", "pressor")
 ])
 }
 

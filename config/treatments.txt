@@ -1,4 +1,4 @@
 treatment
-ventilation_bin
+mech_vent
 rrt
 pressor
