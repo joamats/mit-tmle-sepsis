@@ -164,6 +164,7 @@ load_data <- function(cohort){
   sepsis_data$anchor_year_group <- as.numeric(sepsis_data$anchor_year_group)
 
   sepsis_data <- sepsis_data %>% mutate(blood_yes = ifelse(is.na(transfusion_yes), 0, 1))
+  sepsis_data <- sepsis_data %>% mutate(insulin_yes = ifelse(is.na(insulin_yes), 0, 1))
 
 
   if (file_path == "data/MIMIC_data.csv") {
@@ -251,7 +252,7 @@ load_data <- function(cohort){
                           "fibrinogen_min", "inr_max", "hypertension_present", "heart_failure_present",
                           "copd_present", "asthma_present", "cad_present", "ckd_stages", "diabetes_types",
                           "connective_disease", "pneumonia", "uti", "biliary", "skin", "mortality_in",
-                          "blood_yes", "los", "mortality_90", "clabsi", "cauti", "ssi", "vap",
+                          "blood_yes", "insulin_yes", "los", "mortality_90", "clabsi", "cauti", "ssi", "vap",
                           "mech_vent", "rrt", "pressor")
   ])
 
@@ -311,7 +312,7 @@ load_data <- function(cohort){
                           "fibrinogen_min", "inr_max", "hypertension_present", "heart_failure_present",
                           "copd_present", "asthma_present", "cad_present", "ckd_stages", "diabetes_types",
                           "connective_disease", "pneumonia", "uti", "biliary", "skin", "mortality_in",
-                          "blood_yes", "los", "clabsi", "cauti", "ssi", "vap",
+                          "blood_yes", "insulin_yes","los", "clabsi", "cauti", "ssi", "vap",
                           "mech_vent", "rrt", "pressor")
   ])
 
