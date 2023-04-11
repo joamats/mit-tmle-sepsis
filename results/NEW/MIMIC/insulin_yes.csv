@@ -1,0 +1,2 @@
+"","outcome","treatment","cohort","race","prob_mort_start","prob_mort_end","psi","i_ci","s_ci","pvalue","n","SL_libraries","Q_weights","g_weights"
+"1","insulin_yes","mech_vent","MIMIC","all","0","0.1","0.110079415108012","0.0879856009616262","0.132173229254397","1.58434340908085e-22","8670","SL.glm SL.glmnet","0.578241675535215 0.421758324464785","0.61994678266426 0.38005321733574"
