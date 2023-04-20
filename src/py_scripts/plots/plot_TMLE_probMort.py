@@ -5,7 +5,7 @@ import seaborn as sb
 import matplotlib
 matplotlib.use('TKAgg')
 
-plot_name = "NEW/MIMIC/mortality_in"
+plot_name = "NEW/eICU/mortality_in"
 title = "TMLE across Hospital Mortality Probability ranges, for each invasive treatment\n"
 df = pd.read_csv(f"results/{plot_name}.csv")
 
