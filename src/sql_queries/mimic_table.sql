@@ -37,8 +37,10 @@ charlson.charlson_comorbidity_index, (pressor.stay_id = icu.stay_id) as pressor,
 InvasiveVent.InvasiveVent_hr,Oxygen.Oxygen_hr,HighFlow.HighFlow_hr,NonInvasiveVent.NonInvasiveVent_hr,Trach.Trach_hr, FiO2_mean_24h,
 
 -- Treatment durations
-MV_time_hr/24 AS mv_time_d, vp_time_hr/24 AS vp_time_d,
+MV_time_hr/24 AS mv_time_d, vp_time_hr/24 AS vp_time_d, rrt_time_hr/24 AS rrt_time_d,
 MV_time_hr/24/icu.los_icu AS MV_time_perc_of_stay, vp_time_hr/24/icu.los_icu AS VP_time_perc_of_stay,
+
+-- MV as offset as fraction of LOS
 CASE
   WHEN TIMESTAMP_DIFF(mv_mtime.starttime, icu.icu_intime, HOUR) >= 0
   THEN TIMESTAMP_DIFF(mv_mtime.starttime, icu.icu_intime, HOUR)/24/icu.los_icu
@@ -47,6 +49,16 @@ CASE
   ELSE NULL
 END AS MV_init_offset_perc,
 
+-- MV as offset absolut in days
+CASE
+  WHEN TIMESTAMP_DIFF(mv_mtime.starttime, icu.icu_intime, HOUR) >= 0
+  THEN TIMESTAMP_DIFF(mv_mtime.starttime, icu.icu_intime, HOUR)/24
+  WHEN TIMESTAMP_DIFF(mv_mtime.starttime, icu.icu_intime, HOUR) < 0
+  THEN 0
+  ELSE NULL
+END AS MV_init_offset_d_abs,
+
+-- RRT as offset as fraction of LOS
 CASE
   WHEN TIMESTAMP_DIFF(rrt_time.charttime, icu.icu_intime, HOUR) >= 0
   THEN TIMESTAMP_DIFF(rrt_time.charttime, icu.icu_intime, HOUR)/24/icu.los_icu
@@ -55,6 +67,16 @@ CASE
   ELSE NULL
 END AS RRT_init_offset_perc,
 
+-- RRT as offset absolut in days
+CASE
+  WHEN TIMESTAMP_DIFF(rrt_time.charttime, icu.icu_intime, HOUR) >= 0
+  THEN TIMESTAMP_DIFF(rrt_time.charttime, icu.icu_intime, HOUR)/24
+  WHEN TIMESTAMP_DIFF(rrt_time.charttime, icu.icu_intime, HOUR) < 0
+  THEN 0
+  ELSE NULL
+END AS RRT_init_offset_d_abs,
+
+-- VP as offset as fraction of LOS
 CASE
   WHEN TIMESTAMP_DIFF(vp_mtime.starttime, icu.icu_intime, HOUR) >= 0
   THEN TIMESTAMP_DIFF(vp_mtime.starttime, icu.icu_intime, HOUR)/24/icu.los_icu
@@ -62,6 +84,15 @@ CASE
   THEN 0
   ELSE NULL
 END AS VP_init_offset_perc,
+
+-- VP as offset absolut in days
+CASE
+  WHEN TIMESTAMP_DIFF(vp_mtime.starttime, icu.icu_intime, HOUR) >= 0
+  THEN TIMESTAMP_DIFF(vp_mtime.starttime, icu.icu_intime, HOUR)/24
+  WHEN TIMESTAMP_DIFF(vp_mtime.starttime, icu.icu_intime, HOUR) < 0
+  THEN 0
+  ELSE NULL
+END AS VP_init_offset_d_abs,
 
 oa.oasis, oa.oasis_prob,
 fluids_volume, fluids_volume_norm_by_los_icu,
@@ -137,13 +168,15 @@ on icu.stay_id = rrt.stay_id
 left join (
   SELECT dia.stay_id,
   MAX(dialysis_present) AS rrt,
-  MIN(charttime) AS charttime
+  MIN(charttime) AS charttime,
+  TIMESTAMP_DIFF(MAX(charttime), MIN(charttime), HOUR) AS rrt_time_hr
   FROM `physionet-data.mimiciv_derived.rrt` dia
+
   LEFT JOIN `physionet-data.mimiciv_derived.icustay_detail` icu
   ON icu.stay_id = dia.stay_id
   AND TIMESTAMP_DIFF(icu.icu_outtime, charttime, HOUR) > 0 -- to make sure it's within the ICU stay
   AND TIMESTAMP_DIFF(charttime, icu.icu_intime, HOUR) > 0
-  WHERE dialysis_present = 1
+  WHERE dialysis_type like "C%" OR dialysis_type like "IHD" -- only consider hemodialyisis
   GROUP BY stay_id
 ) AS rrt_time
 ON icu.stay_id = rrt_time.stay_id 

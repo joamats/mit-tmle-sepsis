@@ -10,7 +10,6 @@ load_data <- function(cohort){
   sepsis_data <- read.csv(file_path, header = TRUE, stringsAsFactors = TRUE)
 
   # Define outcomes
-  mortality_in <- sepsis_data[, c(1)]
   discharge_hosp <- sepsis_data[, c(1)]
   ethnicity_white <- sepsis_data[, c(1)]
   blood_yes <- sepsis_data[, c(1)]
@@ -20,7 +19,7 @@ load_data <- function(cohort){
   free_days_rrt_28 <- sepsis_data[, c(1)]
   free_days_vp_28 <- sepsis_data[, c(1)]
 
-  sepsis_data <- cbind(sepsis_data, mortality_in, discharge_hosp, 
+  sepsis_data <- cbind(sepsis_data, discharge_hosp, 
                       ethnicity_white, blood_yes, free_days_hosp_28,
                       free_days_mv_28, free_days_rrt_28, free_days_vp_28)
 
@@ -174,33 +173,6 @@ load_data <- function(cohort){
 
   sepsis_data <- sepsis_data %>% mutate(blood_yes = ifelse(is.na(transfusion_yes), 0, 1))
   sepsis_data <- sepsis_data %>% mutate(insulin_yes = ifelse(is.na(insulin_yes), 0, 1))
-
-  # Encode outcomes
-
-  # Definition of "free days" outcomes:
-  # “Free day” outcomes were calculated as 28 minus the number of days on therapy (MV, RRT, or VP)
-  # Patients who died in the hospital were assigned 0 “free days”
-
-  sepsis_data <- sepsis_data %>% mutate(free_days_rrt_28 = ifelse(rrt == 1, 0, 28))
-  # assumption: whenever rrt is used, it's never shortterm, i.e. longer than 28 days
-  sepsis_data$free_days_mv_28 <- pmax(round((28 - sepsis_data$mv_time_d), 0), 0)
-  sepsis_data$free_days_vp_28 <- pmax(round((28 - sepsis_data$vp_time_d), 0), 0)
-  sepsis_data$los_icu[sepsis_data$los_icu < 0] <- 0 # clean data to have minimum of 0 days
-  sepsis_data$free_days_hosp_28 <- pmax(round((28 - sepsis_data$los_icu), 0), 0)
-  # round to closest integer day, use pmax to convert values < 0 to 0
-
-
-  # set free days to 0 if < 0
-  #sepsis_data <- sepsis_data %>% mutate(free_days_hosp_28 = ifelse(free_days_hosp_28 < 0, 0, free_days_hosp_28))
- # sepsis_data <- sepsis_data %>% mutate(free_days_mv_28 = ifelse(free_days_mv_28 < 0, 0, free_days_mv_28))
-  #sepsis_data <- sepsis_data %>% mutate(free_days_vp_28 = ifelse(free_days_vp_28 < 0, 0, free_days_vp_28))
-  
-  # set free days to 0 in case of death
-  sepsis_data <- sepsis_data %>% mutate(free_days_hosp_28 = ifelse(mortality_in == 1, 0, free_days_hosp_28))
-  sepsis_data <- sepsis_data %>% mutate(free_days_mv_28 = ifelse(mortality_in == 1, 0, free_days_mv_28))
-  sepsis_data <- sepsis_data %>% mutate(free_days_rrt_28 = ifelse(mortality_in == 1, 0, free_days_rrt_28))
-  sepsis_data <- sepsis_data %>% mutate(free_days_vp_28 = ifelse(mortality_in == 1, 0, free_days_vp_28))
-
   
 
   if (file_path == "data/MIMIC_data.csv") {
@@ -270,6 +242,31 @@ load_data <- function(cohort){
     # encode insurance as numeric
     sepsis_data$insurance <- as.numeric(sepsis_data$insurance)    
 
+    # Encode outcomes
+
+    # Definition of "free days" outcomes:
+    # “Free day” outcomes were calculated as 28 minus the number of days on therapy (MV, RRT, or VP)
+    # Patients who died in the hospital were assigned 0 “free days”
+
+    sepsis_data$free_days_mv_28 <- pmax(round((28 - sepsis_data$mv_time_d), 0), 0)
+    sepsis_data$free_days_rrt_28 <- pmax(round((28 - sepsis_data$rrt_time_d), 0), 0)
+    sepsis_data$free_days_vp_28 <- pmax(round((28 - sepsis_data$vp_time_d), 0), 0)
+    sepsis_data$los_icu[sepsis_data$los_icu < 0] <- 0 # clean data to have minimum of 0 days
+    sepsis_data$free_days_hosp_28 <- pmax(round((28 - sepsis_data$los_icu), 0), 0)
+    # round to closest integer day, use pmax to convert values < 0 to 0
+
+    # set free days to 0 if NA
+    sepsis_data <- sepsis_data %>% mutate(free_days_hosp_28 = ifelse(is.na(free_days_hosp_28), 0, free_days_hosp_28))
+    sepsis_data <- sepsis_data %>% mutate(free_days_mv_28 = ifelse(is.na(free_days_mv_28), 0, free_days_mv_28))
+    sepsis_data <- sepsis_data %>% mutate(free_days_rrt_28 = ifelse(is.na(free_days_rrt_28), 0, free_days_rrt_28))
+    sepsis_data <- sepsis_data %>% mutate(free_days_vp_28 = ifelse(is.na(free_days_vp_28), 0, free_days_vp_28))
+    
+    # set free days to 0 in case of death
+    sepsis_data <- sepsis_data %>% mutate(free_days_hosp_28 = ifelse(mortality_in == 1, 0, free_days_hosp_28))
+    sepsis_data <- sepsis_data %>% mutate(free_days_mv_28 = ifelse(mortality_in == 1, 0, free_days_mv_28))
+    sepsis_data <- sepsis_data %>% mutate(free_days_rrt_28 = ifelse(mortality_in == 1, 0, free_days_rrt_28))
+    sepsis_data <- sepsis_data %>% mutate(free_days_vp_28 = ifelse(mortality_in == 1, 0, free_days_vp_28))
+
     # Return just keeping columns of interest
     return(sepsis_data[, c("admission_age", "gender", "ethnicity_white", "insurance",
                           #  "weight_admit",  "eng_prof",
@@ -288,8 +285,9 @@ load_data <- function(cohort){
                           "copd_present", "asthma_present", "cad_present", "ckd_stages", "diabetes_types",
                           "connective_disease", "pneumonia", "uti", "biliary", "skin", "mortality_in",
                           "blood_yes", "insulin_yes", "los", "mortality_90", "clabsi", "cauti", "ssi", "vap",
-                          "mech_vent", "rrt", "pressor")
-  ])
+                          "mech_vent", "rrt", "pressor",
+                          "free_days_rrt_28", "free_days_mv_28", "free_days_vp_28", "free_days_hosp_28") 
+                          ])
 
 
   } else if (file_path == "data/eICU_data.csv") {
@@ -301,9 +299,9 @@ load_data <- function(cohort){
 
     sepsis_data <- sepsis_data %>% mutate(gender = ifelse(gender == "Female", 1, 0))
 
-    sepsis_data <- sepsis_data %>% mutate(mortality_in = ifelse(unitdischargelocation == "Death" | unitdischargestatus == "Expired" | hospitaldischargestatus == "Expired", 1, 0))
+    sepsis_data <- sepsis_data %>% mutate(death_bin = ifelse(unitdischargelocation == "Death" | unitdischargestatus == "Expired" | hospitaldischargestatus == "Expired", 1, 0))
     # Rename mortality_in to mortality_in
-    sepsis_data <- sepsis_data %>% rename(mortality_in = mortality_in)
+    sepsis_data <- sepsis_data %>% rename(death_bin = mortality_in)
 
     sepsis_data <- sepsis_data %>% mutate(discharge_hosp = ifelse(unitdischargelocation == "HOSPICE", 1, 0)) # dummy line to have homogeneous columns 
     sepsis_data <- sepsis_data %>% mutate(ethnicity_white = ifelse(race == "Caucasian", 1, 0))
@@ -348,8 +346,9 @@ load_data <- function(cohort){
                           "copd_present", "asthma_present", "cad_present", "ckd_stages", "diabetes_types",
                           "connective_disease", "pneumonia", "uti", "biliary", "skin", "mortality_in",
                           "blood_yes", "insulin_yes","los", "clabsi", "cauti", "ssi", "vap",
-                          "mech_vent", "rrt", "pressor")
-  ])
+                          "mech_vent", "rrt", "pressor",
+                          "free_days_rrt_28", "free_days_mv_28", "free_days_vp_28", "free_days_hosp_28") 
+                          ])
 
 
   } else {
@@ -362,7 +361,7 @@ load_data <- function(cohort){
 get_merged_datasets <- function() {
 
   mimic_data <- load_data("MIMIC")
-  eicu_data <- load_data("eICU")
+  #eicu_data <- load_data("eICU")
   # merge both datasets 
   #data <- combine(mimic_data, eicu_data)
 
@@ -370,7 +369,7 @@ get_merged_datasets <- function() {
   #data <- data %>% mutate(source = ifelse(source == "mimic_data", 1, 0))
 
   write.csv(mimic_data, "data/MIMIC.csv")
-  write.csv(eicu_data, "data/eICU.csv")
+  #write.csv(eicu_data, "data/eICU.csv")
   #write.csv(data, "data/MIMIC_eICU.csv")
 
   return (data)
