@@ -35,6 +35,9 @@ sf.respiration, sf.coagulation, sf.liver, sf.cardiovascular, sf.cns, sf.renal,
 rrt.rrt, weight.weight_admit,fd_uo.urineoutput,
 charlson.charlson_comorbidity_index, (pressor.stay_id = icu.stay_id) as pressor,ad.discharge_location as discharge_location, pat.dod,
 InvasiveVent.InvasiveVent_hr,Oxygen.Oxygen_hr,HighFlow.HighFlow_hr,NonInvasiveVent.NonInvasiveVent_hr,Trach.Trach_hr, FiO2_mean_24h,
+
+-- Treatment durations
+MV_time_hr/24 AS mv_time_d, vp_time_hr/24 AS vp_time_d,
 MV_time_hr/24/icu.los_icu AS MV_time_perc_of_stay, vp_time_hr/24/icu.los_icu AS VP_time_perc_of_stay,
 CASE
   WHEN TIMESTAMP_DIFF(mv_mtime.starttime, icu.icu_intime, HOUR) >= 0

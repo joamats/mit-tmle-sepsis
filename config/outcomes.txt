@@ -1,8 +1,10 @@
 outcome
-mortality_in
+death_bin
 blood_yes
-los
-mortality_90
+free_days_hosp_28
+free_days_mv_28
+free_days_rrt_28
+free_days_vp_28
 clabsi
 cauti
 ssi
