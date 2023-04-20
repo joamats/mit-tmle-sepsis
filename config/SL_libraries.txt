@@ -1,9 +1,3 @@
 SL_library
 SL.glm
-SL.glmnet
-SL.ranger
-SL.earth
-<<<<<<< HEAD
-=======
 SL.mean
->>>>>>> e294c94c04a2da5978d99a07355590018fd3aa7d

@@ -23,6 +23,9 @@ load_data <- function(cohort){
                       ethnicity_white, blood_yes, free_days_hosp_28,
                       free_days_mv_28, free_days_rrt_28, free_days_vp_28)
 
+  # Define Eligibility Period for Treatment in days
+  sepsis_data$elig_period <- 1
+
   # Common data cleaning steps
 
   # labs
@@ -225,10 +228,13 @@ load_data <- function(cohort){
     sepsis_data$VP_time_perc_of_stay[is.na(sepsis_data$VP_time_perc_of_stay)] <- 0
     # MV_init_offset_perc: make 0 if na
     sepsis_data$MV_init_offset_perc[is.na(sepsis_data$MV_init_offset_perc)] <- 0
+    sepsis_data$MV_init_offset_d_abs[is.na(sepsis_data$MV_init_offset_d_abs)] <- 0
     # RRT_time_perc_of_stay: make 0 if na
     sepsis_data$RRT_init_offset_perc[is.na(sepsis_data$RRT_init_offset_perc)] <- 0
+    sepsis_data$RRT_init_offset_d_abs[is.na(sepsis_data$RRT_init_offset_d_abs)] <- 0
     # VP_init_offset_perc: make 0 if na
     sepsis_data$VP_init_offset_perc[is.na(sepsis_data$VP_init_offset_perc)] <- 0
+    sepsis_data$VP_init_offset_d_abs[is.na(sepsis_data$VP_init_offset_d_abs)] <- 0
 
     # If FiO2 is not available and Oxygen_hr, HighFlow_hr, and NonInvasiveVent_hr are all na, then FiO2 = 21%
     # i.e, no oxygen therapy at all -> room air
@@ -267,6 +273,14 @@ load_data <- function(cohort){
     sepsis_data <- sepsis_data %>% mutate(free_days_rrt_28 = ifelse(mortality_in == 1, 0, free_days_rrt_28))
     sepsis_data <- sepsis_data %>% mutate(free_days_vp_28 = ifelse(mortality_in == 1, 0, free_days_vp_28))
 
+    # Therapy within eligibility period
+    sepsis_data <- sepsis_data %>% mutate(mv_elig = ifelse(mech_vent == 1 & (MV_init_offset_d_abs <= elig_period), 1, 0))
+    sepsis_data <- sepsis_data %>% mutate(vp_elig = ifelse(pressor == 1 & (VP_init_offset_d_abs <= elig_period), 1, 0))
+    sepsis_data <- sepsis_data %>% mutate(rrt_elig = ifelse(rrt == 1 & (RRT_init_offset_d_abs <= elig_period), 1, 0))
+
+    # Drop observations with LOS <= 1 day
+    sepsis_data <- sepsis_data[sepsis_data$los_icu <= 1, ]
+    
     # Return just keeping columns of interest
     return(sepsis_data[, c("admission_age", "gender", "ethnicity_white", "insurance",
                           #  "weight_admit",  "eng_prof",
@@ -285,7 +299,7 @@ load_data <- function(cohort){
                           "copd_present", "asthma_present", "cad_present", "ckd_stages", "diabetes_types",
                           "connective_disease", "pneumonia", "uti", "biliary", "skin", "mortality_in",
                           "blood_yes", "insulin_yes", "los", "mortality_90", "clabsi", "cauti", "ssi", "vap",
-                          "mech_vent", "rrt", "pressor",
+                          "mech_vent", "rrt", "pressor", "mv_elig", "rrt_elig", "vp_elig",
                           "free_days_rrt_28", "free_days_mv_28", "free_days_vp_28", "free_days_hosp_28") 
                           ])
 
@@ -346,7 +360,7 @@ load_data <- function(cohort){
                           "copd_present", "asthma_present", "cad_present", "ckd_stages", "diabetes_types",
                           "connective_disease", "pneumonia", "uti", "biliary", "skin", "mortality_in",
                           "blood_yes", "insulin_yes","los", "clabsi", "cauti", "ssi", "vap",
-                          "mech_vent", "rrt", "pressor",
+                          "mech_vent", "rrt", "pressor", "mv_elig", "rrt_elig", "vp_elig",
                           "free_days_rrt_28", "free_days_mv_28", "free_days_vp_28", "free_days_hosp_28") 
                           ])
 
@@ -362,6 +376,7 @@ get_merged_datasets <- function() {
 
   mimic_data <- load_data("MIMIC")
   #eicu_data <- load_data("eICU")
+
   # merge both datasets 
   #data <- combine(mimic_data, eicu_data)
 
