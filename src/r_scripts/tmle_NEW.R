@@ -42,7 +42,7 @@ run_tmle <- function(data, treatment, confounders, outcome, SL_libraries,
 
 # Main
 cohorts <- c("MIMIC") # choose "MIMIC", "eICU", or "MIMIC_eICU" for both
-outcomes <- c("blood_yes", "mortality_in") # "insulin_yes"
+outcomes <- c("insulin_yes", "blood_yes", "mortality_in") # 
 prob_mort_ranges <- read.csv("config/prob_mort_ranges.csv")
 treatments <- read.delim("config/treatments.txt")
 SL_libraries <- read.delim("config/SL_libraries.txt")
@@ -55,7 +55,7 @@ for (c in cohorts) {
     data <- read.csv(paste0("data/", c, ".csv"))
 
     # Factorize variables
-    
+
     confounders <- read.delim(paste0("config/confounders_", c,".txt"))
 
     for (outcome in outcomes) {

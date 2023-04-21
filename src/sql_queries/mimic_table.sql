@@ -307,21 +307,30 @@ GROUP BY stay_id
 AS ce
 ON ce.stay_id = icu.stay_id
 
--- Add insulin transfusion
+-- Add insulin treatment as negative control
 LEFT JOIN (
-SELECT cee.stay_id --, amount --, valueuom --itemid
-, max(
-    CASE
-    WHEN cee.itemid IN (223257, 223258, 223259, 223260, 223261, 223262, 229299, 229619) THEN 1
-    ELSE 0
-    END) AS insulin_yes
-FROM  `physionet-data.mimiciv_icu.inputevents` cee
-WHERE itemid IN (223257, 223258, 223259, 223260, 223261, 223262, 229299, 229619)
-and amount is NOT NULL and amount > 0 
-GROUP BY stay_id
+  SELECT cee.stay_id --, amount --, valueuom --itemid
+  , max(
+      CASE
+      WHEN cee.itemid IN (223257, 223258, 223259, 223260, 223261, 223262, 229299, 229619) THEN 1
+      ELSE 0
+      END) AS insulin_yes
+  FROM  `physionet-data.mimiciv_icu.inputevents` cee
+  
+  LEFT JOIN `physionet-data.mimiciv_derived.icustay_detail` icu
+  ON icu.stay_id = cee.stay_id
+
+  WHERE itemid IN (223257, 223258, 223259, 223260, 223261, 223262, 229299, 229619)
+  AND amount IS NOT NULL 
+  AND amount > 0 
+  AND TIMESTAMP_DIFF(icu.icu_outtime, cee.starttime, HOUR) >= 0 -- to make sure it's first 1 ICU day
+  AND TIMESTAMP_DIFF(cee.starttime, icu.icu_intime, HOUR) <= 24
+
+  GROUP BY stay_id
 )
 AS cee
 ON cee.stay_id = icu.stay_id
+
 
 -- Add Lab from original table
 -- minimal whole stay cortisol and hemoglobin

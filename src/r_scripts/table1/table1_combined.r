@@ -6,11 +6,11 @@ library(flextable)
 library(magrittr)
 
 
-m_e_df = read_csv('data/MIMIC_eICU.csv', 
+m_e_df = read_csv('data/MIMIC.csv', 
                   show_col_types = FALSE)
 
 ##########Age groups############
-m_e_df$age_new <- m_e_df$anchor_age
+m_e_df$age_new <- m_e_df$admission_age
 m_e_df$age_new[m_e_df$age_new >= 18 
                 & m_e_df$age_new <= 44] <- "18 - 44"
 m_e_df$age_new[m_e_df$age_new >= 45 
@@ -81,13 +81,13 @@ m_e_df <- m_e_df %>% mutate(
 ##########LOS groups############
 m_e_df$los[m_e_df$los < 0] <- 0 # clean data to have minimum of 0 days
 m_e_df$los_d <- m_e_df$los
-m_e_df <- m_e_df %>% mutate(los_d = ifelse(death_bin == 1, los_d, NA)) 
+m_e_df <- m_e_df %>% mutate(los_d = ifelse(mortality_in == 1, los_d, NA)) 
 
 m_e_df$los_s <- m_e_df$los 
-m_e_df <- m_e_df %>% mutate(los_s = ifelse(death_bin == 0, los_s, NA))
+m_e_df <- m_e_df %>% mutate(los_s = ifelse(mortality_in == 0, los_s, NA))
 
 # Factorize and label variables
-m_e_df$death_bin <- factor(m_e_df$death_bin, levels = c(0, 1), 
+m_e_df$mortality_in <- factor(m_e_df$mortality_in, levels = c(0, 1), 
                            labels = c('Survived', 'Died'))
 
 m_e_df$discharge_hosp <- factor(m_e_df$discharge_hosp, levels = c(0, 1), 
@@ -162,7 +162,7 @@ label(m_e_df$pressor)         <- "Vasopressor"
 label(m_e_df$ventilation_bin) <- "Mechanical ventilation"
 label(m_e_df$rrt)             <- "Renal replacement therapy"
 label(m_e_df$blood_yes)       <- "Red blood cell transfusion"
-label(m_e_df$death_bin)       <- "In-hospital mortality"
+label(m_e_df$mortality_in)       <- "In-hospital mortality"
 label(m_e_df$discharge_hosp)  <- "Discharge to hospice"
 label(m_e_df$source)          <- "Cohort"
 label(m_e_df$adm_elective)    <- "Admission type"
@@ -185,7 +185,7 @@ render.strat <- function (label, n, ...) {
 }
 
 # Create table1 object for both cohorts
-tbl1 <- table1(~ death_bin + source + adm_elective + pressor + ventilation_bin + rrt + blood_yes +
+tbl1 <- table1(~ mortality_in + source + adm_elective + pressor + ventilation_bin + rrt + blood_yes +
                  age_new + anchor_age + gender + SOFA_new + SOFA + OASIS_cat + OASIS_N + los + los_s + los_d +
                  charlson_new + charlson_cont + hypertension + heart_failure + copd + asthma + ckd
                | ethnicity_white, data=m_e_df, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
@@ -200,7 +200,7 @@ t1flex(tbl1) %>%
 
 
 # Create table1 object for MIMIC 
-tbl1 <- table1(~ race_cat + death_bin + discharge_hosp + adm_elective + pressor + ventilation_bin + rrt + blood_yes +
+tbl1 <- table1(~ race_cat + mortality_in + discharge_hosp + adm_elective + pressor + ventilation_bin + rrt + blood_yes +
                  age_new + anchor_age + gender + SOFA_new + SOFA + OASIS_cat + OASIS_N + los + los_s + los_d +
                  charlson_new + charlson_cont + hypertension + heart_failure + copd + asthma + ckd
                | ethnicity_white, data= subset(m_e_df, source=='MIMIC'), topclass="Rtable1-grid Rtable1-shade Rtable1-times",
@@ -212,7 +212,7 @@ t1flex(tbl1) %>%
 
 
 # Create table1 object for eICU 
-tbl1 <- table1(~ race_cat + death_bin + adm_elective + pressor + ventilation_bin + rrt + blood_yes +
+tbl1 <- table1(~ race_cat + mortality_in + adm_elective + pressor + ventilation_bin + rrt + blood_yes +
                  age_new + anchor_age + gender + SOFA_new + SOFA + OASIS_cat + OASIS_N + los + los_s + los_d +
                  charlson_new + charlson_cont + hypertension + heart_failure + copd + asthma + ckd
                | ethnicity_white, data= subset(m_e_df, source=='eICU'), topclass="Rtable1-grid Rtable1-shade Rtable1-times",
@@ -228,14 +228,14 @@ t1flex(tbl1) %>%
 ###############################
 
 # Create table1 object for SOFA
-tbl1 <- table1(~ rrt + ventilation_bin + pressor + ethnicity_white | death_bin*SOFA_new , data=m_e_df, render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
+tbl1 <- table1(~ rrt + ventilation_bin + pressor + ethnicity_white | mortality_in*SOFA_new , data=m_e_df, render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
                render.categorical=render.categorical, render.strat=render.strat)
 
 # Convert to flextable
 t1flex(tbl1) %>% save_as_docx(path="results/table1/Table_posA_SOFA.docx")
 
 # Create table1 object for OASIS
-tbl1 <- table1(~ rrt + ventilation_bin + pressor + ethnicity_white | death_bin*OASIS_cat , data=m_e_df, render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
+tbl1 <- table1(~ rrt + ventilation_bin + pressor + ethnicity_white | mortality_in*OASIS_cat , data=m_e_df, render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
                render.categorical=render.categorical, render.strat=render.strat)
 
 # Convert to flextable
@@ -246,21 +246,29 @@ t1flex(tbl1) %>% save_as_docx(path="results/table1/Table_posA_OASIS.docx")
 # Table for sanity check
 ###############################
 
-# Make probabilty bins
-m_e_df$mort_bins <- m_e_df$prob_mort
-m_e_df$mort_bins[m_e_df$mort_bins >= 0 
-                & m_e_df$mort_bins <= 0.10] <- "0 - 10"
-m_e_df$mort_bins[m_e_df$mort_bins > 0.10
-                & m_e_df$mort_bins <= 0.20] <- "10 - 20"
-m_e_df$mort_bins[m_e_df$mort_bins > 0.20
-                & m_e_df$mort_bins <= 0.30] <- "20 - 30"
-m_e_df$mort_bins[m_e_df$mort_bins > 0.30 
-                & m_e_df$mort_bins <= 1] <- "> 30"
+m_e_df = read_csv('data/MIMIC.csv', 
+                  show_col_types = FALSE)
 
-m_e_df$mort_bins <- factor(m_e_df$mort_bins, levels = c('0 - 10', '10 - 20','20 - 30', '> 30' ))
+# Read in probabilty bins
+prob_mort_ranges <- read.csv("config/prob_mort_ranges.csv")
+
+
+m_e_df$mort_bins <- m_e_df$prob_mort
+m_e_df$mort_bins[m_e_df$mort_bins >= prob_mort_ranges$min[1]
+                & m_e_df$mort_bins <= prob_mort_ranges$max[1]] <- "0 - 6"
+m_e_df$mort_bins[m_e_df$mort_bins > prob_mort_ranges$min[2]
+                & m_e_df$mort_bins <= prob_mort_ranges$max[2]] <- "6 - 11"
+m_e_df$mort_bins[m_e_df$mort_bins > prob_mort_ranges$min[3]
+                & m_e_df$mort_bins <= prob_mort_ranges$max[3]] <- "11 - 21"
+m_e_df$mort_bins[m_e_df$mort_bins > prob_mort_ranges$min[4]
+                & m_e_df$mort_bins <= prob_mort_ranges$max[4]] <- "> 21"
+
+m_e_df$mort_bins <- factor(m_e_df$mort_bins, levels = c('0 - 6', '6 - 11','11 - 21', '> 21' ))
+m_e_df$mortality_in <- factor(m_e_df$mortality_in, levels = c(0, 1), 
+                           labels = c('Survived', 'Died'))
 
 # Create table1 object for SOFA
-tbl1 <- table1(~ ventilation_bin + rrt + pressor | mort_bins*death_bin,
+tbl1 <- table1(~ mv_elig + rrt_elig + vp_elig | mort_bins*mortality_in,
               data=m_e_df, 
               render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
               render.categorical=render.categorical, render.strat=render.strat)
@@ -269,7 +277,7 @@ tbl1 <- table1(~ ventilation_bin + rrt + pressor | mort_bins*death_bin,
 t1flex(tbl1) %>% save_as_docx(path="results/table1/Table_sanity_check.docx")
 
 # Same for MIMIC only
-tbl1 <- table1(~ ventilation_bin + rrt + pressor | mort_bins*death_bin,
+tbl1 <- table1(~ ventilation_bin + rrt + pressor | mort_bins*mortality_in,
               data=subset(m_e_df, source=="MIMIC"), 
               overall=FALSE,
               render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
@@ -279,7 +287,7 @@ tbl1 <- table1(~ ventilation_bin + rrt + pressor | mort_bins*death_bin,
 t1flex(tbl1) %>% save_as_docx(path="results/table1/Tbl_san_check_MIMIC.docx")
 
 # Same for eICU only
-tbl1 <- table1(~ ventilation_bin + rrt + pressor | mort_bins*death_bin,
+tbl1 <- table1(~ ventilation_bin + rrt + pressor | mort_bins*mortality_in,
               data=subset(m_e_df, source=="eICU"), 
               overall=FALSE,
               render.missing=NULL, topclass="Rtable1-grid Rtable1-shade Rtable1-times",

@@ -59,7 +59,7 @@ for i, t in enumerate(treatments):
     axes[0].set(ylabel="ATE (%)\nTreated vs. Not Treated")
     axes[2].legend(bbox_to_anchor=(1.05, 0.7), loc='upper left')
     #axes[i].set_xticklabels(["0-10", "10-25", "25-100"])
-    axes[i].set_xticklabels(["0-10", "10-20", "20-30", "30-100"])
+    axes[i].set_xticklabels(["0-6", "6-11", "11-21", "21-100"])
     #axes[i].set_xticks(range(3))
     axes[i].set_xticks(range(4))
 
