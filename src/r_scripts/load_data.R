@@ -23,9 +23,6 @@ load_data <- function(cohort){
                       ethnicity_white, blood_yes, free_days_hosp_28,
                       free_days_mv_28, free_days_rrt_28, free_days_vp_28)
 
-  # Define Eligibility Period for Treatment in days
-  sepsis_data$elig_period <- 1
-
   # Common data cleaning steps
 
   # labs
@@ -219,6 +216,7 @@ load_data <- function(cohort){
     # and then adjust fluids_volume accordingly, given the los_icu
     sepsis_data$fluids_volume_norm_by_los_icu[sepsis_data$fluids_volume_norm_by_los_icu > 4000] <- 4000
     sepsis_data$fluids_volume <- sepsis_data$fluids_volume_norm_by_los_icu * sepsis_data$los_icu
+
     # add 0 to fluids_volume if it is NA
     sepsis_data$fluids_volume[is.na(sepsis_data$fluids_volume)] <- 0
 
@@ -274,13 +272,14 @@ load_data <- function(cohort){
     sepsis_data <- sepsis_data %>% mutate(free_days_vp_28 = ifelse(mortality_in == 1, 0, free_days_vp_28))
 
     # Therapy within eligibility period
-    sepsis_data <- sepsis_data %>% mutate(mv_elig = ifelse(mech_vent == 1 & (MV_init_offset_d_abs <= elig_period), 1, 0))
-    sepsis_data <- sepsis_data %>% mutate(vp_elig = ifelse(pressor == 1 & (VP_init_offset_d_abs <= elig_period), 1, 0))
-    sepsis_data <- sepsis_data %>% mutate(rrt_elig = ifelse(rrt == 1 & (RRT_init_offset_d_abs <= elig_period), 1, 0))
+    sepsis_data <- sepsis_data %>% mutate(mv_elig = ifelse(mech_vent == 1 & (MV_init_offset_d_abs <= 1), 1, 0))
+    sepsis_data <- sepsis_data %>% mutate(vp_elig = ifelse(pressor == 1 & (VP_init_offset_d_abs <= 1), 1, 0))
+    sepsis_data <- sepsis_data %>% mutate(rrt_elig = ifelse(rrt == 1 & (RRT_init_offset_d_abs <= 3), 1, 0))
 
     # Drop observations with LOS <= 1 day
-    sepsis_data <- sepsis_data[sepsis_data$los_icu <= 1, ]
-    
+    sepsis_data <- sepsis_data[sepsis_data$los_icu >= 1, ]
+    sepsis_data <- sepsis_data[sepsis_data$los_icu <= 30, ]
+
     # Return just keeping columns of interest
     return(sepsis_data[, c("admission_age", "gender", "ethnicity_white", "insurance",
                           #  "weight_admit",  "eng_prof",

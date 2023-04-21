@@ -5,7 +5,7 @@ import seaborn as sb
 import matplotlib
 matplotlib.use('TKAgg')
 
-plot_name = "NEW/eICU/blood_yes"
+plot_name = "NEW/MIMIC/blood_yes"
 title = "TMLE on Blood Tx, for each invasive treatment\n"
 df = pd.read_csv(f"results/{plot_name}.csv")
 
@@ -20,7 +20,7 @@ df.s_ci = df.s_ci * 100
 treatments = df.treatment.unique()
 races = df.race.unique()
 
-t_dict = dict(zip(["mech_vent", "rrt", "pressor"],
+t_dict = dict(zip(["mv_elig", "rrt_elig", "vp_elig"],
                   ["Mechanical Ventilation", "RRT", "Vasopressor(s)"]))
 
 fig, axes = plt.subplots(1, len(treatments),

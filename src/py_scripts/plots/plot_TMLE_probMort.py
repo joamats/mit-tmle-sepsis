@@ -5,10 +5,11 @@ import seaborn as sb
 import matplotlib
 matplotlib.use('TKAgg')
 
-plot_name = "NEW/eICU/mortality_in"
+plot_name = "NEW/MIMIC/mortality_in"
 title = "TMLE across Hospital Mortality Probability ranges, for each invasive treatment\n"
 df = pd.read_csv(f"results/{plot_name}.csv")
 
+#conversion_dict = dict(zip(df.prob_mort_start.unique(), range(3)))
 conversion_dict = dict(zip(df.prob_mort_start.unique(), range(4)))
 df.prob_mort_start = df.prob_mort_start.apply(lambda x: conversion_dict[x])
 
@@ -20,7 +21,7 @@ df.s_ci = df.s_ci * 100
 treatments = df.treatment.unique()
 races = df.race.unique()
 
-t_dict = dict(zip(["mech_vent", "rrt", "pressor"],
+t_dict = dict(zip(["mv_elig", "rrt_elig", "vp_elig"],
                   ["Mechanical Ventilation", "RRT", "Vasopressor(s)"]))
 
 fig, axes = plt.subplots(1, len(treatments),
@@ -57,7 +58,9 @@ for i, t in enumerate(treatments):
     axes[i].set_title(t_dict[t])
     axes[0].set(ylabel="ATE (%)\nTreated vs. Not Treated")
     axes[2].legend(bbox_to_anchor=(1.05, 0.7), loc='upper left')
+    #axes[i].set_xticklabels(["0-10", "10-25", "25-100"])
     axes[i].set_xticklabels(["0-10", "10-20", "20-30", "30-100"])
+    #axes[i].set_xticks(range(3))
     axes[i].set_xticks(range(4))
 
 fig.supxlabel('\nHospital Mortality Probability')

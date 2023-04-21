@@ -1,3 +1,6 @@
 SL_library
 SL.glm
+SL.glmnet
+SL.ranger
+SL.earth
 SL.mean

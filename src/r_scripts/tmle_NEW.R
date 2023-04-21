@@ -42,7 +42,7 @@ run_tmle <- function(data, treatment, confounders, outcome, SL_libraries,
 
 # Main
 cohorts <- c("MIMIC") # choose "MIMIC", "eICU", or "MIMIC_eICU" for both
-outcomes <- c("insulin_yes", "blood_yes", "mortality_in")
+outcomes <- c("blood_yes", "mortality_in") # "insulin_yes"
 prob_mort_ranges <- read.csv("config/prob_mort_ranges.csv")
 treatments <- read.delim("config/treatments.txt")
 SL_libraries <- read.delim("config/SL_libraries.txt")
@@ -54,6 +54,8 @@ for (c in cohorts) {
     # Read Data for this database and cohort
     data <- read.csv(paste0("data/", c, ".csv"))
 
+    # Factorize variables
+    
     confounders <- read.delim(paste0("config/confounders_", c,".txt"))
 
     for (outcome in outcomes) {
@@ -97,8 +99,8 @@ for (c in cohorts) {
 
                 if (r == "non-white") {
                     subset_data <- subset(data, ethnicity_white == 0)
-                    
-                } else if (r == "white") {
+
+                } else if (r == "white") {        
                     subset_data <- subset(data, ethnicity_white == 1)
                     
                 } else {
@@ -114,7 +116,7 @@ for (c in cohorts) {
 
                     # Stratify by prob_mort
                     subsubset_data <- subset(subset_data, prob_mort >= sev_min & prob_mort < sev_max)
-
+                    
                     # Run TMLE
                     results_df <- run_tmle(subsubset_data, treatment, model_confounders, outcome, 
                                            SL_libraries, c, r, sev_min, sev_max, results_df)
