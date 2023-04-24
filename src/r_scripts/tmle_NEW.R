@@ -5,6 +5,27 @@ source("src/r_scripts/utils.R")
 run_tmle <- function(data, treatment, confounders, outcome, SL_libraries,
                      cohort, race, sev_min, sev_max, results_df) {
 
+    # transform the following variables into factors for tmle
+    data$gender <- as.factor(data$gender)
+    data$ethnicity_white <- as.factor(data$ethnicity_white)
+    data$insurance <- as.factor(data$insurance)
+    data$anchor_year_group <- as.factor(data$anchor_year_group)
+    data$adm_elective <- as.factor(data$adm_elective)
+    data$major_surgery <- as.factor(data$major_surgery)
+    data$is_full_code_admission <- as.factor(data$is_full_code_admission)
+    data$is_full_code_discharge <- as.factor(data$is_full_code_discharge)
+    data$hypertension_present <- as.factor(data$hypertension_present)
+    data$heart_failure_present <- as.factor(data$heart_failure_present)
+    data$copd_present <- as.factor(data$copd_present)
+    data$asthma_present <- as.factor(data$asthma_present)
+    data$cad_present <- as.factor(data$cad_present)
+    data$ckd_stages <- as.factor(data$ckd_stages)
+    data$diabetes_types <- as.factor(data$diabetes_types)
+    data$connective_disease <- as.factor(data$connective_disease)
+    data$pneumonia <- as.factor(data$pneumonia)
+    data$uti <- as.factor(data$uti)
+    data$biliary <- as.factor(data$biliary)
+    data$skin <- as.factor(data$skin)
 
     W <- data[, confounders]
     A <- data[, treatment]
