@@ -1,5 +1,5 @@
 outcome
-death_bin
+mortality_in
 blood_yes
 free_days_hosp_28
 free_days_mv_28
