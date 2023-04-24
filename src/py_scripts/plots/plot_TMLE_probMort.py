@@ -5,9 +5,9 @@ import seaborn as sb
 import matplotlib
 matplotlib.use('TKAgg')
 
-plot_name = "NEW/MIMIC/mortality_in"
-title = "TMLE across Hospital Mortality Probability ranges, for each invasive treatment\n"
-df = pd.read_csv(f"results/{plot_name}.csv")
+plot_name = "MIMIC/mortality_in"
+title = "factors TMLE across Hospital Mortality Probability ranges, for each invasive treatment\n"
+df = pd.read_csv(f"results/prob_mort/{plot_name}.csv")
 
 #conversion_dict = dict(zip(df.prob_mort_start.unique(), range(3)))
 conversion_dict = dict(zip(df.prob_mort_start.unique(), range(4)))
@@ -65,4 +65,4 @@ for i, t in enumerate(treatments):
 
 fig.supxlabel('\nHospital Mortality Probability')
 
-fig.savefig(f"results/{plot_name}.png", dpi=1000)
+fig.savefig(f"results/prob_mort/{plot_name}.png", dpi=1000)
