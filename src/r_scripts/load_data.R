@@ -4,7 +4,7 @@ library(gdata)
 
 load_data <- function(cohort){
 
-  file_path <- paste0("data/", cohort, "_data.csv")
+  file_path <- paste0("data/", cohort, "_coh.csv")
 
   # Load Data  
   sepsis_data <- read.csv(file_path, header = TRUE, stringsAsFactors = TRUE)
@@ -175,7 +175,7 @@ load_data <- function(cohort){
   sepsis_data <- sepsis_data %>% mutate(insulin_yes = ifelse(is.na(insulin_yes), 0, 1))
   
 
-  if (file_path == "data/MIMIC_data.csv") {
+  if (file_path == "data/MIMIC_coh.csv") {
 
     # generate dummy var for eICU reliable hospitals -> all 0 for MIMIC
     sepsis_data$rel_icu <- 0
