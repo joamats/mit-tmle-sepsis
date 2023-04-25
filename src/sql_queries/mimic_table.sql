@@ -30,7 +30,36 @@ WITH
     GROUP BY stay_id
 )
 
-SELECT sepsis3, icu.*, fluids_table.los_icu, adm.adm_type, adm.adm_elective, ad.insurance, pat.anchor_age,pat.anchor_year_group,sf.SOFA,
+SELECT sepsis3, icu.*
+  , CASE 
+      WHEN (
+         LOWER(icu.race) LIKE "%white%"
+      OR LOWER(icu.race) LIKE "%portuguese%" 
+      OR LOWER(icu.race) LIKE "%caucasian%" 
+      ) THEN "White"
+      WHEN (
+         LOWER(icu.race) LIKE "%black%"
+      OR LOWER(icu.race) LIKE "%african american%"
+      ) THEN "Black"
+      WHEN (
+         LOWER(icu.race) LIKE "%hispanic%"
+      OR LOWER(icu.race) LIKE "%south american%" 
+      ) THEN "Hispanic"
+      WHEN (
+         LOWER(icu.race) LIKE "%asian%"
+      ) THEN "Asian"
+      ELSE "Other"
+    END AS race_group
+  
+  , CASE WHEN icu.gender = "F" THEN 1 ELSE 0 END AS sex_female,
+
+
+fluids_table.los_icu, adm.adm_type, adm.adm_elective
+, ad.language
+, CASE WHEN ad.language = "ENGLISH" THEN 1 ELSE 0 END AS eng_prof
+, ad.insurance
+, CASE WHEN ad.insurance = "Other" THEN 1 ELSE 0 END AS private_insurance
+, pat.anchor_age,pat.anchor_year_group,sf.SOFA,
 sf.respiration, sf.coagulation, sf.liver, sf.cardiovascular, sf.cns, sf.renal,
 rrt.rrt, weight.weight_admit,fd_uo.urineoutput,
 charlson.charlson_comorbidity_index, (pressor.stay_id = icu.stay_id) as pressor,ad.discharge_location as discharge_location, pat.dod,
