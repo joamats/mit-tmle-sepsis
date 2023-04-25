@@ -30,7 +30,7 @@ WITH
     GROUP BY stay_id
 )
 
-SELECT icu.*, fluids_table.los_icu, adm.adm_type, adm.adm_elective, ad.insurance, pat.anchor_age,pat.anchor_year_group,sf.SOFA,
+SELECT sepsis3, icu.*, fluids_table.los_icu, adm.adm_type, adm.adm_elective, ad.insurance, pat.anchor_age,pat.anchor_year_group,sf.SOFA,
 sf.respiration, sf.coagulation, sf.liver, sf.cardiovascular, sf.cns, sf.renal,
 rrt.rrt, weight.weight_admit,fd_uo.urineoutput,
 charlson.charlson_comorbidity_index, (pressor.stay_id = icu.stay_id) as pressor,ad.discharge_location as discharge_location, pat.dod,
@@ -138,9 +138,8 @@ ABS(TIMESTAMP_DIFF(pat.dod,icu.icu_outtime,DAY)) as dod_icuout_offset
   END AS mortality_90
 
 from `physionet-data.mimiciv_derived.icustay_detail` as icu 
-inner join `physionet-data.mimiciv_derived.sepsis3` as s3
+left join `physionet-data.mimiciv_derived.sepsis3` as s3
 on s3.stay_id = icu.stay_id
-and s3.sepsis3 is true
 
 left join `physionet-data.mimiciv_hosp.patients` as pat
 on icu.subject_id = pat.subject_id
@@ -443,12 +442,6 @@ ON com.hadm_id = icu.hadm_id
 LEFT JOIN fluids_table
 ON fluids_table.stay_id = icu.stay_id
 
-WHERE (icu.first_icu_stay IS TRUE AND icu.first_hosp_stay IS TRUE)
-AND (discharge_location is not null OR abs(timestamp_diff(pat.dod,icu.icu_outtime,DAY)) < 4)
-AND (icu.race != "UNKNOWN")
-AND (icu.race != "UNABLE TO OBTAIN")
-AND (icu.race != "PATIENT DECLINED TO ANSWER")
-AND (icu.race != "OTHER")
+WHERE icu.los_icu > 0
 
-
-order by icu.hadm_id
+order by icu.subject_id, icu.hadm_id, icu.stay_id, icu.hospstay_seq, icu.icustay_seq
