@@ -77,13 +77,11 @@ ICD-9 to ICD-10 translation based on this [GitHub Repo](https://github.com/Atlas
 
 Fit a logistic regression with the treatment as outcome to assess odd ratios' disparities amongst different ethnicities. Results can be replicated by:
 
-1) Generating CSV files ready for the Stata script, by runnning the command:
+1) Running the script:
 
 ```sh
-source("src/r_scripts/log_reg/create_csv.R")
+source("src/r_scripts/log_reg/log_reg.R")
 ```
-
-2) Running all the commands of the file **src/stata_scripts/logistic_regression.do** in a licensed version of [Stata](https://www.stata.com/).
 
 #### 4.2 TMLE
 
