@@ -55,4 +55,5 @@ tbl1 <- table1(~ mv_elig + rrt_elig + vp_elig | mort_bins*mortality_in,
 
 # Convert to flextable
 t1flex(tbl1) %>% save_as_docx(path="results/table1/Table_sanity_check.docx")
-
+# Save also as a CSV
+tbl1 %>% as.data.frame() %>% write_csv("results/table1/Table_sanity_check.csv")
