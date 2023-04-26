@@ -9,6 +9,10 @@ matplotlib.use('TKAgg')
 # Read in the CSV file
 data = pd.read_csv(f"data/MIMIC.csv")
 
+# Subset data according to ethnicity_white
+#data = data.loc[data['ethnicity_white'] == 0] # non-whites
+#data = data.loc[data['ethnicity_white'] == 1] # whites
+
 # Define the bins for prob_mort
 bins = [0, 0.06, 0.11, 0.21, 1]
 
@@ -67,7 +71,7 @@ for i, treatment in enumerate(treatments):
 
     # Set the x-axis tick labels and the y-axis label
     ax[i].set_xticks(range(len(bins)-1))
-    ax[i].set_xticklabels(["0-6", "6-11", "11-21", "> 21"])
+    ax[i].set_xticklabels(["0-6", "7-11", "12-21", "> 21"])
     ax[i].set_ylim([0,100])
     ax[0].set(ylabel="Probability of Receiving Treatment (%)")
     ax[i].set_title(treat_names[i])
@@ -76,4 +80,6 @@ for i, treatment in enumerate(treatments):
 fig.supxlabel('\nMortality Probability (%)               ')
 
 # Save the figure
-fig.savefig(f"results/sanity_check.png", dpi=300, bbox_inches="tight")
+fig.savefig(f"results/sanity_check_all.png", dpi=300, bbox_inches="tight")
+#fig.savefig(f"results/sanity_check_non-whites.png", dpi=300, bbox_inches="tight")
+#fig.savefig(f"results/sanity_check_whites.png", dpi=300, bbox_inches="tight")

@@ -1,0 +1,646 @@
+,OR,2.50%,97.50%,model,cohort,outcome,prob_mort_start
+(Intercept),0.00,0.00,0.00,Prob Mort all,combined,Ventilation,1
+rrt_elig,0.80,0.67,0.95,Prob Mort all,combined,Ventilation,1
+vp_elig,2.03,1.87,2.22,Prob Mort all,combined,Ventilation,1
+admission_age,1.00,0.99,1.00,Prob Mort all,combined,Ventilation,1
+gender,1.08,1.00,1.17,Prob Mort all,combined,Ventilation,1
+ethnicity_white,1.33,1.20,1.47,Prob Mort all,combined,Ventilation,1
+insurance,0.94,0.89,1.00,Prob Mort all,combined,Ventilation,1
+anchor_year_group,0.92,0.89,0.95,Prob Mort all,combined,Ventilation,1
+adm_elective,0.78,0.70,0.87,Prob Mort all,combined,Ventilation,1
+major_surgery,1.58,1.45,1.74,Prob Mort all,combined,Ventilation,1
+is_full_code_admission,2.03,1.54,2.69,Prob Mort all,combined,Ventilation,1
+is_full_code_discharge,0.69,0.54,0.88,Prob Mort all,combined,Ventilation,1
+SOFA,1.21,1.20,1.23,Prob Mort all,combined,Ventilation,1
+charlson_cont,0.95,0.93,0.97,Prob Mort all,combined,Ventilation,1
+fluids_volume,1.00,1.00,1.00,Prob Mort all,combined,Ventilation,1
+resp_rate_mean,0.96,0.95,0.97,Prob Mort all,combined,Ventilation,1
+mbp_mean,1.02,1.02,1.03,Prob Mort all,combined,Ventilation,1
+heart_rate_mean,0.99,0.99,0.99,Prob Mort all,combined,Ventilation,1
+temperature_mean,1.93,1.80,2.08,Prob Mort all,combined,Ventilation,1
+spo2_mean,1.41,1.38,1.44,Prob Mort all,combined,Ventilation,1
+po2_min,1.00,1.00,1.01,Prob Mort all,combined,Ventilation,1
+pco2_max,1.06,1.06,1.06,Prob Mort all,combined,Ventilation,1
+ph_min,0.07,0.04,0.12,Prob Mort all,combined,Ventilation,1
+lactate_max,1.21,1.18,1.24,Prob Mort all,combined,Ventilation,1
+glucose_max,1.00,1.00,1.00,Prob Mort all,combined,Ventilation,1
+sodium_min,1.03,1.03,1.04,Prob Mort all,combined,Ventilation,1
+potassium_max,0.97,0.93,1.02,Prob Mort all,combined,Ventilation,1
+cortisol_min,1.01,1.00,1.01,Prob Mort all,combined,Ventilation,1
+hemoglobin_min,0.97,0.95,0.99,Prob Mort all,combined,Ventilation,1
+fibrinogen_min,1.00,1.00,1.00,Prob Mort all,combined,Ventilation,1
+inr_max,0.90,0.86,0.94,Prob Mort all,combined,Ventilation,1
+hypertension_present,1.05,0.96,1.14,Prob Mort all,combined,Ventilation,1
+heart_failure_present,1.09,1.00,1.19,Prob Mort all,combined,Ventilation,1
+copd_present,1.30,1.18,1.43,Prob Mort all,combined,Ventilation,1
+asthma_present,1.26,0.87,1.80,Prob Mort all,combined,Ventilation,1
+cad_present,1.18,1.09,1.29,Prob Mort all,combined,Ventilation,1
+ckd_stages1,0.79,0.68,0.90,Prob Mort all,combined,Ventilation,1
+diabetes_types,0.89,0.81,0.97,Prob Mort all,combined,Ventilation,1
+connective_disease,0.94,0.79,1.12,Prob Mort all,combined,Ventilation,1
+pneumonia,1.17,1.01,1.36,Prob Mort all,combined,Ventilation,1
+uti,0.51,0.39,0.67,Prob Mort all,combined,Ventilation,1
+biliary,0.25,0.13,0.45,Prob Mort all,combined,Ventilation,1
+skin,1.03,0.61,1.70,Prob Mort all,combined,Ventilation,1
+(Intercept)1,0.00,0.00,0.00,1,combined,Ventilation,0
+rrt_elig1,1.04,0.73,1.51,1,combined,Ventilation,0
+vp_elig1,2.77,2.23,3.45,1,combined,Ventilation,0
+admission_age1,0.96,0.96,0.97,1,combined,Ventilation,0
+gender1,0.93,0.77,1.12,1,combined,Ventilation,0
+ethnicity_white1,1.43,1.13,1.81,1,combined,Ventilation,0
+insurance1,1.01,0.86,1.20,1,combined,Ventilation,0
+anchor_year_group1,0.95,0.87,1.04,1,combined,Ventilation,0
+adm_elective1,0.85,0.56,1.30,1,combined,Ventilation,0
+major_surgery1,2.02,1.58,2.59,1,combined,Ventilation,0
+is_full_code_admission1,1.87,1.18,3.00,1,combined,Ventilation,0
+is_full_code_discharge1,0.87,0.57,1.31,1,combined,Ventilation,0
+SOFA1,1.10,1.06,1.14,1,combined,Ventilation,0
+charlson_cont1,0.90,0.86,0.94,1,combined,Ventilation,0
+fluids_volume1,1.00,1.00,1.00,1,combined,Ventilation,0
+resp_rate_mean1,0.88,0.86,0.90,1,combined,Ventilation,0
+mbp_mean1,1.03,1.02,1.04,1,combined,Ventilation,0
+heart_rate_mean1,0.97,0.97,0.98,1,combined,Ventilation,0
+temperature_mean1,2.26,1.95,2.63,1,combined,Ventilation,0
+spo2_mean1,1.21,1.17,1.26,1,combined,Ventilation,0
+po2_min1,1.01,1.01,1.01,1,combined,Ventilation,0
+pco2_max1,1.05,1.04,1.06,1,combined,Ventilation,0
+ph_min1,0.02,0.01,0.06,1,combined,Ventilation,0
+lactate_max1,1.17,1.11,1.23,1,combined,Ventilation,0
+glucose_max1,1.00,1.00,1.00,1,combined,Ventilation,0
+sodium_min1,1.01,1.00,1.03,1,combined,Ventilation,0
+potassium_max1,0.94,0.84,1.05,1,combined,Ventilation,0
+cortisol_min1,1.00,0.98,1.02,1,combined,Ventilation,0
+hemoglobin_min1,0.94,0.89,0.99,1,combined,Ventilation,0
+fibrinogen_min1,1.00,1.00,1.00,1,combined,Ventilation,0
+inr_max1,0.96,0.88,1.05,1,combined,Ventilation,0
+hypertension_present1,1.27,1.02,1.57,1,combined,Ventilation,0
+heart_failure_present1,1.10,0.90,1.34,1,combined,Ventilation,0
+copd_present1,1.48,1.19,1.84,1,combined,Ventilation,0
+asthma_present1,1.18,0.57,2.59,1,combined,Ventilation,0
+cad_present1,1.28,1.05,1.57,1,combined,Ventilation,0
+ckd_stages11,0.87,0.65,1.17,1,combined,Ventilation,0
+diabetes_types1,0.94,0.76,1.18,1,combined,Ventilation,0
+connective_disease1,1.13,0.74,1.75,1,combined,Ventilation,0
+pneumonia1,1.03,0.75,1.43,1,combined,Ventilation,0
+uti1,0.29,0.17,0.50,1,combined,Ventilation,0
+biliary1,0.39,0.12,1.28,1,combined,Ventilation,0
+skin1,0.46,0.12,2.08,1,combined,Ventilation,0
+(Intercept)2,0.00,0.00,0.00,2,combined,Ventilation,0.06
+rrt_elig2,0.57,0.22,1.39,2,combined,Ventilation,0.06
+vp_elig2,1.56,1.15,2.12,2,combined,Ventilation,0.06
+admission_age2,0.96,0.95,0.97,2,combined,Ventilation,0.06
+gender2,0.80,0.60,1.06,2,combined,Ventilation,0.06
+ethnicity_white2,1.64,1.17,2.33,2,combined,Ventilation,0.06
+insurance2,0.68,0.57,0.82,2,combined,Ventilation,0.06
+anchor_year_group2,1.06,0.94,1.19,2,combined,Ventilation,0.06
+adm_elective2,1.62,1.21,2.19,2,combined,Ventilation,0.06
+major_surgery2,2.81,1.97,4.05,2,combined,Ventilation,0.06
+is_full_code_admission2,1.66,0.12,19.37,2,combined,Ventilation,0.06
+is_full_code_discharge2,0.91,0.17,10.91,2,combined,Ventilation,0.06
+SOFA2,1.11,1.04,1.18,2,combined,Ventilation,0.06
+charlson_cont2,0.98,0.91,1.05,2,combined,Ventilation,0.06
+fluids_volume2,1.00,1.00,1.00,2,combined,Ventilation,0.06
+resp_rate_mean2,0.99,0.94,1.04,2,combined,Ventilation,0.06
+mbp_mean2,1.02,1.01,1.04,2,combined,Ventilation,0.06
+heart_rate_mean2,0.97,0.96,0.98,2,combined,Ventilation,0.06
+temperature_mean2,1.23,0.91,1.67,2,combined,Ventilation,0.06
+spo2_mean2,1.64,1.49,1.81,2,combined,Ventilation,0.06
+po2_min2,1.00,0.99,1.00,2,combined,Ventilation,0.06
+pco2_max2,1.05,1.03,1.06,2,combined,Ventilation,0.06
+ph_min2,0.15,0.01,1.72,2,combined,Ventilation,0.06
+lactate_max2,1.45,1.34,1.58,2,combined,Ventilation,0.06
+glucose_max2,1.00,1.00,1.00,2,combined,Ventilation,0.06
+sodium_min2,1.06,1.02,1.09,2,combined,Ventilation,0.06
+potassium_max2,1.07,0.88,1.29,2,combined,Ventilation,0.06
+cortisol_min2,1.02,0.97,1.06,2,combined,Ventilation,0.06
+hemoglobin_min2,0.93,0.86,1.00,2,combined,Ventilation,0.06
+fibrinogen_min2,1.00,1.00,1.00,2,combined,Ventilation,0.06
+inr_max2,0.92,0.70,1.17,2,combined,Ventilation,0.06
+hypertension_present2,1.39,1.04,1.85,2,combined,Ventilation,0.06
+heart_failure_present2,1.52,1.13,2.03,2,combined,Ventilation,0.06
+copd_present2,1.15,0.83,1.59,2,combined,Ventilation,0.06
+asthma_present2,0.00,0.00,0.00,2,combined,Ventilation,0.06
+cad_present2,1.00,0.75,1.33,2,combined,Ventilation,0.06
+ckd_stages12,0.66,0.35,1.18,2,combined,Ventilation,0.06
+diabetes_types2,0.94,0.69,1.28,2,combined,Ventilation,0.06
+connective_disease2,1.80,0.96,3.23,2,combined,Ventilation,0.06
+pneumonia2,1.56,0.80,2.89,2,combined,Ventilation,0.06
+uti2,1.02,0.36,2.45,2,combined,Ventilation,0.06
+biliary2,0.31,0.01,1.95,2,combined,Ventilation,0.06
+skin2,0.76,0.10,3.51,2,combined,Ventilation,0.06
+(Intercept)3,0.00,0.00,0.00,3,combined,Ventilation,0.11
+rrt_elig3,0.31,0.21,0.45,3,combined,Ventilation,0.11
+vp_elig3,3.08,2.54,3.73,3,combined,Ventilation,0.11
+admission_age3,0.96,0.95,0.96,3,combined,Ventilation,0.11
+gender3,0.92,0.78,1.09,3,combined,Ventilation,0.11
+ethnicity_white3,1.17,0.94,1.46,3,combined,Ventilation,0.11
+insurance3,0.98,0.86,1.13,3,combined,Ventilation,0.11
+anchor_year_group3,0.91,0.84,0.99,3,combined,Ventilation,0.11
+adm_elective3,1.17,0.90,1.54,3,combined,Ventilation,0.11
+major_surgery3,2.07,1.71,2.52,3,combined,Ventilation,0.11
+is_full_code_admission3,2.11,1.16,3.85,3,combined,Ventilation,0.11
+is_full_code_discharge3,0.83,0.50,1.39,3,combined,Ventilation,0.11
+SOFA3,1.02,0.99,1.06,3,combined,Ventilation,0.11
+charlson_cont3,0.94,0.90,0.98,3,combined,Ventilation,0.11
+fluids_volume3,1.00,1.00,1.00,3,combined,Ventilation,0.11
+resp_rate_mean3,0.87,0.85,0.89,3,combined,Ventilation,0.11
+mbp_mean3,1.03,1.02,1.04,3,combined,Ventilation,0.11
+heart_rate_mean3,0.96,0.96,0.97,3,combined,Ventilation,0.11
+temperature_mean3,2.46,2.10,2.88,3,combined,Ventilation,0.11
+spo2_mean3,1.39,1.32,1.46,3,combined,Ventilation,0.11
+po2_min3,1.00,1.00,1.01,3,combined,Ventilation,0.11
+pco2_max3,1.07,1.06,1.08,3,combined,Ventilation,0.11
+ph_min3,0.08,0.02,0.28,3,combined,Ventilation,0.11
+lactate_max3,1.12,1.07,1.18,3,combined,Ventilation,0.11
+glucose_max3,1.00,1.00,1.00,3,combined,Ventilation,0.11
+sodium_min3,1.02,1.00,1.04,3,combined,Ventilation,0.11
+potassium_max3,0.95,0.86,1.05,3,combined,Ventilation,0.11
+cortisol_min3,0.99,0.96,1.01,3,combined,Ventilation,0.11
+hemoglobin_min3,0.99,0.94,1.04,3,combined,Ventilation,0.11
+fibrinogen_min3,1.00,1.00,1.00,3,combined,Ventilation,0.11
+inr_max3,0.85,0.78,0.93,3,combined,Ventilation,0.11
+hypertension_present3,0.97,0.80,1.18,3,combined,Ventilation,0.11
+heart_failure_present3,1.08,0.89,1.30,3,combined,Ventilation,0.11
+copd_present3,1.39,1.14,1.70,3,combined,Ventilation,0.11
+asthma_present3,1.68,0.74,3.67,3,combined,Ventilation,0.11
+cad_present3,1.26,1.05,1.51,3,combined,Ventilation,0.11
+ckd_stages13,1.04,0.78,1.38,3,combined,Ventilation,0.11
+diabetes_types3,0.88,0.73,1.07,3,combined,Ventilation,0.11
+connective_disease3,0.78,0.53,1.13,3,combined,Ventilation,0.11
+pneumonia3,1.21,0.89,1.65,3,combined,Ventilation,0.11
+uti3,0.51,0.29,0.87,3,combined,Ventilation,0.11
+biliary3,0.44,0.11,1.37,3,combined,Ventilation,0.11
+skin3,0.97,0.32,3.04,3,combined,Ventilation,0.11
+(Intercept)4,0.00,0.00,0.00,4,combined,Ventilation,0.21
+rrt_elig4,0.65,0.41,1.02,4,combined,Ventilation,0.21
+vp_elig4,2.79,2.29,3.41,4,combined,Ventilation,0.21
+admission_age4,0.95,0.94,0.95,4,combined,Ventilation,0.21
+gender4,0.85,0.71,1.01,4,combined,Ventilation,0.21
+ethnicity_white4,1.31,1.05,1.64,4,combined,Ventilation,0.21
+insurance4,0.98,0.86,1.11,4,combined,Ventilation,0.21
+anchor_year_group4,1.00,0.93,1.08,4,combined,Ventilation,0.21
+adm_elective4,1.21,0.97,1.52,4,combined,Ventilation,0.21
+major_surgery4,1.66,1.36,2.03,4,combined,Ventilation,0.21
+is_full_code_admission4,3.38,1.50,7.70,4,combined,Ventilation,0.21
+is_full_code_discharge4,0.52,0.27,1.01,4,combined,Ventilation,0.21
+SOFA4,1.01,0.97,1.05,4,combined,Ventilation,0.21
+charlson_cont4,0.98,0.94,1.02,4,combined,Ventilation,0.21
+fluids_volume4,1.00,1.00,1.00,4,combined,Ventilation,0.21
+resp_rate_mean4,0.86,0.84,0.89,4,combined,Ventilation,0.21
+mbp_mean4,1.03,1.02,1.04,4,combined,Ventilation,0.21
+heart_rate_mean4,0.94,0.94,0.95,4,combined,Ventilation,0.21
+temperature_mean4,2.67,2.23,3.20,4,combined,Ventilation,0.21
+spo2_mean4,1.52,1.44,1.61,4,combined,Ventilation,0.21
+po2_min4,1.00,1.00,1.00,4,combined,Ventilation,0.21
+pco2_max4,1.07,1.06,1.08,4,combined,Ventilation,0.21
+ph_min4,0.41,0.10,1.58,4,combined,Ventilation,0.21
+lactate_max4,1.34,1.27,1.42,4,combined,Ventilation,0.21
+glucose_max4,1.00,1.00,1.00,4,combined,Ventilation,0.21
+sodium_min4,1.05,1.03,1.07,4,combined,Ventilation,0.21
+potassium_max4,1.03,0.91,1.15,4,combined,Ventilation,0.21
+cortisol_min4,1.02,1.00,1.04,4,combined,Ventilation,0.21
+hemoglobin_min4,0.97,0.93,1.02,4,combined,Ventilation,0.21
+fibrinogen_min4,1.00,1.00,1.00,4,combined,Ventilation,0.21
+inr_max4,0.83,0.73,0.94,4,combined,Ventilation,0.21
+hypertension_present4,0.95,0.78,1.14,4,combined,Ventilation,0.21
+heart_failure_present4,1.44,1.18,1.76,4,combined,Ventilation,0.21
+copd_present4,1.22,0.98,1.50,4,combined,Ventilation,0.21
+asthma_present4,1.95,0.81,4.39,4,combined,Ventilation,0.21
+cad_present4,1.31,1.08,1.59,4,combined,Ventilation,0.21
+ckd_stages14,0.74,0.53,1.04,4,combined,Ventilation,0.21
+diabetes_types4,0.98,0.80,1.20,4,combined,Ventilation,0.21
+connective_disease4,0.98,0.65,1.46,4,combined,Ventilation,0.21
+pneumonia4,1.25,0.87,1.77,4,combined,Ventilation,0.21
+uti4,0.26,0.13,0.50,4,combined,Ventilation,0.21
+biliary4,0.24,0.04,0.94,4,combined,Ventilation,0.21
+skin4,1.01,0.34,2.97,4,combined,Ventilation,0.21
+(Intercept)5,11765789.77,2469.41,56146014551.68,Prob Mort all,combined,rrt_elig,1
+mv_elig,0.66,0.55,0.79,Prob Mort all,combined,rrt_elig,1
+vp_elig5,0.55,0.46,0.66,Prob Mort all,combined,rrt_elig,1
+admission_age5,0.97,0.96,0.97,Prob Mort all,combined,rrt_elig,1
+gender5,1.07,0.93,1.24,Prob Mort all,combined,rrt_elig,1
+ethnicity_white5,0.97,0.82,1.15,Prob Mort all,combined,rrt_elig,1
+insurance5,0.89,0.80,1.00,Prob Mort all,combined,rrt_elig,1
+anchor_year_group5,0.99,0.92,1.06,Prob Mort all,combined,rrt_elig,1
+adm_elective5,0.64,0.47,0.85,Prob Mort all,combined,rrt_elig,1
+major_surgery5,1.27,1.06,1.51,Prob Mort all,combined,rrt_elig,1
+is_full_code_admission5,1.02,0.67,1.55,Prob Mort all,combined,rrt_elig,1
+is_full_code_discharge5,0.94,0.67,1.33,Prob Mort all,combined,rrt_elig,1
+SOFA5,1.37,1.33,1.40,Prob Mort all,combined,rrt_elig,1
+charlson_cont5,0.98,0.94,1.01,Prob Mort all,combined,rrt_elig,1
+fluids_volume5,1.00,1.00,1.00,Prob Mort all,combined,rrt_elig,1
+resp_rate_mean5,1.01,0.99,1.03,Prob Mort all,combined,rrt_elig,1
+mbp_mean5,1.00,0.99,1.00,Prob Mort all,combined,rrt_elig,1
+heart_rate_mean5,1.00,1.00,1.00,Prob Mort all,combined,rrt_elig,1
+temperature_mean5,0.81,0.72,0.91,Prob Mort all,combined,rrt_elig,1
+spo2_mean5,0.94,0.91,0.96,Prob Mort all,combined,rrt_elig,1
+po2_min5,1.00,1.00,1.00,Prob Mort all,combined,rrt_elig,1
+pco2_max5,1.00,0.99,1.01,Prob Mort all,combined,rrt_elig,1
+ph_min5,0.87,0.36,2.11,Prob Mort all,combined,rrt_elig,1
+lactate_max5,1.05,1.02,1.08,Prob Mort all,combined,rrt_elig,1
+glucose_max5,1.00,1.00,1.00,Prob Mort all,combined,rrt_elig,1
+sodium_min5,0.96,0.95,0.98,Prob Mort all,combined,rrt_elig,1
+potassium_max5,1.39,1.30,1.49,Prob Mort all,combined,rrt_elig,1
+cortisol_min5,1.00,0.99,1.01,Prob Mort all,combined,rrt_elig,1
+hemoglobin_min5,0.89,0.85,0.93,Prob Mort all,combined,rrt_elig,1
+fibrinogen_min5,1.00,1.00,1.00,Prob Mort all,combined,rrt_elig,1
+inr_max5,0.96,0.90,1.03,Prob Mort all,combined,rrt_elig,1
+hypertension_present5,1.29,1.08,1.55,Prob Mort all,combined,rrt_elig,1
+heart_failure_present5,1.14,0.97,1.33,Prob Mort all,combined,rrt_elig,1
+copd_present5,0.97,0.82,1.15,Prob Mort all,combined,rrt_elig,1
+asthma_present5,0.83,0.39,1.61,Prob Mort all,combined,rrt_elig,1
+cad_present5,1.22,1.04,1.43,Prob Mort all,combined,rrt_elig,1
+ckd_stages15,19.61,16.46,23.43,Prob Mort all,combined,rrt_elig,1
+diabetes_types5,1.33,1.12,1.56,Prob Mort all,combined,rrt_elig,1
+connective_disease5,1.11,0.80,1.51,Prob Mort all,combined,rrt_elig,1
+pneumonia5,0.93,0.73,1.18,Prob Mort all,combined,rrt_elig,1
+uti5,0.80,0.41,1.45,Prob Mort all,combined,rrt_elig,1
+biliary5,0.70,0.29,1.54,Prob Mort all,combined,rrt_elig,1
+skin5,1.05,0.31,2.88,Prob Mort all,combined,rrt_elig,1
+(Intercept)6,3257267.26,31.89,341501591323.94,1,combined,rrt_elig,0
+mv_elig1,0.98,0.70,1.37,1,combined,rrt_elig,0
+vp_elig6,0.55,0.41,0.75,1,combined,rrt_elig,0
+admission_age6,0.97,0.96,0.98,1,combined,rrt_elig,0
+gender6,1.10,0.88,1.38,1,combined,rrt_elig,0
+ethnicity_white6,1.27,0.96,1.67,1,combined,rrt_elig,0
+insurance6,0.92,0.77,1.10,1,combined,rrt_elig,0
+anchor_year_group6,1.03,0.93,1.15,1,combined,rrt_elig,0
+adm_elective6,0.65,0.38,1.07,1,combined,rrt_elig,0
+major_surgery6,1.35,1.03,1.77,1,combined,rrt_elig,0
+is_full_code_admission6,1.00,0.58,1.72,1,combined,rrt_elig,0
+is_full_code_discharge6,1.00,0.65,1.56,1,combined,rrt_elig,0
+SOFA6,1.25,1.20,1.30,1,combined,rrt_elig,0
+charlson_cont6,0.97,0.92,1.02,1,combined,rrt_elig,0
+fluids_volume6,1.00,1.00,1.00,1,combined,rrt_elig,0
+resp_rate_mean6,1.03,1.00,1.06,1,combined,rrt_elig,0
+mbp_mean6,1.00,0.98,1.01,1,combined,rrt_elig,0
+heart_rate_mean6,1.00,0.99,1.01,1,combined,rrt_elig,0
+temperature_mean6,0.90,0.77,1.06,1,combined,rrt_elig,0
+spo2_mean6,0.94,0.91,0.98,1,combined,rrt_elig,0
+po2_min6,1.00,1.00,1.00,1,combined,rrt_elig,0
+pco2_max6,1.00,0.99,1.00,1,combined,rrt_elig,0
+ph_min6,0.49,0.14,1.70,1,combined,rrt_elig,0
+lactate_max6,1.05,1.01,1.09,1,combined,rrt_elig,0
+glucose_max6,1.00,1.00,1.00,1,combined,rrt_elig,0
+sodium_min6,0.97,0.95,0.99,1,combined,rrt_elig,0
+potassium_max6,1.52,1.37,1.70,1,combined,rrt_elig,0
+cortisol_min6,1.00,0.98,1.02,1,combined,rrt_elig,0
+hemoglobin_min6,0.85,0.79,0.91,1,combined,rrt_elig,0
+fibrinogen_min6,1.00,1.00,1.00,1,combined,rrt_elig,0
+inr_max6,1.03,0.93,1.13,1,combined,rrt_elig,0
+hypertension_present6,1.27,0.97,1.67,1,combined,rrt_elig,0
+heart_failure_present6,1.07,0.84,1.37,1,combined,rrt_elig,0
+copd_present6,0.95,0.73,1.24,1,combined,rrt_elig,0
+asthma_present6,0.66,0.17,1.93,1,combined,rrt_elig,0
+cad_present6,1.15,0.89,1.47,1,combined,rrt_elig,0
+ckd_stages16,13.73,10.44,18.17,1,combined,rrt_elig,0
+diabetes_types6,1.36,1.05,1.76,1,combined,rrt_elig,0
+connective_disease6,1.22,0.74,1.98,1,combined,rrt_elig,0
+pneumonia6,0.91,0.62,1.34,1,combined,rrt_elig,0
+uti6,0.62,0.20,1.65,1,combined,rrt_elig,0
+biliary6,1.20,0.34,3.73,1,combined,rrt_elig,0
+skin6,3.32,0.44,15.53,1,combined,rrt_elig,0
+(Intercept)7,164654.72,0.00,4952999064489370000.00,2,combined,rrt_elig,0.06
+mv_elig2,0.43,0.16,1.07,2,combined,rrt_elig,0.06
+vp_elig7,0.37,0.22,0.62,2,combined,rrt_elig,0.06
+admission_age7,0.98,0.96,1.00,2,combined,rrt_elig,0.06
+gender7,1.02,0.67,1.53,2,combined,rrt_elig,0.06
+ethnicity_white7,0.76,0.49,1.17,2,combined,rrt_elig,0.06
+insurance7,0.69,0.51,0.93,2,combined,rrt_elig,0.06
+anchor_year_group7,0.91,0.75,1.10,2,combined,rrt_elig,0.06
+adm_elective7,0.89,0.42,1.85,2,combined,rrt_elig,0.06
+major_surgery7,0.90,0.53,1.51,2,combined,rrt_elig,0.06
+is_full_code_admission7,2.21,0.45,11.05,2,combined,rrt_elig,0.06
+is_full_code_discharge7,0.45,0.13,1.72,2,combined,rrt_elig,0.06
+SOFA7,1.52,1.39,1.68,2,combined,rrt_elig,0.06
+charlson_cont7,0.91,0.82,1.01,2,combined,rrt_elig,0.06
+fluids_volume7,1.00,1.00,1.00,2,combined,rrt_elig,0.06
+resp_rate_mean7,0.98,0.92,1.04,2,combined,rrt_elig,0.06
+mbp_mean7,0.99,0.97,1.01,2,combined,rrt_elig,0.06
+heart_rate_mean7,1.01,0.99,1.02,2,combined,rrt_elig,0.06
+temperature_mean7,0.56,0.34,0.90,2,combined,rrt_elig,0.06
+spo2_mean7,0.95,0.86,1.05,2,combined,rrt_elig,0.06
+po2_min7,1.00,0.99,1.00,2,combined,rrt_elig,0.06
+pco2_max7,1.00,0.97,1.02,2,combined,rrt_elig,0.06
+ph_min7,10.06,0.47,229.06,2,combined,rrt_elig,0.06
+lactate_max7,1.07,0.94,1.20,2,combined,rrt_elig,0.06
+glucose_max7,1.00,1.00,1.00,2,combined,rrt_elig,0.06
+sodium_min7,0.95,0.92,0.99,2,combined,rrt_elig,0.06
+potassium_max7,1.39,1.15,1.66,2,combined,rrt_elig,0.06
+cortisol_min7,0.98,0.94,1.02,2,combined,rrt_elig,0.06
+hemoglobin_min7,0.96,0.86,1.07,2,combined,rrt_elig,0.06
+fibrinogen_min7,1.00,1.00,1.00,2,combined,rrt_elig,0.06
+inr_max7,0.84,0.65,1.06,2,combined,rrt_elig,0.06
+hypertension_present7,1.52,0.87,2.68,2,combined,rrt_elig,0.06
+heart_failure_present7,0.97,0.61,1.53,2,combined,rrt_elig,0.06
+copd_present7,0.83,0.51,1.33,2,combined,rrt_elig,0.06
+asthma_present7,0.54,0.03,4.01,2,combined,rrt_elig,0.06
+cad_present7,1.11,0.70,1.74,2,combined,rrt_elig,0.06
+ckd_stages17,52.52,31.50,90.88,2,combined,rrt_elig,0.06
+diabetes_types7,1.43,0.90,2.28,2,combined,rrt_elig,0.06
+connective_disease7,0.54,0.19,1.33,2,combined,rrt_elig,0.06
+pneumonia7,1.82,0.95,3.41,2,combined,rrt_elig,0.06
+uti7,0.96,0.14,3.80,2,combined,rrt_elig,0.06
+biliary7,0.49,0.02,3.09,2,combined,rrt_elig,0.06
+skin7,0.00,0.00,34916016.15,2,combined,rrt_elig,0.06
+(Intercept)8,7919.80,0.00,2332728224124.22,3,combined,rrt_elig,0.11
+mv_elig3,0.27,0.18,0.39,3,combined,rrt_elig,0.11
+vp_elig8,0.67,0.46,0.96,3,combined,rrt_elig,0.11
+admission_age8,0.95,0.94,0.96,3,combined,rrt_elig,0.11
+gender8,0.94,0.69,1.28,3,combined,rrt_elig,0.11
+ethnicity_white8,0.95,0.66,1.36,3,combined,rrt_elig,0.11
+insurance8,0.91,0.71,1.17,3,combined,rrt_elig,0.11
+anchor_year_group8,1.02,0.88,1.17,3,combined,rrt_elig,0.11
+adm_elective8,0.72,0.39,1.29,3,combined,rrt_elig,0.11
+major_surgery8,1.61,1.10,2.36,3,combined,rrt_elig,0.11
+is_full_code_admission8,0.97,0.37,2.49,3,combined,rrt_elig,0.11
+is_full_code_discharge8,1.08,0.52,2.39,3,combined,rrt_elig,0.11
+SOFA8,1.40,1.31,1.49,3,combined,rrt_elig,0.11
+charlson_cont8,0.98,0.91,1.05,3,combined,rrt_elig,0.11
+fluids_volume8,1.00,1.00,1.00,3,combined,rrt_elig,0.11
+resp_rate_mean8,1.01,0.97,1.05,3,combined,rrt_elig,0.11
+mbp_mean8,0.98,0.97,1.00,3,combined,rrt_elig,0.11
+heart_rate_mean8,0.99,0.98,1.00,3,combined,rrt_elig,0.11
+temperature_mean8,0.77,0.58,1.01,3,combined,rrt_elig,0.11
+spo2_mean8,0.98,0.91,1.05,3,combined,rrt_elig,0.11
+po2_min8,1.00,1.00,1.00,3,combined,rrt_elig,0.11
+pco2_max8,1.00,0.99,1.02,3,combined,rrt_elig,0.11
+ph_min8,2.22,0.29,17.11,3,combined,rrt_elig,0.11
+lactate_max8,1.05,0.98,1.12,3,combined,rrt_elig,0.11
+glucose_max8,1.00,1.00,1.00,3,combined,rrt_elig,0.11
+sodium_min8,0.97,0.94,0.99,3,combined,rrt_elig,0.11
+potassium_max8,1.26,1.08,1.46,3,combined,rrt_elig,0.11
+cortisol_min8,1.01,0.98,1.04,3,combined,rrt_elig,0.11
+hemoglobin_min8,0.93,0.85,1.03,3,combined,rrt_elig,0.11
+fibrinogen_min8,1.00,1.00,1.00,3,combined,rrt_elig,0.11
+inr_max8,0.86,0.74,0.99,3,combined,rrt_elig,0.11
+hypertension_present8,1.68,1.13,2.54,3,combined,rrt_elig,0.11
+heart_failure_present8,1.52,1.09,2.12,3,combined,rrt_elig,0.11
+copd_present8,1.08,0.74,1.55,3,combined,rrt_elig,0.11
+asthma_present8,0.98,0.19,3.40,3,combined,rrt_elig,0.11
+cad_present8,1.19,0.85,1.68,3,combined,rrt_elig,0.11
+ckd_stages18,19.74,13.78,28.66,3,combined,rrt_elig,0.11
+diabetes_types8,1.50,1.06,2.11,3,combined,rrt_elig,0.11
+connective_disease8,1.30,0.66,2.47,3,combined,rrt_elig,0.11
+pneumonia8,0.72,0.42,1.22,3,combined,rrt_elig,0.11
+uti8,1.41,0.33,4.22,3,combined,rrt_elig,0.11
+biliary8,0.35,0.02,1.97,3,combined,rrt_elig,0.11
+skin8,0.41,0.01,4.81,3,combined,rrt_elig,0.11
+(Intercept)9,229143145942214.00,23765.61,2018223361715950000000000.00,4,combined,rrt_elig,0.21
+mv_elig4,0.49,0.30,0.78,4,combined,rrt_elig,0.21
+vp_elig9,0.53,0.35,0.81,4,combined,rrt_elig,0.21
+admission_age9,0.96,0.94,0.97,4,combined,rrt_elig,0.21
+gender9,1.02,0.72,1.44,4,combined,rrt_elig,0.21
+ethnicity_white9,0.73,0.50,1.08,4,combined,rrt_elig,0.21
+insurance9,0.99,0.76,1.29,4,combined,rrt_elig,0.21
+anchor_year_group9,0.93,0.80,1.08,4,combined,rrt_elig,0.21
+adm_elective9,0.73,0.37,1.40,4,combined,rrt_elig,0.21
+major_surgery9,1.08,0.70,1.65,4,combined,rrt_elig,0.21
+is_full_code_admission9,0.83,0.25,2.68,4,combined,rrt_elig,0.21
+is_full_code_discharge9,0.95,0.36,2.77,4,combined,rrt_elig,0.21
+SOFA9,1.47,1.37,1.58,4,combined,rrt_elig,0.21
+charlson_cont9,1.03,0.94,1.11,4,combined,rrt_elig,0.21
+fluids_volume9,1.00,1.00,1.00,4,combined,rrt_elig,0.21
+resp_rate_mean9,0.96,0.92,1.01,4,combined,rrt_elig,0.21
+mbp_mean9,1.02,1.00,1.04,4,combined,rrt_elig,0.21
+heart_rate_mean9,0.99,0.98,1.00,4,combined,rrt_elig,0.21
+temperature_mean9,0.74,0.53,1.04,4,combined,rrt_elig,0.21
+spo2_mean9,0.87,0.79,0.95,4,combined,rrt_elig,0.21
+po2_min9,1.00,1.00,1.01,4,combined,rrt_elig,0.21
+pco2_max9,1.00,0.98,1.02,4,combined,rrt_elig,0.21
+ph_min9,0.45,0.05,4.07,4,combined,rrt_elig,0.21
+lactate_max9,1.03,0.95,1.12,4,combined,rrt_elig,0.21
+glucose_max9,1.00,1.00,1.00,4,combined,rrt_elig,0.21
+sodium_min9,0.96,0.93,0.99,4,combined,rrt_elig,0.21
+potassium_max9,1.23,1.04,1.46,4,combined,rrt_elig,0.21
+cortisol_min9,0.99,0.96,1.02,4,combined,rrt_elig,0.21
+hemoglobin_min9,0.88,0.80,0.98,4,combined,rrt_elig,0.21
+fibrinogen_min9,1.00,1.00,1.00,4,combined,rrt_elig,0.21
+inr_max9,1.00,0.87,1.14,4,combined,rrt_elig,0.21
+hypertension_present9,0.81,0.53,1.23,4,combined,rrt_elig,0.21
+heart_failure_present9,1.11,0.77,1.61,4,combined,rrt_elig,0.21
+copd_present9,1.07,0.71,1.59,4,combined,rrt_elig,0.21
+asthma_present9,0.90,0.18,3.33,4,combined,rrt_elig,0.21
+cad_present9,1.68,1.15,2.45,4,combined,rrt_elig,0.21
+ckd_stages19,23.69,15.80,36.20,4,combined,rrt_elig,0.21
+diabetes_types9,1.13,0.76,1.67,4,combined,rrt_elig,0.21
+connective_disease9,1.23,0.58,2.46,4,combined,rrt_elig,0.21
+pneumonia9,0.77,0.42,1.35,4,combined,rrt_elig,0.21
+uti9,0.77,0.16,2.59,4,combined,rrt_elig,0.21
+biliary9,0.51,0.02,4.84,4,combined,rrt_elig,0.21
+skin9,1.78,0.25,7.88,4,combined,rrt_elig,0.21
+(Intercept)10,20814576716.89,80425744.33,5530976741679.35,Prob Mort all,combined,VP,1
+mv_elig5,2.14,1.97,2.34,Prob Mort all,combined,VP,1
+rrt_elig5,0.60,0.50,0.72,Prob Mort all,combined,VP,1
+admission_age10,1.01,1.01,1.01,Prob Mort all,combined,VP,1
+gender10,1.01,0.94,1.10,Prob Mort all,combined,VP,1
+ethnicity_white10,1.14,1.03,1.26,Prob Mort all,combined,VP,1
+insurance10,1.07,1.01,1.14,Prob Mort all,combined,VP,1
+anchor_year_group10,1.13,1.09,1.17,Prob Mort all,combined,VP,1
+adm_elective10,2.14,1.91,2.40,Prob Mort all,combined,VP,1
+major_surgery10,2.06,1.87,2.26,Prob Mort all,combined,VP,1
+is_full_code_admission10,1.23,0.94,1.61,Prob Mort all,combined,VP,1
+is_full_code_discharge10,1.03,0.82,1.29,Prob Mort all,combined,VP,1
+SOFA10,1.40,1.38,1.42,Prob Mort all,combined,VP,1
+charlson_cont10,0.91,0.90,0.93,Prob Mort all,combined,VP,1
+fluids_volume10,1.00,1.00,1.00,Prob Mort all,combined,VP,1
+resp_rate_mean10,0.99,0.98,1.00,Prob Mort all,combined,VP,1
+mbp_mean10,0.94,0.93,0.94,Prob Mort all,combined,VP,1
+heart_rate_mean10,1.01,1.01,1.01,Prob Mort all,combined,VP,1
+temperature_mean10,0.89,0.82,0.96,Prob Mort all,combined,VP,1
+spo2_mean10,1.08,1.05,1.10,Prob Mort all,combined,VP,1
+po2_min10,1.00,1.00,1.00,Prob Mort all,combined,VP,1
+pco2_max10,1.00,1.00,1.00,Prob Mort all,combined,VP,1
+ph_min10,0.04,0.02,0.07,Prob Mort all,combined,VP,1
+lactate_max10,1.11,1.09,1.14,Prob Mort all,combined,VP,1
+glucose_max10,1.00,1.00,1.00,Prob Mort all,combined,VP,1
+sodium_min10,0.98,0.97,0.99,Prob Mort all,combined,VP,1
+potassium_max10,0.86,0.82,0.91,Prob Mort all,combined,VP,1
+cortisol_min10,1.01,1.00,1.02,Prob Mort all,combined,VP,1
+hemoglobin_min10,0.98,0.96,1.00,Prob Mort all,combined,VP,1
+fibrinogen_min10,1.00,1.00,1.00,Prob Mort all,combined,VP,1
+inr_max10,0.95,0.91,0.99,Prob Mort all,combined,VP,1
+hypertension_present10,1.07,0.98,1.17,Prob Mort all,combined,VP,1
+heart_failure_present10,1.13,1.03,1.23,Prob Mort all,combined,VP,1
+copd_present10,1.07,0.98,1.17,Prob Mort all,combined,VP,1
+asthma_present10,0.76,0.54,1.07,Prob Mort all,combined,VP,1
+cad_present10,2.04,1.88,2.22,Prob Mort all,combined,VP,1
+ckd_stages110,0.78,0.68,0.89,Prob Mort all,combined,VP,1
+diabetes_types10,1.02,0.93,1.12,Prob Mort all,combined,VP,1
+connective_disease10,1.23,1.03,1.47,Prob Mort all,combined,VP,1
+pneumonia10,0.97,0.84,1.12,Prob Mort all,combined,VP,1
+uti10,0.99,0.76,1.29,Prob Mort all,combined,VP,1
+biliary10,1.66,1.05,2.64,Prob Mort all,combined,VP,1
+skin10,1.77,1.05,2.92,Prob Mort all,combined,VP,1
+(Intercept)11,30193867096.56,1820266.11,560155233072189.00,1,combined,VP,0
+mv_elig6,3.20,2.58,3.98,1,combined,VP,0
+rrt_elig6,0.62,0.46,0.85,1,combined,VP,0
+admission_age11,1.01,1.01,1.02,1,combined,VP,0
+gender11,1.06,0.90,1.24,1,combined,VP,0
+ethnicity_white11,1.25,1.01,1.54,1,combined,VP,0
+insurance11,1.13,0.99,1.29,1,combined,VP,0
+anchor_year_group11,1.11,1.03,1.20,1,combined,VP,0
+adm_elective11,2.01,1.47,2.75,1,combined,VP,0
+major_surgery11,2.18,1.79,2.65,1,combined,VP,0
+is_full_code_admission11,1.15,0.77,1.72,1,combined,VP,0
+is_full_code_discharge11,0.92,0.66,1.30,1,combined,VP,0
+SOFA11,1.37,1.33,1.41,1,combined,VP,0
+charlson_cont11,0.94,0.90,0.97,1,combined,VP,0
+fluids_volume11,1.00,1.00,1.00,1,combined,VP,0
+resp_rate_mean11,1.00,0.98,1.02,1,combined,VP,0
+mbp_mean11,0.94,0.94,0.95,1,combined,VP,0
+heart_rate_mean11,1.02,1.01,1.02,1,combined,VP,0
+temperature_mean11,0.96,0.84,1.09,1,combined,VP,0
+spo2_mean11,1.05,1.01,1.09,1,combined,VP,0
+po2_min11,1.00,1.00,1.00,1,combined,VP,0
+pco2_max11,1.00,0.99,1.01,1,combined,VP,0
+ph_min11,0.03,0.01,0.08,1,combined,VP,0
+lactate_max11,1.14,1.09,1.19,1,combined,VP,0
+glucose_max11,1.00,1.00,1.00,1,combined,VP,0
+sodium_min11,0.98,0.96,0.99,1,combined,VP,0
+potassium_max11,0.81,0.73,0.89,1,combined,VP,0
+cortisol_min11,1.02,1.00,1.03,1,combined,VP,0
+hemoglobin_min11,1.00,0.96,1.05,1,combined,VP,0
+fibrinogen_min11,1.00,1.00,1.00,1,combined,VP,0
+inr_max11,1.00,0.92,1.08,1,combined,VP,0
+hypertension_present11,0.98,0.81,1.17,1,combined,VP,0
+heart_failure_present11,1.15,0.97,1.37,1,combined,VP,0
+copd_present11,1.12,0.93,1.35,1,combined,VP,0
+asthma_present11,0.96,0.52,1.78,1,combined,VP,0
+cad_present11,1.86,1.57,2.22,1,combined,VP,0
+ckd_stages111,0.91,0.69,1.18,1,combined,VP,0
+diabetes_types11,1.16,0.96,1.40,1,combined,VP,0
+connective_disease11,0.99,0.68,1.44,1,combined,VP,0
+pneumonia11,1.18,0.89,1.57,1,combined,VP,0
+uti11,1.27,0.72,2.20,1,combined,VP,0
+biliary11,0.99,0.26,3.76,1,combined,VP,0
+skin11,0.87,0.18,3.46,1,combined,VP,0
+(Intercept)12,22588780.02,8.87,59170954278072.20,2,combined,VP,0.06
+mv_elig7,1.66,1.25,2.22,2,combined,VP,0.06
+rrt_elig7,0.46,0.28,0.74,2,combined,VP,0.06
+admission_age12,1.02,1.01,1.03,2,combined,VP,0.06
+gender12,0.98,0.82,1.17,2,combined,VP,0.06
+ethnicity_white12,1.15,0.92,1.44,2,combined,VP,0.06
+insurance12,1.12,0.98,1.28,2,combined,VP,0.06
+anchor_year_group12,1.09,1.01,1.18,2,combined,VP,0.06
+adm_elective12,1.66,1.34,2.06,2,combined,VP,0.06
+major_surgery12,1.82,1.48,2.24,2,combined,VP,0.06
+is_full_code_admission12,0.77,0.23,2.37,2,combined,VP,0.06
+is_full_code_discharge12,3.03,1.15,8.97,2,combined,VP,0.06
+SOFA12,1.60,1.53,1.67,2,combined,VP,0.06
+charlson_cont12,0.86,0.82,0.90,2,combined,VP,0.06
+fluids_volume12,1.00,1.00,1.00,2,combined,VP,0.06
+resp_rate_mean12,1.00,0.97,1.03,2,combined,VP,0.06
+mbp_mean12,0.92,0.91,0.93,2,combined,VP,0.06
+heart_rate_mean12,1.01,1.01,1.02,2,combined,VP,0.06
+temperature_mean12,0.73,0.59,0.89,2,combined,VP,0.06
+spo2_mean12,1.16,1.10,1.22,2,combined,VP,0.06
+po2_min12,1.00,1.00,1.00,2,combined,VP,0.06
+pco2_max12,1.01,1.00,1.02,2,combined,VP,0.06
+ph_min12,0.07,0.01,0.30,2,combined,VP,0.06
+lactate_max12,1.12,1.05,1.19,2,combined,VP,0.06
+glucose_max12,1.00,1.00,1.00,2,combined,VP,0.06
+sodium_min12,1.00,0.98,1.02,2,combined,VP,0.06
+potassium_max12,0.89,0.79,0.99,2,combined,VP,0.06
+cortisol_min12,1.01,0.99,1.03,2,combined,VP,0.06
+hemoglobin_min12,1.01,0.97,1.06,2,combined,VP,0.06
+fibrinogen_min12,1.00,1.00,1.00,2,combined,VP,0.06
+inr_max12,0.91,0.81,1.02,2,combined,VP,0.06
+hypertension_present12,1.02,0.85,1.23,2,combined,VP,0.06
+heart_failure_present12,1.08,0.89,1.32,2,combined,VP,0.06
+copd_present12,1.18,0.96,1.46,2,combined,VP,0.06
+asthma_present12,0.75,0.30,1.75,2,combined,VP,0.06
+cad_present12,2.20,1.83,2.65,2,combined,VP,0.06
+ckd_stages112,0.74,0.53,1.04,2,combined,VP,0.06
+diabetes_types12,1.00,0.82,1.23,2,combined,VP,0.06
+connective_disease12,1.52,1.03,2.21,2,combined,VP,0.06
+pneumonia12,1.02,0.70,1.47,2,combined,VP,0.06
+uti12,0.90,0.50,1.59,2,combined,VP,0.06
+biliary12,1.68,0.76,3.76,2,combined,VP,0.06
+skin12,3.84,1.45,10.24,2,combined,VP,0.06
+(Intercept)13,59233348089.12,1358666.54,2875968582456000.00,3,combined,VP,0.11
+mv_elig8,3.31,2.74,3.99,3,combined,VP,0.11
+rrt_elig8,0.67,0.48,0.95,3,combined,VP,0.11
+admission_age13,1.02,1.01,1.02,3,combined,VP,0.11
+gender13,0.97,0.84,1.13,3,combined,VP,0.11
+ethnicity_white13,1.08,0.89,1.32,3,combined,VP,0.11
+insurance13,1.03,0.91,1.16,3,combined,VP,0.11
+anchor_year_group13,1.16,1.08,1.25,3,combined,VP,0.11
+adm_elective13,1.96,1.55,2.48,3,combined,VP,0.11
+major_surgery13,2.22,1.86,2.65,3,combined,VP,0.11
+is_full_code_admission13,0.99,0.61,1.62,3,combined,VP,0.11
+is_full_code_discharge13,1.02,0.67,1.55,3,combined,VP,0.11
+SOFA13,1.37,1.33,1.42,3,combined,VP,0.11
+charlson_cont13,0.95,0.91,0.98,3,combined,VP,0.11
+fluids_volume13,1.00,1.00,1.00,3,combined,VP,0.11
+resp_rate_mean13,1.00,0.98,1.02,3,combined,VP,0.11
+mbp_mean13,0.95,0.94,0.96,3,combined,VP,0.11
+heart_rate_mean13,1.01,1.00,1.01,3,combined,VP,0.11
+temperature_mean13,0.78,0.68,0.90,3,combined,VP,0.11
+spo2_mean13,1.06,1.01,1.10,3,combined,VP,0.11
+po2_min13,1.00,1.00,1.00,3,combined,VP,0.11
+pco2_max13,1.00,0.99,1.00,3,combined,VP,0.11
+ph_min13,0.06,0.02,0.19,3,combined,VP,0.11
+lactate_max13,1.08,1.04,1.13,3,combined,VP,0.11
+glucose_max13,1.00,1.00,1.00,3,combined,VP,0.11
+sodium_min13,0.99,0.97,1.00,3,combined,VP,0.11
+potassium_max13,0.90,0.82,0.99,3,combined,VP,0.11
+cortisol_min13,1.01,0.99,1.03,3,combined,VP,0.11
+hemoglobin_min13,0.94,0.90,0.98,3,combined,VP,0.11
+fibrinogen_min13,1.00,1.00,1.00,3,combined,VP,0.11
+inr_max13,0.95,0.88,1.02,3,combined,VP,0.11
+hypertension_present13,1.14,0.97,1.35,3,combined,VP,0.11
+heart_failure_present13,1.16,0.98,1.37,3,combined,VP,0.11
+copd_present13,1.04,0.87,1.24,3,combined,VP,0.11
+asthma_present13,0.75,0.38,1.45,3,combined,VP,0.11
+cad_present13,1.66,1.42,1.95,3,combined,VP,0.11
+ckd_stages113,0.81,0.62,1.05,3,combined,VP,0.11
+diabetes_types13,0.93,0.78,1.10,3,combined,VP,0.11
+connective_disease13,1.21,0.85,1.71,3,combined,VP,0.11
+pneumonia13,1.04,0.79,1.37,3,combined,VP,0.11
+uti13,0.84,0.49,1.41,3,combined,VP,0.11
+biliary13,1.52,0.63,3.66,3,combined,VP,0.11
+skin13,1.27,0.47,3.36,3,combined,VP,0.11
+(Intercept)14,3750282249.71,19267.18,775213547787451.00,4,combined,VP,0.21
+mv_elig9,3.11,2.56,3.78,4,combined,VP,0.21
+rrt_elig9,0.67,0.45,0.98,4,combined,VP,0.21
+admission_age14,1.01,1.01,1.02,4,combined,VP,0.21
+gender14,1.21,1.04,1.42,4,combined,VP,0.21
+ethnicity_white14,1.15,0.93,1.41,4,combined,VP,0.21
+insurance14,0.99,0.88,1.11,4,combined,VP,0.21
+anchor_year_group14,1.12,1.04,1.20,4,combined,VP,0.21
+adm_elective14,2.52,2.03,3.14,4,combined,VP,0.21
+major_surgery14,1.83,1.53,2.20,4,combined,VP,0.21
+is_full_code_admission14,1.26,0.65,2.44,4,combined,VP,0.21
+is_full_code_discharge14,1.01,0.57,1.82,4,combined,VP,0.21
+SOFA14,1.47,1.42,1.52,4,combined,VP,0.21
+charlson_cont14,0.90,0.87,0.94,4,combined,VP,0.21
+fluids_volume14,1.00,1.00,1.00,4,combined,VP,0.21
+resp_rate_mean14,1.00,0.97,1.02,4,combined,VP,0.21
+mbp_mean14,0.93,0.92,0.94,4,combined,VP,0.21
+heart_rate_mean14,1.01,1.00,1.02,4,combined,VP,0.21
+temperature_mean14,0.91,0.78,1.07,4,combined,VP,0.21
+spo2_mean14,1.09,1.04,1.14,4,combined,VP,0.21
+po2_min14,1.00,1.00,1.00,4,combined,VP,0.21
+pco2_max14,1.00,0.99,1.00,4,combined,VP,0.21
+ph_min14,0.05,0.01,0.15,4,combined,VP,0.21
+lactate_max14,1.11,1.06,1.17,4,combined,VP,0.21
+glucose_max14,1.00,1.00,1.00,4,combined,VP,0.21
+sodium_min14,0.98,0.96,0.99,4,combined,VP,0.21
+potassium_max14,0.87,0.78,0.96,4,combined,VP,0.21
+cortisol_min14,1.00,0.98,1.02,4,combined,VP,0.21
+hemoglobin_min14,0.98,0.94,1.02,4,combined,VP,0.21
+fibrinogen_min14,1.00,1.00,1.00,4,combined,VP,0.21
+inr_max14,0.92,0.83,1.00,4,combined,VP,0.21
+hypertension_present14,1.10,0.93,1.31,4,combined,VP,0.21
+heart_failure_present14,1.12,0.94,1.33,4,combined,VP,0.21
+copd_present14,0.98,0.81,1.18,4,combined,VP,0.21
+asthma_present14,0.51,0.23,1.04,4,combined,VP,0.21
+cad_present14,2.44,2.06,2.89,4,combined,VP,0.21
+ckd_stages114,0.62,0.47,0.82,4,combined,VP,0.21
+diabetes_types14,1.01,0.84,1.21,4,combined,VP,0.21
+connective_disease14,1.18,0.83,1.66,4,combined,VP,0.21
+pneumonia14,0.79,0.59,1.05,4,combined,VP,0.21
+uti14,1.16,0.69,1.90,4,combined,VP,0.21
+biliary14,1.74,0.60,4.99,4,combined,VP,0.21
+skin14,1.48,0.50,4.02,4,combined,VP,0.21

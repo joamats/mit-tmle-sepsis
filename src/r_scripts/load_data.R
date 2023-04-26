@@ -13,13 +13,14 @@ load_data <- function(cohort){
   discharge_hosp <- sepsis_data[, c(1)]
   ethnicity_white <- sepsis_data[, c(1)]
   blood_yes <- sepsis_data[, c(1)]
+  comb_noso <- sepsis_data[, c(1)]
 
   free_days_hosp_28 <- sepsis_data[, c(1)]
   free_days_mv_28 <- sepsis_data[, c(1)]
   free_days_rrt_28 <- sepsis_data[, c(1)]
   free_days_vp_28 <- sepsis_data[, c(1)]
 
-  sepsis_data <- cbind(sepsis_data, discharge_hosp, 
+  sepsis_data <- cbind(sepsis_data, discharge_hosp, comb_noso,
                       ethnicity_white, blood_yes, free_days_hosp_28,
                       free_days_mv_28, free_days_rrt_28, free_days_vp_28)
 
@@ -134,6 +135,9 @@ load_data <- function(cohort){
   sepsis_data <- sepsis_data %>% mutate(cauti = ifelse(is.na(cauti), 0, 1))
   sepsis_data <- sepsis_data %>% mutate(ssi = ifelse(is.na(ssi), 0, 1))
   sepsis_data <- sepsis_data %>% mutate(vap = ifelse(is.na(vap), 0, 1))
+
+  # combine complications
+  sepsis_data <- sepsis_data %>% mutate(comb_noso = ifelse(clabsi == 1 | cauti == 1 | ssi == 1 | vap == 1, 1, 0))
 
   # create dummy vars for comorbidities
   sepsis_data <- sepsis_data %>% mutate(hypertension_present = ifelse(!is.na(hypertension_present), 1, 0))
@@ -281,11 +285,11 @@ load_data <- function(cohort){
     sepsis_data <- sepsis_data[sepsis_data$los_icu <= 30, ]
 
     # Return just keeping columns of interest
-    return(sepsis_data[, c("admission_age", "gender", "ethnicity_white", "insurance",
+    return(sepsis_data[, c("admission_age", "gender", "ethnicity_white", "race_group", "insurance",
                           #  "weight_admit",  "eng_prof",
                           "anchor_year_group", 
                           "adm_elective", "major_surgery", "is_full_code_admission",
-                          "is_full_code_discharge", "prob_mort",
+                          "is_full_code_discharge", "prob_mort", "discharge_hosp",
                           "SOFA", "respiration", "coagulation", "liver", "cardiovascular",
                           "cns", "renal", "charlson_cont",
                           "MV_time_perc_of_stay", "FiO2_mean_24h","VP_time_perc_of_stay",
@@ -297,7 +301,7 @@ load_data <- function(cohort){
                           "fibrinogen_min", "inr_max", "hypertension_present", "heart_failure_present",
                           "copd_present", "asthma_present", "cad_present", "ckd_stages", "diabetes_types",
                           "connective_disease", "pneumonia", "uti", "biliary", "skin", "mortality_in",
-                          "blood_yes", "insulin_yes", "los", "mortality_90", "clabsi", "cauti", "ssi", "vap",
+                          "blood_yes", "insulin_yes", "los", "mortality_90", "comb_noso", "clabsi", "cauti", "ssi", "vap",
                           "mech_vent", "rrt", "pressor", "mv_elig", "rrt_elig", "vp_elig",
                           "free_days_rrt_28", "free_days_mv_28", "free_days_vp_28", "free_days_hosp_28") 
                           ])
@@ -345,11 +349,11 @@ load_data <- function(cohort){
     sepsis_data <- sepsis_data %>% rename(prob_mort = apache_pred_hosp_mort)
 
     # Return just keeping columns of interest
-    return(sepsis_data[, c("admission_age", "gender", "ethnicity_white", 
+    return(sepsis_data[, c("admission_age", "gender", "ethnicity_white", "race_group",
                           # "weight_admit",  "eng_prof",
                           "anchor_year_group", 
                           "adm_elective", "major_surgery", "is_full_code_admission",
-                          "is_full_code_discharge", "prob_mort",
+                          "is_full_code_discharge", "prob_mort", 
                           "SOFA", "respiration", "coagulation", "liver", "cardiovascular",
                           "cns", "renal", "charlson_cont",
                           "resp_rate_mean", "mbp_mean", "heart_rate_mean", "temperature_mean",
@@ -358,7 +362,7 @@ load_data <- function(cohort){
                           "fibrinogen_min", "inr_max", "hypertension_present", "heart_failure_present",
                           "copd_present", "asthma_present", "cad_present", "ckd_stages", "diabetes_types",
                           "connective_disease", "pneumonia", "uti", "biliary", "skin", "mortality_in",
-                          "blood_yes", "insulin_yes","los", "clabsi", "cauti", "ssi", "vap",
+                          "blood_yes", "insulin_yes","los", "comb_noso", "clabsi", "cauti", "ssi", "vap",
                           "mech_vent", "rrt", "pressor", "mv_elig", "rrt_elig", "vp_elig",
                           "free_days_rrt_28", "free_days_mv_28", "free_days_vp_28", "free_days_hosp_28") 
                           ])
