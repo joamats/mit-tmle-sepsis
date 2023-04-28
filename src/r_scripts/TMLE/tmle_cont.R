@@ -57,8 +57,8 @@ outcomes <- c("free_days_hosp_28", "free_days_mv_28", "free_days_vp_28", "free_d
 # choose "free_days_hosp_28", "free_days_mv_28", "free_days_vp_28", "free_days_rrt_28",
 prob_mort_ranges <- read.csv("config/prob_mort_ranges.csv")
 treatments <- read.delim("config/treatments.txt")
-SL_libraries <- read.delim("config/SL_libraries_base.txt") # or read.delim("config/SL_libraries_SL.txt")
-#SL_libraries <- read.delim("config/SL_libraries_SL.txt") # or read.delim("config/SL_libraries_SL.txt")
+#SL_libraries <- read.delim("config/SL_libraries_base.txt") # or read.delim("config/SL_libraries_SL.txt")
+SL_libraries <- read.delim("config/SL_libraries_SL.txt") # or read.delim("config/SL_libraries_SL.txt")
 
 
 for (c in cohorts) {

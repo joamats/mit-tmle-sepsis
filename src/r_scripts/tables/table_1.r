@@ -4,7 +4,6 @@ library(table1)
 library(flextable)
 
 cohort <- c("MIMIC") # choose "MIMIC", "eICU", or "MIMIC_eICU" for both
-
 m_e_df <- read.csv(paste0("data/", cohort, ".csv"))
 
 ##########Age groups############

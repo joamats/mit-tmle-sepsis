@@ -43,6 +43,8 @@ m_e_df$mort_bins[m_e_df$mort_bins > prob_mort_ranges$min[4]
 m_e_df$mort_bins <- factor(m_e_df$mort_bins, levels = c('0 - 6', '7 - 11','12 - 21', '> 21' ))
 m_e_df$mortality_in <- factor(m_e_df$mortality_in, levels = c(0, 1), 
                            labels = c('Survived', 'Died'))
+m_e_df$ethnicity_white <- factor(m_e_df$ethnicity_white, levels = c(0, 1), 
+                           labels = c('Racial-ethnic group', 'White group'))                          
 m_e_df$vp_elig <- factor(m_e_df$vp_elig)
 m_e_df$rrt_elig <- factor(m_e_df$rrt_elig)
 m_e_df$mv_elig <- factor(m_e_df$mv_elig)
@@ -55,5 +57,6 @@ tbl1 <- table1(~ mv_elig + rrt_elig + vp_elig | mort_bins*mortality_in,
 
 # Convert to flextable
 t1flex(tbl1) %>% save_as_docx(path="results/tables/Table_sanity_check.docx")
+
 # Save also as a CSV
 tbl1 %>% as.data.frame() %>% write_csv("results/tables/Table_sanity_check.csv")

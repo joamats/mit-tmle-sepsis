@@ -9,7 +9,6 @@ plot_name = "MIMIC/mortality_in"
 title = "TMLE for in-hospital mortality for each invasive treatment\n"
 df = pd.read_csv(f"results/prob_mort/{plot_name}.csv")
 
-#conversion_dict = dict(zip(df.prob_mort_start.unique(), range(3)))
 conversion_dict = dict(zip(df.prob_mort_start.unique(), range(4)))
 df.prob_mort_start = df.prob_mort_start.apply(lambda x: conversion_dict[x])
 
@@ -54,7 +53,7 @@ for i, t in enumerate(treatments):
                      label="White group")
 
     axes[i].axhline(y=0, xmin=0, xmax=1, c="black", linewidth=.7, linestyle='--')
-    axes[i].set_ylim([-27, 27])
+    axes[i].set_ylim([-15, 15])
     axes[i].set_title(t_dict[t])
     axes[0].set(ylabel="ATE (%)\nTreated vs. Not Treated")
     axes[2].legend(bbox_to_anchor=(1.05, 0.7), loc='upper left')

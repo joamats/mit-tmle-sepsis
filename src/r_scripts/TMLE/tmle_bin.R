@@ -41,7 +41,7 @@ run_tmle <- function(data, treatment, confounders, outcome, SL_libraries,
 
 # Main
 cohorts <- c("MIMIC") # choose "MIMIC", "eICU", or "MIMIC_eICU" for both
-outcomes <- c("blood_yes", "comb_noso", "mortality_in") # "insulin_yes", "blood_yes", "comb_noso", "mortality_in"
+outcomes <- c("blood_yes", "comb_noso") # "insulin_yes", "blood_yes", "comb_noso", "mortality_in"
 prob_mort_ranges <- read.csv("config/prob_mort_ranges.csv")
 treatments <- read.delim("config/treatments.txt")
 SL_libraries <- read.delim("config/SL_libraries_SL.txt") # or read.delim("config/SL_libraries_SL.txt")
@@ -79,7 +79,7 @@ for (c in cohorts) {
                                 "Q_weights",
                                 "g_weights")
 
-        if (outcome == "mortality_in" | outcome == "blood_yes" | outcome == "comb_noso") {
+        if (outcome == "mortality_in") {
             races <- c("white", "non-white") 
         } else {
             races <- c("all") 
