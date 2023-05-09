@@ -289,7 +289,7 @@ load_data <- function(cohort){
                           #  "weight_admit",  "eng_prof",
                           "anchor_year_group", 
                           "adm_elective", "major_surgery", "is_full_code_admission",
-                          "is_full_code_discharge", "prob_mort", "discharge_hosp",
+                          "is_full_code_discharge", "prob_mort", "discharge_hosp", "OASIS_N",
                           "SOFA", "respiration", "coagulation", "liver", "cardiovascular",
                           "cns", "renal", "charlson_cont",
                           "MV_time_perc_of_stay", "FiO2_mean_24h","VP_time_perc_of_stay",

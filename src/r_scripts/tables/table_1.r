@@ -18,16 +18,6 @@ m_e_df$age_cat[m_e_df$age_cat >= 75
                 & m_e_df$age_cat <= 84] <- "75 - 84"
 m_e_df$age_cat[m_e_df$age_cat >= 85] <- "85 and higher"
 
-##########SOFA############
-m_e_df$SOFA_new = m_e_df$SOFA
-m_e_df$SOFA_new[m_e_df$SOFA >= 0 
-                 & m_e_df$SOFA <= 3] <- "0 - 3"
-m_e_df$SOFA_new[m_e_df$SOFA >= 4 
-                 & m_e_df$SOFA <= 6] <- "4 - 6"
-m_e_df$SOFA_new[m_e_df$SOFA >= 7 
-                 & m_e_df$SOFA <= 10] <- "7 - 10"
-m_e_df$SOFA_new[m_e_df$SOFA >= 11] <- "11 and above"
-
 ##########Charlson############
 m_e_df$charlson_new = m_e_df$charlson_cont
 m_e_df$charlson_new[m_e_df$charlson_cont >= 0 
@@ -100,7 +90,6 @@ m_e_df$source <- cohort
 m_e_df$ethnicity_white <- factor(m_e_df$ethnicity_white, levels = c(0, 1), 
                            labels = c('Non-White', 'White'))
 
-m_e_df$SOFA_new <- factor(m_e_df$SOFA_new, levels = c('0 - 3', '4 - 6','7 - 10', '11 and above' ))
 m_e_df$charlson_new <- factor(m_e_df$charlson_new, levels = c('0 - 3', '4 - 6','7 - 10', '11 and above' ))
 
 label(m_e_df$age_cat)     <- "Age by group"
@@ -111,8 +100,8 @@ units(m_e_df$admission_age)  <- "years"
 
 label(m_e_df$gender)      <- "Sex"
 
-label(m_e_df$SOFA)        <- "SOFA continuous"
-label(m_e_df$SOFA_new)    <- "SOFA categorical"
+label(m_e_df$SOFA)        <- "SOFA"
+label(m_e_df$OASIS_N)     <- "OASIS"
 
 label(m_e_df$los)         <- "Length of stay"
 units(m_e_df$los)         <- "days"
@@ -164,7 +153,7 @@ render.strat <- function (label, n, ...) {
 # Create table1 object 
 tbl1 <- table1(~ race_group + mortality_in + discharge_hosp + adm_elective + vp_elig + mv_elig + rrt_elig + blood_yes +
                 free_days_hosp_28 + free_days_mv_28 + free_days_vp_28 + free_days_rrt_28 + clabsi + cauti + ssi + vap + comb_noso +
-                 age_cat + admission_age + gender + SOFA_new + SOFA + los + los_s + los_d +
+                 age_cat + admission_age + gender + OASIS_N + SOFA + los + los_s + los_d +
                  charlson_new + charlson_cont + hypertension + heart_failure + copd + asthma + ckd_stages
                | ethnicity_white, data= m_e_df, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
                render.categorical=render.categorical, render.strat=render.strat, render.continuous=c(.="Mean (SD)", .="Median (Q2, Q3)"))
