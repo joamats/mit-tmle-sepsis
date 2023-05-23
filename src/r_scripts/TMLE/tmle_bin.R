@@ -44,7 +44,7 @@ cohorts <- c("MIMIC") # choose "MIMIC", "eICU", or "MIMIC_eICU" for both
 outcomes <- c("odd_hour") # "odd_hour","insulin_yes", "blood_yes", "comb_noso", "mortality_in"
 prob_mort_ranges <- read.csv("config/prob_mort_ranges.csv")
 treatments <- read.delim("config/treatments.txt")
-SL_libraries <- read.delim("config/SL_libraries_SL.txt") # or read.delim("config/SL_libraries_SL.txt")
+SL_libraries <- read.delim("config/SL_libraries_SL.txt") # or use only base libraries, see below
 #SL_libraries <- read.delim("config/SL_libraries_base.txt") # or read.delim("config/SL_libraries_SL.txt")
 
 

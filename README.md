@@ -59,10 +59,6 @@ Having all the necessary tables for the cohort generation query in your project,
 python3 src/py_scripts/get_data.py --sql "src/sql_queries/mimic_table.sql" --destination "data/MIMIC_data.csv"
 ```
 
-```sh
-python3 src/py_scripts/get_data.py --sql "src/sql_queries/eicu_table.sql" --destination "data/eICU_data.csv"
-```
-
 And combine both:
 
 ```sh
@@ -71,19 +67,9 @@ source("src/r_scripts/utils/load_data.R")
 
 ICD-9 to ICD-10 translation based on this [GitHub Repo](https://github.com/AtlasCUMC/ICD10-ICD9-codes-conversion).
 
-### 4. Run the different analyses
+### 4. Run the different analysis
 
-#### 4.1 Logistic Regression
-
-Fit a logistic regression with the treatment as outcome to assess odd ratios' disparities amongst different ethnicities. Results can be replicated by:
-
-1) Running the script:
-
-```sh
-source("src/r_scripts/log_reg/log_reg.R")
-```
-
-#### 4.2 TMLE
+#### 4.1 TMLE
 
 Targetted Maximum Likelihood Estimation was used to delineate the average treatment effect for one of the interventions. Data was stratified by race and SOFA category. Running the following command allows to replicate the obtained results.
 
