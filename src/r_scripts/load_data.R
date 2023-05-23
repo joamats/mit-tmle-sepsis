@@ -284,8 +284,20 @@ load_data <- function(cohort){
     sepsis_data <- sepsis_data[sepsis_data$los_icu >= 1, ]
     sepsis_data <- sepsis_data[sepsis_data$los_icu <= 30, ]
 
+    # odd hours for negative control outcome
+    sepsis_data$dischtime <- as.POSIXct(sepsis_data$dischtime)
+
+    # Extract hour from 'dischtime'
+    sepsis_data$hour <- format(sepsis_data$dischtime, "%H")
+
+    # Convert hour to numeric
+    sepsis_data$hour <- as.numeric(sepsis_data$hour)
+
+    # Create new column 'odd_hour' based on 'hour'
+    sepsis_data$odd_hour <- ifelse(sepsis_data$hour %% 2 == 1, 1, 0)
+
     # Return just keeping columns of interest
-    return(sepsis_data[, c("admission_age", "gender", "ethnicity_white", "race_group", "insurance",
+    return(sepsis_data[, c("admission_age", "gender", "ethnicity_white", "race_group", "insurance", "odd_hour",
                           #  "weight_admit",  "eng_prof",
                           "anchor_year_group", 
                           "adm_elective", "major_surgery", "is_full_code_admission",
