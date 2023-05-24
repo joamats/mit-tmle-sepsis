@@ -2,7 +2,7 @@
 
 Many interventions in healthcare are still not based on hard evidence and care might differ between races, especially in the Intensive Care Unit (ICU).
 
-The goal of this project is to investigate disparities between races in critically ill sepsis patients in regard to in-hospital mortality, renal replacement therapy (RRT), vasopressor use (VP), or mechanical ventilation (MV), in cohorts curated from MIMIC IV (2008-2019) and eICU (2014-2015) datasets.
+The goal of this project is to investigate disparities between races in critically ill sepsis patients in regard to in-hospital mortality, renal replacement therapy (RRT), vasopressor use (VP), or mechanical ventilation (MV) in cohorts curated from MIMIC IV (2008-2019).
 
 ## How to run this project
 
@@ -59,22 +59,26 @@ Having all the necessary tables for the cohort generation query in your project,
 python3 src/py_scripts/get_data.py --sql "src/sql_queries/mimic_table.sql" --destination "data/MIMIC_data.csv"
 ```
 
-And combine both:
+And transform into a ready to use dataframe:
 
 ```sh
 source("src/r_scripts/utils/load_data.R")
 ```
 
-ICD-9 to ICD-10 translation based on this [GitHub Repo](https://github.com/AtlasCUMC/ICD10-ICD9-codes-conversion).
+The ICD-9 to ICD-10 translation based on this [GitHub Repo](https://github.com/AtlasCUMC/ICD10-ICD9-codes-conversion).
 
 ### 4. Run the different analysis
 
 #### 4.1 TMLE
 
-Targetted Maximum Likelihood Estimation was used to delineate the average treatment effect for one of the interventions. Data was stratified by race and SOFA category. Running the following command allows to replicate the obtained results.
+Targetted Maximum Likelihood Estimation was used to delineate the average treatment effect for one of the interventions. Data was stratified by race and predicted probability of mortality based on the OASIS score. Running the following command allows to replicate the obtained results.
 
 ```sh
-source("src/r_scripts/tmle.R")
+source("src/r_scripts/tmle_bin.R")
+# for binary outcomes
+
+source("src/r_scripts/tmle_cont.R")
+# for continuous outcomes
 ```
 
 ## How to contribute
