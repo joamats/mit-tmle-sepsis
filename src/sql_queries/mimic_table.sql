@@ -130,10 +130,12 @@ transfusion_yes, insulin_yes, major_surgery, resp_rate_mean, mbp_mean, heart_rat
 ">= 500" AS numbedscategory, -- dummy variable for numbedscategory in eICU
 "true" AS teachingstatus, -- is boolean in eICU
 "Northeast" AS region, -- dummy variable for US census region in eICU
+
 -- lab values 
 po2_min, pco2_max, ph_min, lactate_max, glucose_max, sodium_min, potassium_max, cortisol_min, hemoglobin_min, fibrinogen_min, inr_max, 
 hypertension_present, heart_failure_present, copd_present, asthma_present, cad_present, ckd_stages, diabetes_types, connective_disease,
 pneumonia, uti, biliary, skin, clabsi, cauti, ssi, vap,
+
 ABS(TIMESTAMP_DIFF(pat.dod,icu.icu_outtime,DAY)) as dod_icuout_offset
 
   , CASE
@@ -167,6 +169,8 @@ ABS(TIMESTAMP_DIFF(pat.dod,icu.icu_outtime,DAY)) as dod_icuout_offset
   END AS mortality_90
 
 from `physionet-data.mimiciv_derived.icustay_detail` as icu 
+
+-- Start of Left Joins
 left join `physionet-data.mimiciv_derived.sepsis3` as s3
 on s3.stay_id = icu.stay_id
 

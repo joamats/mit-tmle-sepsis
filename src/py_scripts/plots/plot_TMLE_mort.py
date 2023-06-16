@@ -55,11 +55,11 @@ for i, t in enumerate(treatments):
     axes[i].axhline(y=0, xmin=0, xmax=1, c="black", linewidth=.7, linestyle='--')
     axes[i].set_ylim([-15, 15])
     axes[i].set_title(t_dict[t])
-    axes[0].set(ylabel="ATE (%)\nTreated vs. Not Treated")
+    axes[0].set(ylabel="ATE change in mortality (%)\nTreated vs. Not Treated")
     axes[2].legend(bbox_to_anchor=(1.05, 0.7), loc='upper left')
     axes[i].set_xticklabels(["0-6", "7-11", "12-21", ">21"])
     axes[i].set_xticks(range(4))
 
-fig.supxlabel('\nPredicted in-hospital mortality')
+fig.supxlabel('\nPredicted mortality (%)')
 
 fig.savefig(f"results/prob_mort/{plot_name}.png", dpi=1000)
