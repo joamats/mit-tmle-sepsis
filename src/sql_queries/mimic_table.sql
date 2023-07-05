@@ -126,10 +126,6 @@ END AS VP_init_offset_d_abs,
 oa.oasis, oa.oasis_prob,
 fluids_volume, fluids_volume_norm_by_los_icu,
 transfusion_yes, insulin_yes, major_surgery, resp_rate_mean, mbp_mean, heart_rate_mean, temperature_mean, spo2_mean, first_code, last_code,
-001 AS hospitalid, -- dummy variable for hospitalid in eICU
-">= 500" AS numbedscategory, -- dummy variable for numbedscategory in eICU
-"true" AS teachingstatus, -- is boolean in eICU
-"Northeast" AS region, -- dummy variable for US census region in eICU
 
 -- lab values 
 po2_min, pco2_max, ph_min, lactate_max, glucose_max, sodium_min, potassium_max, cortisol_min, hemoglobin_min, fibrinogen_min, inr_max, 

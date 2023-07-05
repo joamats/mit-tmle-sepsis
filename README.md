@@ -34,9 +34,9 @@ pip install -r src/py_scripts/setup/requirements.txt
 
 ### 3. Fetch the data
 
-Both MIMIC and eICU data can be found in [PhysioNet](https://physionet.org/), a repository of freely-available medical research data, managed by the MIT Laboratory for Computational Physiology. Due to its sensitive nature, credentialing is required to access both datasets.
+MIMIC data can be found in [PhysioNet](https://physionet.org/), a repository of freely-available medical research data, managed by the MIT Laboratory for Computational Physiology. Due to its sensitive nature, credentialing is required to access both datasets.
 
-Documentation for MIMIC-IV's can be found [here](https://mimic.mit.edu/) and for eICU [here](https://eicu-crd.mit.edu/).
+Documentation for MIMIC-IV's can be found [here](https://mimic.mit.edu/).
 
 #### Integration with Google Cloud Platform (GCP)
 

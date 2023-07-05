@@ -3,7 +3,7 @@ library(tidyverse)
 library(table1)
 library(flextable)
 
-cohort <- c("MIMIC") # choose "MIMIC", "eICU", or "MIMIC_eICU" for both
+cohort <- c("MIMIC") 
 m_e_df <- read.csv(paste0("data/", cohort, ".csv"))
 
 ##########Age groups############
@@ -156,7 +156,7 @@ tbl1 <- table1(~ race_group + mortality_in + discharge_hosp + adm_elective + vp_
                  age_cat + admission_age + gender + OASIS_N + SOFA + los + los_s + los_d +
                  charlson_new + charlson_cont + hypertension + heart_failure + copd + asthma + ckd_stages
                | ethnicity_white, data= m_e_df, topclass="Rtable1-grid Rtable1-shade Rtable1-times",
-               render.categorical=render.categorical, render.strat=render.strat, render.continuous=c(.="Mean (SD)", .="Median (Q2, Q3)"))
+               render.categorical=render.categorical, render.strat=render.strat, render.continuous=c(.="Mean (SD)", .="Median (Q1, Q3)"))
 
 # render.missing=NULL, 
 # use if you want to suppress missing lines

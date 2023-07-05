@@ -40,7 +40,7 @@ run_tmle <- function(data, treatment, confounders, outcome, SL_libraries,
 }
 
 # Main
-cohorts <- c("MIMIC") # choose "MIMIC", "eICU", or "MIMIC_eICU" for both
+cohorts <- c("MIMIC") # choose "MIMIC" only
 outcomes <- c("odd_hour") # "odd_hour","insulin_yes", "blood_yes", "comb_noso", "mortality_in"
 prob_mort_ranges <- read.csv("config/prob_mort_ranges.csv")
 treatments <- read.delim("config/treatments.txt")

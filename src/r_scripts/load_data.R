@@ -172,7 +172,6 @@ load_data <- function(cohort){
   sepsis_data <- sepsis_data %>% mutate(major_surgery = ifelse(is.na(major_surgery), 0, 1))
 
   # encode anchor_year_group by: MIMIC, 2008-2010, 2011-2013, 2014-2016, 2017-2019 into 1, 2, 3, 4
-  # eICU: 2014 = 0, 2015 = 1
   sepsis_data$anchor_year_group <- as.numeric(sepsis_data$anchor_year_group)
 
   sepsis_data <- sepsis_data %>% mutate(blood_yes = ifelse(is.na(transfusion_yes), 0, 1))
@@ -180,9 +179,6 @@ load_data <- function(cohort){
   
 
   if (file_path == "data/MIMIC_coh.csv") {
-
-    # generate dummy var for eICU reliable hospitals -> all 0 for MIMIC
-    sepsis_data$rel_icu <- 0
     
     sepsis_data <- sepsis_data %>% mutate(gender = ifelse(gender == "F", 1, 0))
     
@@ -319,67 +315,6 @@ load_data <- function(cohort){
                           ])
 
 
-  } else if (file_path == "data/eICU_data.csv") {
-
-    # generate dummy var for eICU reliable hospitals -> match with list from Leo
-    # rel_hosp <- read.csv("hospitals/reliable_teach_hosp.csv", header = TRUE, stringsAsFactors = TRUE)
-    # sepsis_data <- sepsis_data %>%  mutate(rel_icu = ifelse(sepsis_data$hospitalid %in% rel_hosp$hospitalid , 1, 0))
-    # sepsis_data <- subset(sepsis_data, rel_icu == 1) # only keep reliable hospitals
-
-    sepsis_data <- sepsis_data %>% mutate(gender = ifelse(gender == "Female", 1, 0))
-
-    sepsis_data <- sepsis_data %>% mutate(death_bin = ifelse(unitdischargelocation == "Death" | unitdischargestatus == "Expired" | hospitaldischargestatus == "Expired", 1, 0))
-    # Rename mortality_in to mortality_in
-    sepsis_data <- sepsis_data %>% rename(death_bin = mortality_in)
-
-    sepsis_data <- sepsis_data %>% mutate(discharge_hosp = ifelse(unitdischargelocation == "HOSPICE", 1, 0)) # dummy line to have homogeneous columns 
-    sepsis_data <- sepsis_data %>% mutate(ethnicity_white = ifelse(race == "Caucasian", 1, 0))
-
-    sepsis_data$charlson_cont <- sepsis_data$charlson_comorbidity_index # create unified and continous Charlson column
-    sepsis_data <- sepsis_data %>% mutate(charlson_comorbidity_index = ifelse(
-      charlson_comorbidity_index >= 0 & charlson_comorbidity_index <= 5, "0 - 5", ifelse(
-        charlson_comorbidity_index >= 6 & charlson_comorbidity_index <= 10, "6 - 10", ifelse(
-          charlson_comorbidity_index >= 11 & charlson_comorbidity_index <= 15, "11 - 15", "16 and above"))))
-
-    sepsis_data <- sepsis_data %>% mutate(anchor_age = ifelse(anchor_age == "> 89", 91, strtoi(anchor_age)))
-    # rename into admission_age
-    sepsis_data <- sepsis_data %>% rename(admission_age = anchor_age)
-
-    sepsis_data <- sepsis_data %>% mutate(anchor_year_group = as.character(anchor_year_group))
-    
-    sepsis_data$los <- (sepsis_data$hospitaldischargeoffset/1440) # Generate eICU Lenght of stay
-
-    sepsis_data$OASIS_W <- sepsis_data$score_OASIS_W      # worst case scenario
-    sepsis_data$OASIS_N <- sepsis_data$score_OASIS_Nulls  # embracing the nulls
-    sepsis_data$OASIS_B <- sepsis_data$score_OASIS_B      # best case scenario
-
-    # drop row if apache_pred_hosp_mort is nan or -1
-    sepsis_data <- sepsis_data[!is.na(sepsis_data$apache_pred_hosp_mort), ]
-    sepsis_data <- sepsis_data[sepsis_data$apache_pred_hosp_mort != -1, ]
-
-    # rename apache_pred_hosp_mort into prob_mort
-    sepsis_data <- sepsis_data %>% rename(prob_mort = apache_pred_hosp_mort)
-
-    # Return just keeping columns of interest
-    return(sepsis_data[, c("admission_age", "gender", "ethnicity_white", "race_group",
-                          # "weight_admit",  "eng_prof",
-                          "anchor_year_group", 
-                          "adm_elective", "major_surgery", "is_full_code_admission",
-                          "is_full_code_discharge", "prob_mort", 
-                          "SOFA", "respiration", "coagulation", "liver", "cardiovascular",
-                          "cns", "renal", "charlson_cont",
-                          "resp_rate_mean", "mbp_mean", "heart_rate_mean", "temperature_mean",
-                          "spo2_mean", "po2_min", "pco2_max", "ph_min", "lactate_max", "glucose_max",
-                          "sodium_min", "potassium_max", "cortisol_min", "hemoglobin_min",
-                          "fibrinogen_min", "inr_max", "hypertension_present", "heart_failure_present",
-                          "copd_present", "asthma_present", "cad_present", "ckd_stages", "diabetes_types",
-                          "connective_disease", "pneumonia", "uti", "biliary", "skin", "mortality_in",
-                          "blood_yes", "insulin_yes","los", "comb_noso", "clabsi", "cauti", "ssi", "vap",
-                          "mech_vent", "rrt", "pressor", "mv_elig", "rrt_elig", "vp_elig",
-                          "free_days_rrt_28", "free_days_mv_28", "free_days_vp_28", "free_days_hosp_28") 
-                          ])
-
-
   } else {
     print("Wrong path or file name.")
   }
@@ -390,17 +325,11 @@ load_data <- function(cohort){
 get_merged_datasets <- function() {
 
   mimic_data <- load_data("MIMIC")
-  #eicu_data <- load_data("eICU")
-
-  # merge both datasets 
-  #data <- combine(mimic_data, eicu_data)
 
   # add column to keep the cohort source and control for it
   #data <- data %>% mutate(source = ifelse(source == "mimic_data", 1, 0))
 
   write.csv(mimic_data, "data/MIMIC.csv")
-  #write.csv(eicu_data, "data/eICU.csv")
-  #write.csv(data, "data/MIMIC_eICU.csv")
 
   return (data)
 

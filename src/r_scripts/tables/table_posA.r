@@ -3,7 +3,7 @@ library(tidyverse)
 library(table1)
 library(flextable)
 
-cohort <- c("MIMIC") # choose "MIMIC", "eICU", or "MIMIC_eICU" for both
+cohort <- c("MIMIC")
 m_e_df <- read.csv(paste0("data/", cohort, ".csv"))
 
 # Read in probabilty bins

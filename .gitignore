@@ -128,8 +128,11 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Data from MIMIC and eICU
+# Data from Physionet
 data/
+
+# Results
+results/
 
 # Results in Word files
 .docx
