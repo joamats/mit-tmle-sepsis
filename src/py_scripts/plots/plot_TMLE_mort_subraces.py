@@ -6,21 +6,12 @@ import matplotlib
 
 matplotlib.use("TKAgg")
 
-plot_name = "MIMIC/odd_hour"
-# plot_name = "MIMIC/blood_yes"
-title = "TMLE for odd hour vs. even hour of discharge or death\n"
+plot_name = "MIMIC/mortality_in_subraces"
+title = "TMLE for in-hospital mortality for each invasive treatment\n"
 df = pd.read_csv(f"results/prob_mort/{plot_name}.csv")
-
-# discard data from prob_mort range 0 to 1
-# concatenate prob_mort_start and prob_mort_end as string
-df["probconcat"] = (
-    df["prob_mort_start"].astype(str) + "-" + df["prob_mort_end"].astype(str)
-)
-df = df.loc[(df.probconcat != "0.0-1.0")]
 
 conversion_dict = dict(zip(df.prob_mort_start.unique(), range(4)))
 df.prob_mort_start = df.prob_mort_start.apply(lambda x: conversion_dict[x])
-
 
 # Transform into percentages
 df.psi = df.psi * 100
@@ -28,7 +19,7 @@ df.i_ci = df.i_ci * 100
 df.s_ci = df.s_ci * 100
 
 treatments = df.treatment.unique()
-races = df.race.unique()
+races = df.race_group.unique()
 
 t_dict = dict(
     zip(
@@ -50,18 +41,27 @@ fig.suptitle(title)
 
 for i, t in enumerate(treatments):
 
-    df_temp1 = df[(df.treatment == t) & (df.race == "all")]
-    df_temp2 = df[(df.treatment == t) & (df.race == "all")]
+    df_temp1 = df[(df.treatment == t) & (df.race_group == "white")]
+    df_temp2 = df[(df.treatment == t) & (df.race_group == "black")]
+    df_temp3 = df[(df.treatment == t) & (df.race_group == "hispanic")]
+    df_temp4 = df[(df.treatment == t) & (df.race_group == "asian")]
 
     axes[i].set(xlabel=None)
     axes[i].set(ylabel=None)
 
-    # axes[i].errorbar(x=df_temp1.prob_mort_start,
-    #                  y=df_temp1.psi,
-    #                  yerr=((df_temp1.psi- df_temp1.i_ci), (df_temp1.s_ci-df_temp1.psi)),
-    #                  fmt='-o', c='dimgray', ecolor='dimgray',
-    #                  elinewidth=.4, linewidth=1.5, capsize=4, markeredgewidth=.4,
-    #                  label="All races")
+    axes[i].errorbar(
+        x=df_temp1.prob_mort_start,
+        y=df_temp1.psi,
+        yerr=((df_temp1.psi - df_temp1.i_ci), (df_temp1.s_ci - df_temp1.psi)),
+        fmt="-o",
+        c="dimgray",
+        ecolor="dimgray",
+        elinewidth=0.7,
+        linewidth=1.5,
+        capsize=4,
+        markeredgewidth=0.7,
+        label="White",
+    )
 
     axes[i].errorbar(
         x=df_temp2.prob_mort_start,
@@ -70,11 +70,39 @@ for i, t in enumerate(treatments):
         fmt="-o",
         c="firebrick",
         ecolor="firebrick",
-        elinewidth=0.4,
+        elinewidth=0.7,
         linewidth=1.5,
         capsize=4,
-        markeredgewidth=0.4,
-        label="All races",
+        markeredgewidth=0.7,
+        label="Black",
+    )
+
+    axes[i].errorbar(
+        x=df_temp3.prob_mort_start,
+        y=df_temp3.psi,
+        yerr=((df_temp3.psi - df_temp3.i_ci), (df_temp3.s_ci - df_temp3.psi)),
+        fmt="-o",
+        c="skyblue",
+        ecolor="skyblue",
+        elinewidth=0.7,
+        linewidth=1.5,
+        capsize=4,
+        markeredgewidth=0.7,
+        label="Hispanic",
+    )
+
+    axes[i].errorbar(
+        x=df_temp4.prob_mort_start,
+        y=df_temp4.psi,
+        yerr=((df_temp4.psi - df_temp4.i_ci), (df_temp4.s_ci - df_temp4.psi)),
+        fmt="-o",
+        c="forestgreen",
+        ecolor="forestgreen",
+        elinewidth=0.7,
+        linewidth=1.5,
+        capsize=4,
+        markeredgewidth=0.7,
+        label="Asian",
     )
 
     axes[i].axhline(y=0, xmin=0, xmax=1, c="black", linewidth=0.7, linestyle="--")
@@ -87,5 +115,5 @@ for i, t in enumerate(treatments):
 
 fig.supxlabel("\nPredicted mortality (%)")
 
-# fig.savefig(f"results/prob_mort/{plot_name}.png", dpi=1000)
+fig.savefig(f"results/prob_mort/{plot_name}.png", dpi=300)
 fig.savefig(f"results/prob_mort/{plot_name}.tif", dpi=200)

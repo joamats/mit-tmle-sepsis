@@ -3,7 +3,7 @@ source("src/r_scripts/utils.R")
 
 # run TMLE 
 run_tmle <- function(data, treatment, confounders, outcome, SL_libraries,
-                     cohort, race, sev_min, sev_max, results_df) {
+                     cohort, race_group, sev_min, sev_max, results_df) {
 
     W <- data[, confounders]
     A <- data[, treatment]
@@ -24,7 +24,7 @@ run_tmle <- function(data, treatment, confounders, outcome, SL_libraries,
     results_df[nrow(results_df) + 1,] <- c( outcome,
                                             treatment,
                                             cohort,
-                                            race,
+                                            race_group,
                                             sev_min,
                                             sev_max,
                                             log$estimates$ATE$psi,
@@ -44,8 +44,8 @@ cohorts <- c("MIMIC") # choose "MIMIC" only
 outcomes <- c("mortality_in") # "odd_hour","insulin_yes", "blood_yes", "comb_noso", "mortality_in"
 prob_mort_ranges <- read.csv("config/prob_mort_ranges.csv")
 treatments <- read.delim("config/treatments.txt")
-#SL_libraries <- read.delim("config/SL_libraries_SL.txt") # or use only base libraries, see below
-SL_libraries <- read.delim("config/SL_libraries_base.txt") # or read.delim("config/SL_libraries_SL.txt")
+SL_libraries <- read.delim("config/SL_libraries_SL.txt") # or use only base libraries, see below
+#SL_libraries <- read.delim("config/SL_libraries_base.txt") # or read.delim("config/SL_libraries_SL.txt")
 
 
 for (c in cohorts) {
@@ -67,7 +67,7 @@ for (c in cohorts) {
                                 "outcome",
                                 "treatment",
                                 "cohort",
-                                "race",
+                                "race_group",
                                 "prob_mort_start",
                                 "prob_mort_end",
                                 "psi",
@@ -80,7 +80,7 @@ for (c in cohorts) {
                                 "g_weights")
 
         if (outcome == "mortality_in") {
-            races <- c("white", "non-white") 
+            races <- c("white", "black", "hispanic", "asian") 
         } else {
             races <- c("all") 
         }
@@ -97,11 +97,17 @@ for (c in cohorts) {
 
                 print(paste0("Race: ", r))
 
-                if (r == "non-white") {
-                    subset_data <- subset(data, ethnicity_white == 0)
+                if (r == "black") {
+                    subset_data <- subset(data, race_group == "Black")
+
+                } else if (r == "hispanic") {        
+                    subset_data <- subset(data, race_group == "Hispanic")
+
+                } else if (r == "asian") {        
+                    subset_data <- subset(data, race_group == "Asian")
 
                 } else if (r == "white") {        
-                    subset_data <- subset(data, ethnicity_white == 1)
+                    subset_data <- subset(data, race_group == "White")
                     
                 } else {
                     subset_data <- data
@@ -122,7 +128,7 @@ for (c in cohorts) {
                                            SL_libraries, c, r, sev_min, sev_max, results_df)
 
                     # Save Results
-                    write.csv(results_df, paste0("results/prob_mort/", c, "/", outcome, ".csv"))
+                    write.csv(results_df, paste0("results/prob_mort/", c, "/", outcome, "_subraces.csv"))
 
                 }
             }           
